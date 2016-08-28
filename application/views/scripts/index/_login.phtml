@@ -1,0 +1,75 @@
+<style>
+
+.htmlForm td{
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+    font-size:12px;
+    color:#555555;
+    border-bottom:1px #cccccc solid;
+	font-weight:bold;
+}
+.htmlForm input,select{
+    border:1px #ccc solid;
+    font-family:tahoma;
+    font-size:14px;
+    padding:3px;
+	color:#333333;
+	background:#efefef;
+}
+.formHeading{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:16px;
+    font-weight:bold;
+    color:#555555;
+    padding:10px;
+}
+.bluebold {
+    color: #005FCD;
+    font-family: Verdana;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+	padding: 2px;
+}
+#sd-tb{
+box-shadow:0 0 5px 0 #cccccc;
+-webkit-box-shadow:0 0 5px 0 #cccccc;
+-moz-box-shadow:0 0 5px 0 #cccccc;
+-ms-box-shadow:0 0 5px 0 #cccccc;
+-o-box-shadow:0 0 5px 0 #cccccc;
+}
+</style>
+    <!-- The outter table to contain the form and the instruction panel -->
+<br/><br/>	
+    <table border="0" cellpadding="2px" cellspacing="1px" bgcolor="#cccccc" id="sd-tb">
+        <tr bgcolor="#dddddd">           
+            <td colspan="2">
+                <div class="formHeading" align="center">Welcome to rsv internal system</div>
+                <!-- The inner table below is a container for form -->             
+                <table width="100%" border="0" cellpadding="3px" class="htmlForm" cellspacing="0" bgcolor="#dddddd">
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>                    
+                    <tr>
+                        <td>Email:  </td>
+                        <td><input type="text" size="32" name="txt_email" /></td>
+						<td style="color:blue; font-weight:normal;">(not case sensitive)</td>
+                    </tr>
+                    <tr>
+                        <td>Password:  </td>
+                        <td><input type="password" size="32" name="txt_password" /></td>
+						<td style="color:red;font-weight:normal;">(case sensitive)</td>
+                    </tr>                                                                                                                                                          
+                </table>				
+            </td>
+        </tr>
+        <tr bgcolor="#cccccc">  
+        	<td>
+        		<?php echo $this->msg;?>
+        	</td>          
+            <td align="right">
+                <input class="bluebold" type="submit" value="Log in" size="25" />                         
+				<input class="bluebold" type="reset" value="Reset" size="25"/>                         
+            </td>
+        </tr>                       	
+    </table>
+

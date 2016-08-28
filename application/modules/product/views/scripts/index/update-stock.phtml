@@ -1,0 +1,51 @@
+<?php $form_stock=$this->formstock; ?>
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$url_save=$this->url(array("module"=>"product","controller"=>"index","action"=>"update-stock"));
+?>
+<title><?php echo $tr->translate("ADD_NEW_LOCATION");?></title>
+<div class="right" style="padding: 10px; width: 97%;">
+	<div class="view-table">
+			<form id="frm" method="post" action="<?php echo $url_save;?>">
+				<div class="head_form">
+					 <?php echo $tr->translate("ADD_NEW_LOCATION");?>
+				</div>
+				<div class="contain_form shadow">
+			 	<table style=" width:100%;">
+			 		<tr>
+			 			<td><?php echo $tr->translate("LOCATION_NAME");?></td>
+			 			<td width="30%"><?php echo $form_stock->getElement("StockName");?></td>
+			 			<td><?php echo $tr->translate("CON_TO");?></td>
+			 			<td width="30%"><?php echo $form_stock->getElement("ContactName");?></td>
+			 		</tr>
+				 		<tr height="40px">
+				 			<td><?php echo $tr->translate("PHONE_NUM");?></td>
+				 			<td><?php echo $form_stock->getElement("ContactNumber");?></td>
+				 			<td><?php echo $tr->translate("STATUS"); echo $form_stock->getElement("id");?></td>
+			 			    <td width="250px"><?php echo $form_stock->getElement("status");?></td>
+				 		</tr>
+			 		<tr>
+			 			<td><?php echo $tr->translate("DESC");?></td>
+			 			<td width="250px"><?php echo $form_stock->getElement("description");?></td>
+			 			<td><?php echo $tr->translate("LOCATION_ADD");?></td>
+				 		<td><?php echo $form_stock->getElement("StockLocation");?></td>
+			 		</tr>
+			 		<tr>
+			 			<td></td>
+			 			<td></td>
+			 			<td><input class="btn_submit" type="submit" name="submit_add_close" value="<?php echo $tr->translate("UPDATE");?>" />
+			 			&nbsp;<input class="btn_submit" type="button" Onclick="Cancel()" name="submit_cancel" value="<?php echo $tr->translate("CANCEL");?>" /></td>		 			
+			 		</tr>
+			 	</table>
+			 	</div><!-- end of .contain_form -->
+			</form>	
+		</div>
+</div>
+<script>
+function Cancel(){
+	var comfir= confirm("តើអ្នកពិតជាចង់ចាកចេញរឺ? ");
+	if(comfir==true){
+			window.open("<?php echo BASE_URL;?>/product/index/index-location","_parent");
+	}	
+}
+</script>

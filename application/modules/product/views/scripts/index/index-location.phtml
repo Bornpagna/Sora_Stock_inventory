@@ -1,0 +1,68 @@
+<?php 
+	$url_new = $this->url(array('module'=>'product','controller'=>'index','action'=>'add-stock',));
+	$url_delete = $this->url(array('module'=>'product','controller'=>'index','action'=>'delete-stock',));
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$formFilter = $this->formFilter;
+?>
+<title><?php echo $tr->translate("LOCATION_LIST");?></title>
+<div class="view_tb_right">
+<table class="table" style="width:100%;">
+		<tr>
+		<td>
+			<div class="select" style="width: 100%;">
+			<div class="view-table">
+					<form method="post" action="<?php echo $formFilter->getAction(); ?>">
+						<div class="shadow">
+							<table style="width: 100%">
+								<tr>
+									<td>
+										<table style="width: 100%">
+											<tr>
+												<td rowspan="2"><div class="sub-location"></div></td>
+												<td><?php echo $tr->translate("LOCATION_NAME");?></td>
+												<td><?php echo $formFilter->getElement('location_name');?></td>
+												<td><?php echo $tr->translate("ADD_LOCATION");?></td>
+												<td><?php echo $formFilter->getElement('address_name');?></td>
+											</tr>
+											<tr>
+											    <td><?php echo $tr->translate("CON_NAME");?></td>
+												<td widht="30%"><?php echo $formFilter->getElement('contact_name');?></td>
+												<td><?php echo $tr->translate("PHONE_NUM");?></td>
+												<td widht="30%"><?php echo $formFilter->getElement('phone');?></td>
+											</tr>
+											<tr>
+												<td colspan="3"></td>
+												<td colspan="2" class="btn"><input type="submit" value="<?php echo $tr->translate("SEARCH");?>" /></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</form>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div class="btn" align="right">
+				<?php 
+					$formList = new Application_Form_Frmlist();
+					echo $formList->showAddBuntton($url_new);
+				?>
+			</div>
+		</td>
+	</tr>
+</table>
+<div style="position: relative; clear: both; width:99%; margin:0 auto;">
+		<div class="">
+			<div class="head_form">
+				<?php echo $tr->translate("LOCATION_LIST");?>
+			</div>
+			<div class="contain_form">
+				<?php echo $this->list; ?>
+			</div>
+		</div>
+</div>
+</div><!-- end of .view_tb_right -->

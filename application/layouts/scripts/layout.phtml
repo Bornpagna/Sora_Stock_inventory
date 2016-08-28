@@ -1,0 +1,342 @@
+<?php
+	// 	Define base url for rediect page
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+   	$action=Application_Model_DbTable_DbGlobal::getActionAccess($request->getActionName());
+   	$controller = Application_Model_DbTable_DbGlobal::getActionAccess($request->getControllerName());
+   	$module=Application_Model_DbTable_DbGlobal::getActionAccess($request->getModuleName());
+   	$session_user=new Zend_Session_Namespace('auth');
+    $show_menu = true;
+	if( $module == "default" && $controller == "index" && 	$action == "index"){
+		$show_menu = false;
+	}
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="shortcut icon" href="<?php echo BASE_URL;?>/images/resolvo.ico" type="image/x-icon"/>
+		<link type="text/css" href="<?php echo BASE_URL;?>/css/style.css" rel="stylesheet"/>
+		<!-- veiw form -->
+			<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL;?>/css/menu.css" media="all" />
+			<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL;?>/css/layout.css" media="all" />
+			<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL;?>/css/interface.css" media="all" />
+			<link  rel="stylesheet" type="text/css" href="<?php echo BASE_URL;?>/css/include.css" media="all" />
+		<!-- end of veiw form -->
+		<!--select box -->
+		<script type="text/javascript"  src="<?php echo BASE_URL;?>/js/other.js"></script>
+		<!-- for popu and select sel -->
+		
+		<!-- for tab -->
+	<!--new other update code js -->
+	<!-- get select for select -->
+	<style>
+	/* force a height so the tabs don't jump as content height changes */
+	#tabs .tabs-spacer { float: left; height: 200px; }
+	.tabs-bottom .ui-tabs-nav { clear: left; padding: 0 .2em .2em .2em; }
+	.tabs-bottom .ui-tabs-nav li { top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: auto; border-top: 0; }
+	.tabs-bottom .ui-tabs-nav li.ui-tabs-active { margin-top: -1px; padding-top: 1px; }
+	</style>
+	  
+		<!-- <script type="text/javascript" src="<?php //echo BASE_URL;?>/jquery-1.8.3.js"></script> -->
+	<!-- end tabs -->
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/global_help.js"></script>
+		<!-- Jquery Version Using to support 
+			1, Jquery GUI	
+			2, Jquery Tablesorter	
+			3, Jquery Validation Engine  (IE 6-8, Firefox, Opera...)
+		Currently, jquery validation Engine not support in Chrome
+		Sophen 25 June 2012
+		
+		Currently, jquery validation Engine support in Chrome Edit By Sovann
+		-->
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="<?php echo BASE_URL;?>/js/javascript.js"></script>
+		<!-- End jquery min using -->
+		<!-- for popup -->
+		<!-- Jquery GUI -->
+		<link type="text/css" href="<?php echo BASE_URL;?>/css/custom-theme/jquery-ui-1.8.20.custom.css" rel="stylesheet" />		
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/jquery-ui-1.8.20.custom.min.js"></script>
+		<!-- End Jquery GUI -->
+		
+		<!-- Jquery ADD-ON -->
+		<link rel="stylesheet" media="screen" href="<?php echo BASE_URL;?>/js/add-on/jquery.timepickr.css" type="text/css" /> 
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/add-on/jquery.timepickr.js"></script>
+		<!-- End Jquery ADD-ON -->
+		<!-- get for select auto complete chosen.jquery.js-->
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/test/chosen.jquery.js"></script>
+		<link rel="stylesheet" media="screen" href="<?php echo BASE_URL;?>/css/chosen.css" type="text/css" />
+
+		<!-- for select auto complete -->
+		<!-- end of auto complete -->
+		 <script type="text/javascript">
+			$(function(){
+				
+				// Button
+				$( "#button, input:submit, a, button, input:reset", ".btn").button();
+				
+				// Radios
+				$( "#radioset" ).buttonset();
+				
+				// Check box
+				$( "#check" ).button();
+				$( "#format" ).buttonset();
+
+			});
+
+			// in purchase order: select item show price in text box(ajax): not work yet.
+			function getItemPrice(id,url,index5)
+		 	{
+				$.post(url,{
+					productID: id
+				}, function(data){
+					$('#price'+index5).val(data.unit_price);//data.paid_date
+				}, "json");
+			}
+		</script>
+		<script>
+		$(function() {
+		$( "#tabs" ).tabs();
+
+		// fix the classes
+		$( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
+			.removeClass( "ui-corner-all ui-corner-top" )
+			.addClass( "ui-corner-bottom" );
+		// move the nav to the bottom
+		$( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
+	});
+	
+       
+</script>
+		
+		<!-- Table shorter Sophen 25 June 2012-->
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/jquery.tablesorter.js"> </script>
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/jquery.tablesorter.pager.js"> </script>		
+		<!-- End table shorter -->
+		
+		<!-- Add Validation Add 26 June 2012 Sophen Developer-->
+		 
+		<link type="text/css" rel="stylesheet" media="screen" href="<?php echo BASE_URL;?>/js/validation/validationEngine.jquery.css">
+		<script src="<?php echo BASE_URL;?>/js/validation/languages/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8"></script>
+		<script src="<?php echo BASE_URL;?>/js/validation/jquery.validationEngine.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){				
+				$("#frm").validationEngine();
+			});
+		</script>
+	
+		<!-- End Validation -->
+		<!-- Optional function js -->
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/js/jsfi.js"></script>	
+		
+		<!-- test for map sophen -->
+	</head>
+	<?php 
+$session_lang=new Zend_Session_Namespace('lang');
+if($session_lang->lang_id==1){?>
+<style>
+	body, html {font-size:98%; font-family:'Khmer OS Battambang' !important}
+</style>
+<?php }else{ ?>
+
+<?php }?>
+	<body>
+	
+			<?php if($show_menu):?>
+				<?php echo $this->render('head-toolbar.phtml')?>
+			<?php endif;?>	
+			<?php //echo $this->render("left-toolbar.phtml")?>	
+		<div class="content">
+			<div style="float: left; width: 18%;">
+				<?php echo $this->render('left-toolbar.phtml')?>
+			</div>
+			<div style="float:right; width:82%;">
+				<?php echo $this->layout()->content;?>
+			</div>
+	    </div>
+		<!-- <div class="content-bottom" style="clear:both;">
+			<span class="align-left"><?php echo $tr->translate('COMPANY_COPYRIGHT');?></span>
+			<span class="align-rgith"><?php echo $tr->translate('COMPANY_POWERBY');?></span>
+		</div>	-->	
+	</body>
+</html>
+<script> 
+
+//for hide dialog
+//for popu blog
+function ShowVendorDialog(modal)
+{
+    $("#overlay-vendor").show();
+    $("#dialog-vendor").fadeIn(300);
+
+    if (modal)
+    {
+        $("#overlay-vendor").unbind("click");
+    }
+    else
+    {
+        $("#overlay-vendor").click(function (e)
+        {
+            HideDialogVendor();
+        });
+    }
+}
+function HideDialogVendor()
+{
+    $("#overlay-vendor").hide();
+    $("#dialog-vendor").fadeOut(300);
+}
+/***************************************************************/
+function AddNewLocation(modal)
+{
+    $("#overlay-location").show();
+    $("#dialog-location").fadeIn(300);
+
+    if (modal)
+    {
+        $("#overlay-location").unbind("click");
+    }
+    else
+    {
+        $("#overlay-location").click(function (e)
+        {
+     	   HideDialoglocation();
+        });
+    }
+}
+function HideDialoglocation()
+{
+    $("#overlay-location").hide();
+    $("#dialog-location").fadeOut(300);
+}
+/***************************************************************///popup
+function ShowDialog(modal)
+{
+    $("#overlay").show();
+    $("#dialog").fadeIn(300);
+
+    if (modal)
+    {
+        $("#overlay").unbind("click");
+    }
+    else
+    {
+        $("#overlay").click(function (e)
+        {
+            HideDialog();
+        });
+    }
+}
+
+function HideDialog()
+{
+    $("#overlay").hide();
+    $("#dialog").fadeOut(300);
+} 
+function HideshowAgentDialog()
+{
+    $("#agent_popup").hide();
+    $("#dialog_popup").fadeOut(300);
+} 
+/********************************************/
+//popup
+$(document).ready(function ()
+{
+    $("#btnShow").click(function (e)
+     {
+          ShowDialog(true);
+          e.preventDefault();
+     });
+    function add(){
+    	ShowDialog(true);
+     e.preventDefault();
+    }
+    $("#btnClose").click(function (e)
+    {
+        HideDialog();
+        e.preventDefault();
+    });
+    $("#btnCancel").click(function (e)
+            {
+                HideDialog();
+                e.preventDefault();
+            });
+    //for vendor
+
+    $("#btnClosevendor").click(function (e)
+            {
+ 	           HideDialogVendor();
+                e.preventDefault();
+            });
+    $("#btnCancelVendor").click(function (e)
+             {
+ 	            HideDialogVendor();
+                 e.preventDefault();
+             });
+    $("#btnCloseLocation").click(function (e)
+            {
+ 	           HideDialoglocation();
+                e.preventDefault();
+            });
+    $("#btncancel_location").click(function (e)
+            {
+ 	           HideDialoglocation();
+                e.preventDefault();
+            });
+    $("#cancelDailogAgent").click(function (e)
+            {
+ 	           HideshowAgentDialog();
+                e.preventDefault();
+            });
+    $("#btncancel_agent").click(function (e)
+            {
+ 	           HideshowAgentDialog();
+                e.preventDefault();
+            });
+    $("#btnCloseMeasure").click(function (e)
+            {
+    	HideMeasureDialog();
+                e.preventDefault();
+            });
+            
+});
+
+$(".cancelDailog").click(function() {
+	$(".required_error").removeAttr("style");
+	$(".required_error").removeClass("required_error");
+});
+function validate_text(tname){//validate input text for dailog
+	var tArray = tname.split(',');
+	var d = '';
+	
+	$.each(tArray, function(index, value) {
+		d = $(value).val();
+		
+		if(d == ''){
+			$(value).attr("style","background-color:#fff; border:1px solid #FF90AB");
+			$(value).addClass("required_error");
+			
+			exit();
+		}else{
+			$(".required_error").removeAttr("style");
+			$(".required_error").removeClass("required_error");
+		}
+		
+	});
+}
+function selectValue(){//use for select auto complet
+	//$(".chzn-select-deselect").chosen({allow_single_deselect:false});
+	//$("#item_id_1").chosen({allow_single_deselect:false});
+	//$(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:false});
+}
+document.onmousedown=disableclick;
+function disableclick(event)
+{
+  if(event.button==2)
+   {
+     return false;    
+   }
+}
+</script>

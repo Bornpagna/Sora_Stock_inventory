@@ -1,0 +1,78 @@
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
+<?php 
+	$url_new = $this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'add-item-price',));
+	$url_sarch = $this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'price',));
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$formFilter = $this->formFilter;
+?>
+<title><?php echo $tr->translate("PRODUCT_PRICE");?></title>
+<div class="view_tb_right">
+<div class="wrapper">
+    <div style="width:98%; margin:0 auto;">
+    	<table class="table" align="right" width="100%">
+			<tr>
+				<td>
+				<div class="view-table shadow">
+					<form method="post" action="<?php echo $url_sarch; ?>">
+						<table class="margin" width="100%">
+							<tr>
+							    <td><?php echo $tr->translate("ITEM_NAME")."/".$tr->translate("ITEM_CODE");?></td>
+								<td><?php echo $formFilter->getElement('p_name');?></td>
+								<td><?php echo $tr->translate("TYPE_PRICE_SM");?></td>
+								<td width="30%"><div class="select_d"><?php echo $formFilter->getElement('type_id');?></div></td>
+							</tr>
+							<tr class="heigh">
+								<td><?php echo $tr->translate("PRICE_SM");?></td>
+								<td><?php echo $formFilter->getElement('p_price');?></td>
+								<td><?php echo $tr->translate("STATUS"); ?></td>
+							    <td width="30%" class="btn"><?php echo $formFilter->getElement("status");?></td>
+							</tr>
+							<tr class="heigh">
+								<td></td>
+								<td></td>
+								<td></td>
+							    <td class="btn"><input type="submit" value="<?php echo $tr->translate("REFRESH");?>"/></td>
+							</tr>
+							<tr>
+								
+							    <td class="select"></td>
+							    <td class="add-edit"><?php ?></td>
+							    <td class="btn"></td>
+								<td></td>
+							</tr>
+						</table>
+					</form>
+			       </div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="btn" align="left">
+						<input class="btn_submit" type="button" onClick="addNewTypePrice()" value="<?php echo $tr->translate("ADD_CUSTOMER");?>"/>
+					</div>
+					<div class="btn" align="right">
+						<?php 
+							$formList = new Application_Form_Frmlist();
+							echo $formList->showAddBuntton($url_new);
+							//echo $formList->showDeleteBuntton($url_delete);
+						?>
+					</div>
+				</td>
+			</tr>
+		</table>
+	  <div style="position: relative; clear: both;">
+			<div class="head_form">
+				<?php echo $tr->translate("PRODUCT_PRICE");?>
+			</div>
+			<div class="contain_form">
+				<?php echo $this->list; ?>
+			</div>
+	  <div>
+    </div>
+</div><!-- end of wrapper -->
+</div><!-- end of .view_tb_right -->
+<script>
+	function addNewTypePrice(){
+		window.open("<?php echo BASE_URL?>/product/adjust-stock/type-price","_parent");
+		}
+</script>

@@ -1,0 +1,78 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage(); 
+	$session_user=new Zend_Session_Namespace('auth');
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+?>		
+<style>
+.branch_name{ 
+	margin-left:-10px;margin-top:2px; background:#eeeeee;padding:10px;
+	display: none;
+	border:1px solid #006600;
+	z-index: 1000;position: absolute;
+}
+.branch_name ul li a{line-height: 20px;}
+.branch_name ul li:hover{text-decoration: underline;}
+
+.my-user:hover .branch_name{ display: block;}
+
+</style>	
+<div class="header">
+		<div class="cover-top">
+		   <div class="sub-header">
+		        <div class="main">
+		   			<div id="nav">
+					          <ul>
+					              <li><span tabindex="1" class="file"></span></li>
+					              <img class="close" src="<?php echo BASE_URL; ?>/images/spacer.gif" alt="" />
+					           </ul>
+				    </div>     	
+		        </div>
+		        <div class="prev-top"></div>
+		        <div class="next-top"></div>
+		         <div class="tool-pro-title">
+		         		<?php 
+		         			$title = $request->getModuleName() . "_"
+									 . $request->getControllerName() ."_"
+									 . $request->getActionName();
+							$title = "MENU_" . strtoupper(str_replace("-", "_", $title));
+		         		?>
+		            	<h3><?php echo $tr->translate($title);?></h3>
+		         </div>
+		         <a href="#" target="_blank">
+			         <div class='new-tab'>	
+			         </div>
+		          </a>
+		          <div class="blog-user">
+			            <div class="my-user"><?php echo $tr->translate('MENU_USERACCESS');?>
+			            <a class="user_id" href="<?php echo $this->url(array('module'=>'rsvAcl','controller'=>'user','action'=>'change-password', 'id'=>$session_user->user_id));?>">
+								<?php echo ucwords(strtolower($session_user->fullname));?>
+								
+						</a>
+			           	<a href="<?php echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout', 'value'=>1));?>">
+								<?php echo "| ".$tr->translate("MENU_SIGNOUT");?>
+						</a>
+						<a onclick="closeMe()" href="#">
+								<?php echo "| ".$tr->translate("CLOSE_SYSTEM");?>
+						</a>
+						<?php if($session_user->level!=1 AND $session_user->level!=2): ?>
+						<?php 
+						$dbtable = new Product_Model_DbTable_DbGetBranch();
+						$branchs = $dbtable->getBranchbyUser($session_user->user_id);
+						?>
+						<div class="branch_name">	
+							<ul>
+								<?php if(!empty($branchs)) foreach ($branchs as $key =>$value):?>
+									<li><a href="<?php echo $this->url(array('module'=>'product','controller'=>'changeuser','action'=>'index', 'id'=>$value["location_id"]));?>"><?php echo $value["Name"]?></a></li>
+								<?php endforeach;?>
+							</ul>
+						</div>
+						<?php endif;?>
+						
+						
+							
+			           	</div>
+		           </div>
+		   </div><!--end of sub header-->
+		    <div class="foot-header-pro"></div>
+	    </div>
+</div><!--end of header-->

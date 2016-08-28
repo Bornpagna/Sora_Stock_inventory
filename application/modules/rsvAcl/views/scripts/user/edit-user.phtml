@@ -1,0 +1,161 @@
+<?php 
+$cancel_url=$this->url(array(
+		'module'=>'rsvAcl',
+		'controller'=>'user',
+		'action'=>'index',
+	));
+$chg_pwd=$this->url(array('module'=>'rsvAcl',
+                              'controller'=>'user',
+                              'action'=>'change-password',
+                              'id'=>$this->user_id,
+						));
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$rowbranch=$this->branchname;
+?>
+<title><?php echo $tr->translate("MENU_RSVACL_USER_EDIT_USER");?></title>
+<?php $form=$this->form;?>
+<style>
+fieldset.fifthy {	
+	border-right: 0px;
+	width: 50%;
+}
+table.user td{
+	vertical-align: top;
+   
+}
+</style> 
+<br/>
+
+<div class="right" style="width: 97%; padding: 10px;">
+<form id="frm" action="<?php echo $form->getAction(); ?>" method="post" enctype="application/x-www-form-urlencoded" >
+	<div class="btn" align="right">
+			    <button name="save" class="bluebold" type="submit">
+			        <img alt="" src="<?php echo BASE_URL?>/images/icon/apply2.png">
+			        <?php echo $tr->translate('UPDATE');?>
+			    </button>
+			    <a class="negative" href="<?php echo $cancel_url;?>">
+			        <img alt="" src="<?php echo BASE_URL?>/images/icon/cross.png">
+			        <?php echo $tr->translate('CANCEL');?>
+			    </a>
+	</div>
+	<div class="view-table">
+		<div class="head_form">
+			<?php echo $tr->translate('AUTHENTICATION');?>
+		</div>
+		<div class="contain_form shadow">
+			<table class="height">
+				<tr class="height">
+					<td><?php echo $tr->translate('GENDER_TITLE');?></td>
+					<td><?php echo $form->getElement('title');?></td>
+				</tr>
+				<tr class="height">
+					<td><?php echo $tr->translate('FULL_NAME');?></td>
+					<td><?php echo $form->getElement('fullname');?></td>
+				</tr>
+				<tr class="height">
+					<td><?php echo $tr->translate('USER_NAME');?></td>
+					<td><?php echo $form->getElement('username');?></td>
+				</tr>
+				<tr class="height">
+					<td><?php echo $tr->translate('EMAIL');?></td>
+					<td><?php echo $form->getElement('email');?></td>
+				</tr>			
+				<tr class="height">
+					<td><?php echo $tr->translate('USER_TYPE');?></td>
+					<td><?php echo $form->getElement('user_type_id');?></td>
+				</tr>
+				<tr class="height">
+					<td><?php echo $tr->translate("ASS_TO_LOCATION");?></td>
+					<td><?php echo $form->getElement("LocationId");?></td>
+				</tr>
+				<tr class="height">
+					<td></td>
+					<td><div class="access" style="float: left; color: blue;"> <span><a href="<?php echo $chg_pwd; ?>" style="color: blue;"><?php echo $tr->translate('CHANGE_PSW');?></a></span></div></td>				
+				</tr>
+				<tr class="height">
+							<td><?php echo $tr->translate("ASS_TO_OTHER_LOCATION");?></td>
+							<td><br /><br />
+								<table class="collape" id="table_order" style="width: 100%;">
+									<tr height="25px">
+										<td class="sub-tdheader" width="20px"><?php echo $tr->translate("NUM");?></td>
+										<td class="sub-tdheader"><?php echo $tr->translate("LOCATION_NAME");?></td>
+									</tr>
+									<input type="hidden" id="identity" name="identity" />
+								</table>
+								<table>
+									 <tr>
+										<td class="new-row">
+											<div class="btn">
+												<button class="positive" type="button" id="new_item"  name= "new_followup" value="New">
+														&nbsp;<img src="<?php echo BASE_URL?>/images/icon/new-row.png" alt=""/><?php echo $tr->translate("ADD");?>
+												</button>
+											</div>
+										</td>
+									</tr>
+							  </table>
+							</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+</div>
+<script>
+jQuery(document).ready(function(){
+	var index5 = '<?php echo count($rowbranch);?>';
+	var option5 = '<?php echo $this->locations; ?>';
+	var template = '';
+	$('#new_item').click(function(){
+		index5++;
+		template='<tr id="row_order_'+index5+'">';
+		template+='<td class="quater-input"><img onClick="deleteRecord('+index5+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+		template+='<td class="quater-input"><select class="validate[required] chzn-select-deselect" Onchange="AddLocation('+index5+')" id="location_id_'+index5+'" name="location_id_'+index5+'" data-placeholder="'+option5+'" >'+option5+'</select></td>';
+		template+="</tr>";
+		$('#table_order').append(template);
+		if($('#identity').val()!="") {
+			var identity = $('#identity').val();
+			$('#identity').val(identity+','+index5);
+		} else {$('#identity').val(index5);}
+		//$("#lostItemFrm").validationEngine();
+	});
+	initList();
+		jQuery('#frm').validationEngine('attach', {promptPosition : "centerRight"});
+});
+
+function initList() {
+	var template;
+	var optionItem = '<?php echo $this->locations; ?>';	
+	<?php if(!empty($rowbranch)) {		
+		foreach($rowbranch AS $i=>$r){		
+			$inx = $i +1;?>
+			template='<tr id="row_order_<?php echo $inx;?>">';
+			if(<?php echo $inx;?> == 1) {
+			template+='<td class="quater-input"></td>';
+			
+			} else {
+			template+='<td class="quater-input"><img onClick="deleteRecord(<?php echo $inx;?>)" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+			}			
+			template+='<td class="quater-input"><select class="validate[required]" id="location_id_<?php echo $inx;?>" name="location_id_<?php echo $inx;?>" data-placeholder="'+optionItem+'" >'+optionItem+'</select></td>'; 
+			template+='</tr>';
+			$('#table_order').append(template);
+
+			$('#location_id_<?php echo $inx;?>').val('<?php echo $r['location_id'];?>');
+			if(<?php echo $inx;?>!=1) {
+				var identity = $('#identity').val();
+				$('#identity').val(identity+','+<?php echo $inx;?>);
+			} else {$('#identity').val(<?php echo $inx;?>);}
+			
+		<?php }  }?>
+}
+
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	$("#row_order_"+index).remove();
+}
+</script>

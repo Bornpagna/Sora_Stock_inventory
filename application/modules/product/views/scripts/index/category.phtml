@@ -1,0 +1,59 @@
+<?php $tr = Application_Form_FrmLanguages::getCurrentlanguage();?>
+<title><?php echo $tr->translate("CATEGORY");?></title>
+<?php 
+	$url_new = $this->url(array('module'=>'product','controller'=>'index','action'=>'add-category',	));
+	$url_delete = $this->url(array('module'=>'product','controller'=>'index','action'=>'delete-category',));
+	$url_sarch = $this->url(array('module'=>'product','controller'=>'index','action'=>'category',));
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$formFilter = $this->formFilter;
+?>
+<div class="view_tb_right">
+<div class="wrapper">
+    <div style="width:98%; margin:0 auto;">
+    	<table class="table" align="right" width="100%">
+			<tr>
+				<td>
+				<div class="view-table shadow">
+					<form method="post" action="<?php echo $url_sarch; ?>">
+						<table class="margin" width="100%">
+							<tr>
+							    <td><?php echo $tr->translate("CATEGORY_NAME");?></td>
+							    <td width="30%"><?php echo $formFilter->getElement('g_name');?></td>
+								<td><?php echo $tr->translate("SELECT_CATE");?></td>
+								<td width="30%"><div class="select_d"><?php echo $formFilter->getElement('category_id');?></div></td>
+							</tr>
+							<tr class="height">
+								
+							    <td class="select"></td>
+							    <td class="add-edit"><?php echo $formFilter->getElement('customer_id');?></td>
+								<td></td>
+								<td class="btn"><input type="submit" value="<?php echo $tr->translate("REFRESH");?>"/></td>
+							</tr>
+						</table>
+					</form>
+			       </div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="btn" align="right">
+						<?php 
+							$formList = new Application_Form_Frmlist();
+							echo $formList->showAddBuntton($url_new);
+							//echo $formList->showDeleteBuntton($url_delete);
+						?>
+					</div>
+				</td>
+			</tr>
+		</table>
+	  <div style="position: relative; clear: both;">
+			<div class="head_form">
+				<?php echo $tr->translate("CATEGORY_LIST");?>
+			</div>
+			<div class="contain_form">
+				<?php echo $this->list; ?>
+			</div>
+	  <div>
+    </div>
+</div><!-- end of wrapper -->
+</div><!-- end of .view_tb_right -->

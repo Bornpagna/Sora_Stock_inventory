@@ -1,0 +1,50 @@
+<title>List User - RSMK</title>
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$url_new = $this->url(array(
+		'module'=>'rsvAcl',
+		'controller'=>'user',
+		'action'=>'add-user',
+	));
+	
+	$form=$this->form;
+	$formfilter=$this->formfilter;
+?>
+<div class="right" style="width: 97%; padding: 10px;">
+<div class="view-table">
+	<table class="table" width="70%" align="right">
+		<tr>
+			<td>
+				<div class="">
+				<form method="post" action="<?php echo $formfilter->getAction(); ?>" enctype="application/x-www-form-urlencoded">	
+					<table width="100%">
+						<tr class="height">
+							<td><?php echo $tr->translate("SELECT_USERTYPE");?></td>
+						
+							<td width="50%"><?php echo $formfilter->getElement('user_type_filter');?></td>
+						</tr>			
+					</table>
+				</form>	
+				</div>
+			</td>
+		</tr>
+		<tr class="height">
+			<td>
+				<div class="btn" align="right">
+					<a href="<?php echo $url_new;?>"><img alt="" src="<?php echo BASE_URL?>/images/icon/add.png"><?php echo $tr->translate("ADD");?></a>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="position: relative; clear: both;">
+	<div class="">
+		<div class="head_form">
+			<?php echo strtoupper($tr->translate('LIST_OF_USER_IN_SYSTEM'));?>
+		</div>
+		<div class="contain_form">
+			<?php echo  $this->form;?>
+		</div>
+	</div>
+</div>
+</div><!-- end of .view_tb_right -->

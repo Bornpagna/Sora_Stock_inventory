@@ -1,0 +1,57 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<title><?php echo $tr->translate("TRANSFER_LIST");?></title>
+<?php 
+	$url_new = $this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'transfer-stock',));
+	$url_delete = $this->url(array('module'=>'product','controller'=>'index','action'=>'delete-product',));
+	$formFilter = $this->formFilter;
+?>
+<div class="right" style="padding:5px;">
+	<form method="post" action="<?php echo $formFilter->getAction(); ?>">
+		<div class="view-table shadow select" width="100%">
+			<table class="margin table" align="right" width="100%">
+				<tr>
+					<td class="add-edit">
+							<table width="100%">
+								<tr class="height">
+									<td><?php echo $tr->translate("INVOICE_NUM");?></td>
+									<td width="30%"><?php echo $formFilter->getElement("order");?></td>
+									<td><?php echo $tr->translate("TO_LOCATION");?></td>
+									<td width="30%"><?php echo $formFilter->getElement("LocationId");?></td>
+								</tr>
+								<tr class="height">
+									<td><?php echo $tr->translate("START_DATE");?></td>
+									<td><?php echo $formFilter->getElement("search_start_date");?></td>
+									<td><?php echo ucwords($tr->translate("END_DATE"));?></td>
+									<td><?php echo $formFilter->getElement("search_end_date");?></td>
+								</tr>
+								<tr class="height">
+									<td class="add-edit" colspan="3"><?php echo $formFilter->getElement('p_name');?></td>
+									<td class="btn"><input type="submit" value="<?php echo $tr->translate("SEARCH");?> "/></td>
+								</tr>
+							</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="btn" align="right">
+							<?php 
+								$formList = new Application_Form_Frmlist();
+								echo $formList->showAddBuntton($url_new);
+							?>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+	<div style="position: relative; clear: both;">
+		<div class="head_form">
+			<?php echo $tr->translate("TRANSFER_LIST");?>
+		</div>
+		<div class="contain_form">
+			<?php echo $this->list; ?>
+		</div>
+	</div>
+</div><!-- end .right -->

@@ -1,0 +1,45 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<title><?php echo $tr->translate("TRANSFER_LIST");?></title>
+<?php 
+	$url_new = $this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'adjust',));
+	$url_delete = $this->url(array('module'=>'product','controller'=>'index','action'=>'delete-product',));
+	$formFilter = $this->formFilter;
+?>
+<div class="right" style="padding:5px;">
+	<table class="table" align="right">
+		<tr>
+			<td>
+				<div class="select">
+				<form method="post" action="<?php echo $formFilter->getAction(); ?>">
+					<table >
+						<tr>
+							<td class="add-edit"><?php echo $formFilter->getElement('p_name');?></td>
+							<td class="btn"><input type="submit" value="<?php echo $tr->translate("SEARCH");?> "/></td>
+						</tr>
+					</table>
+				</form>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="btn" align="right">
+					<?php 
+						$formList = new Application_Form_Frmlist();
+						echo $formList->showAddBuntton($url_new);
+					?>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div style="position: relative; clear: both;">
+		<div class="head_form">
+			<?php echo $tr->translate("TRANSFER_LIST");?>
+		</div>
+		<div class="contain_form">
+			<?php echo $this->list; ?>
+		</div>
+	</div>
+</div><!-- end .right -->

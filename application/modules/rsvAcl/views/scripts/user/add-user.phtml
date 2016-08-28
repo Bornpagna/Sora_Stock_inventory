@@ -1,0 +1,244 @@
+<title>Add User - RSMK</title>
+<?php $form=$this->form; ?>
+<style>
+fieldset.fifthy {	
+	border-right: 0px;
+	width: 50%;	
+}
+table.user td{
+	vertical-align: top;
+	padding-left: 5px;	   
+}
+</style>       
+<script language="javascript">
+      var temp=-1;
+   
+	function validateUser(field)
+	{
+		if(temp==1) return '* User name already exist!';
+		else temp==-1;
+	}
+    function validatePassword(field)
+	{
+    	var com=$('#confirm_password').val();
+    	var pwd=$('#password').val();
+		if(com!=pwd) return '* Password mismatch!';		 
+	}
+</script>
+<script type="text/javascript">
+	jQuery(Document).ready(function(){
+		//binds form submission and fields to the validation engine
+		jQuery('#frm').validationEngine('attach', {promptPosition : "centerRight"});
+		
+	});
+</script>
+<?php 
+	Application_Model_Decorator::removeAllDecorator($form);
+	$cancel_url=$this->url(array(
+		'module'=>'rsvAcl',
+		'controller'=>'user',
+		'action'=>'index',
+	)); 	
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<br/>
+<div class="view-table" style="padding:20px;">
+	<div class="head_form">
+			<?php echo $tr->translate("MENU_RSVACL_USER_ADD_USER");?>	
+	</div>
+	<div class="contain_form">
+		<form id="frm" action="<?php echo $form->getAction(); ?>" method="post" enctype="application/x-www-form-urlencoded" >	
+				<div class="btn" align="right">
+					    <button type="submit" class="positive" name="save">
+					        <img src="<?php echo BASE_URL?>/images/icon/apply2.png" alt=""/>
+					        <?php echo $tr->translate('SAVE');?>
+					    </button>
+					    <a href="<?php echo $cancel_url; ?>" class="negative">
+					        <img src="<?php echo BASE_URL?>/images/icon/cross.png" alt=""/>
+					        <?php echo $tr->translate('CANCEL');?>
+					    </a>
+			   </div>
+					<table class="margin shadow">
+						<tr class="height">
+							<td><?php echo $tr->translate('GENDER_TITLE');?></td>
+							<td><?php echo $form->getElement('title');?></td>
+						</tr>
+						<tr class="height">
+							<td><?php echo $tr->translate('FULL_NAME');?></td>
+							<td><?php echo $form->getElement('fullname');?></td>
+						</tr>
+						<tr class="height">
+							<td><?php echo $tr->translate('USER_NAME');?></td>
+							<td><?php echo $form->getElement('username');?></td>
+						</tr>
+						<tr class="height">
+							<td><?php echo $tr->translate('EMAIL');?></td>
+							<td><?php echo $form->getElement('email');?></td>
+						</tr>			
+						<tr class="height">
+							<td><?php echo $tr->translate('PASSWORD');?></td>
+							<td><?php echo $form->getElement('password');?></td>
+						</tr>
+						<tr class="height">
+							<td><?php echo $tr->translate('RE_PASSWORD');?></td>
+							<td><?php echo $form->getElement('confirm_password');?></td>
+						</tr>
+						<tr class="height">
+							<td><?php echo $tr->translate('USER_TYPE');?></td>
+							<td><?php echo $form->getElement('user_type_id');?></td>
+						</tr>
+						<tr class="height">
+							<td><?php echo $tr->translate("ASS_TO_LOCATION");?></td>
+							<td><?php echo $form->getElement("LocationId");?></td>
+						</tr>	
+						<tr class="height">
+							<td><?php echo $tr->translate("ASS_TO_OTHER_LOCATION");?></td>
+							<td><br /><br />
+								<table class="collape" id="table_order" style="width: 100%;">
+									<tr height="25px">
+										<td class="sub-tdheader" width="20px"><?php echo $tr->translate("NUM");?></td>
+										<td class="sub-tdheader"><?php echo $tr->translate("LOCATION_NAME");?></td>
+									</tr>
+									<input type="hidden" id="identity" name="identity" />
+								</table>
+								<table>
+									 <tr>
+										<td class="new-row">
+											<div class="btn">
+												<button class="positive" type="button" id="new_item"  name= "new_followup" value="New">
+														&nbsp;<img src="<?php echo BASE_URL?>/images/icon/new-row.png" alt=""/><?php echo $tr->translate("ADD");?>
+												</button>
+											</div>
+										</td>
+									</tr>
+							  </table>
+							</td>
+						</tr>					
+					</table>
+					
+			</form>	
+	</div>
+</div>
+						   		
+ <div id="overlay-location" class="web_dialog_overlay"></div>
+		<?php $form_stock = $this->popup_location; ?>
+		<div id="dialog-location" class="web_dialog">
+		<form id="frm-location">
+			<div class="web_dialog_title" align="center"><?php echo $tr->translate("ADD_NEW_LOCATION");?>
+				<a href="#" id="btnCloseLocation" class="cancelDailog"></a>
+			</div>
+			<div class="shadow">
+				<table style="width: 100%; margin:0 auto; padding:10px;">
+					<tr>
+						<td><?php echo $tr->translate("LOCATION_NAME");?></td>
+						<td width="30%"><?php echo $form_stock->getElement("StockName");?></td>
+						<td><?php echo $tr->translate("CON_NAME");?></td>
+						<td width="30%"><?php echo $form_stock->getElement("ContactName");?></td>
+					</tr>
+					<tr>
+						<td><?php echo $tr->translate("CON_NUM");?></td>
+						<td><?php echo $form_stock->getElement("ContactNumber");?></td>
+						<td><?php echo $tr->translate("STOCK_ADD");?></td>
+						<td><?php echo $form_stock->getElement("location_add");?></td>
+					</tr>
+					<tr>
+						<td colspan="2"></td>
+						<td><?php echo $tr->translate("DESC");?></td>
+						<td><?php echo $form_stock->getElement("description");?></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="text-align: center;">
+							<input id="btn_add" Onclick="addNewLocation()" type="button" value="<?php echo $tr->translate("ADD_NEW");?>" />
+							<input id="btncancel_location" class="cancelDailog" type="button" value="<?php echo $tr->translate("CANCEL");?>" />
+						</td>
+						<td colspan="2"></td>
+					</tr>
+		       </table>
+	       </div>
+	     </form>
+ </div>
+<script>
+var index5 = 0;
+var option5 = '<?php echo $this->locations; ?>';
+
+var baseUrl = '<?php echo BASE_URL; ?>';
+var template = '';
+var value = '';
+// add order record
+function addRow() {
+	selectValue();
+	//var value = $("#location_id_1 :selected").attr('label');
+	index5++;
+	template='<tr id="row_order_'+index5+'">';
+	var inp = '';
+	if(index5 == 1) {
+		template+='<td class="quater-input">&nbsp;</td>';
+	} else {
+		template+='<td class="quater-input"><img onClick="deleteRecord('+index5+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+	}
+	template+='<td class="quater-input"><select Onchange="AddLocation('+index5+')" class="validate[required] chzn-select-deselect"  id="location_id_'+index5+'"  name="location_id_'+index5+'" >'+option5+'</select>'+inp+'</td>'; 
+	template+="</tr>";
+	$('#table_order').append(template);
+	if($('#identity').val()!="") {
+		var identity = $('#identity').val();
+		$('#identity').val(identity+','+index5);
+	} else {$('#identity').val(index5);}
+	$("#orderFrm").validationEngine();
+	
+}
+
+
+
+//add default row or record when click
+$('#new_item').click(addRow);
+//add default row or record when ready
+jQuery(document).ready(function(){
+	addRow();
+});
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	$("#row_order_"+index).remove();
+
+	// total price
+}
+
+function AddLocation(){
+	var location_id= $("#LocationId").val();
+	if(location_id==-1){
+		     AddNewLocation(true);
+			
+	  }	
+}
+<?php $url_add_location =  $this->url(array('module'=>'product','controller'=>'index','action'=>'add-new-location')); ?>
+function addNewLocation(){
+	var location_name = $("#StockName").val();
+	var ContactName   = $("#ContactName").val();
+	var ContactNumber = $("#ContactNumber").val();
+	var location_add  = $("#location_add").val();
+	var remark_add    = $("#description").val();
+	validate_text('#StockName');
+	$.ajax({
+        url: "<?php echo $url_add_location;?>",
+        type: "post",
+        data: {'location_name':location_name,'ContactName':ContactName,'ContactNumber':ContactNumber,'location_add':location_add,'remark_add':remark_add},
+        success: function(data){
+           val = $.parseJSON(data);
+            $('#LocationId').append($("<option></option>").attr("value",val['LocationId']).attr("selected",true).text(location_name)); 
+            $('#LocationId').next().val(location_name);
+            document.getElementById("frm-location").reset();
+            HideDialoglocation();
+        },
+        error:function(){
+            alert("faile insert");
+            $("#result").html('There is error while submit');
+        }
+    });
+ 
+}
+</script>

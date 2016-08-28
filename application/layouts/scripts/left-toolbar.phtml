@@ -1,0 +1,534 @@
+<?php 
+	$user_info = new Application_Model_DbTable_DbGetUserInfo();
+	$result = $user_info->getUserInfo();
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage(); 
+	$session_user=new Zend_Session_Namespace('auth');
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+// 	$url_submit =  array($this->url(array('module'=>'product','controller'=>'Index','action'=>'add')), "MENU_ADD");
+// 	$url_cancel =  array($this->url(array('module'=>'product','controller'=>'Index','action'=>'index')), "MENU_CANCEL");
+	
+	//must add edit it
+	$url_pro_add =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'add')), "MENU_PRODUCT_INDEX_ADD");
+	$url_pro_list =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'index')), "MENU_PRODUCT_INDEX_INDEX");
+	$url_category =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'category')), "MENU_PRODUCT_INDEX_CATEGORY");
+	$url_brand = array($this->url(array('module'=>'product','controller'=>'index','action'=>'brand')), "MENU_PRODUCT_INDEX_BRAND");
+	$url_curr =  array($this->url(array('module'=>'product','controller'=>'current-stock','action'=>'index')), "MENU_PRODUCT_CURRENT_STOCK_INDEX");
+	$url_adj =  array($this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'adjust')), "MENU_PRODUCT_ADJUST_STOCK_ADJUST");
+	$url_adj_price =  array($this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'price')), "MENU_PRODUCT_ADJUST_STOCK_ADJUST_PRICE");
+	$url_transfer = array($this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'index')), "MENU_PRODUCT_ADJUST_STOCK_TRANSFER_STOCK");
+	$url_location = array($this->url(array('module'=>'product','controller'=>'index','action'=>'index-location')), "MENU_PRODUCT_INDEX_INDEX_LOCATION");
+	$url_alert = array($this->url(array('module'=>'product','controller'=>'index','action'=>'itemalert')), "MENU_PRODUCT_INDEX_ITEMALERT");
+	//module purchase
+	$url_purchase =  array($this->url(array('module'=>'purchase','controller'=>'index','action'=>'index')), "MENU_PURCHASE_INDEX_INDEX");
+	$url_add_purchase = array($this->url(array('module'=>'purchase','controller'=>'index','action'=>'add-purchase')), "MENU_PURCHASE_INDEX_ADD_PURCHASE");
+	$url_vendor = array($this->url(array('module'=>'purchase','controller'=>'vendor','action'=>'index')), "MENU_PURCHASE_VENDOR_INDEX");
+	$url_vendor_add = array($this->url(array('module'=>'purchase','controller'=>'vendor','action'=>'add')), "MENU_PURCHASE_VENDOR_ADD");
+	$url_return = array($this->url(array('module'=>'purchase','controller'=>'return','action'=>'index')), "MENU_PURCHASE_RETURN");
+	$url_return_vendor_in = array($this->url(array('module'=>'purchase','controller'=>'return','action'=>'return-in')), "MENU_PURCHASE_RETURN_IN");
+	// module sales
+	$url_sales_list = array($this->url(array('module'=>'sales','controller'=>'sales-order','action'=>'index')), "MENU_SALES_SALES_ORDER_INDEX");
+	$url_sales_add = array($this->url(array('module'=>'sales','controller'=>'sales-order','action'=>'sales')), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_ORDER");
+	$url_sales_quote = array($this->url(array('module'=>'sales','controller'=>'sales-order','action'=>'add-customer-quote')), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_QUOTE");
+	$url_cust_list = array($this->url(array('module'=>'sales','controller'=>'customer','action'=>'index')), "MENU_SALES_CUSTOMER_INDEX");
+	$url_add_cust = array($this->url(array('module'=>'sales','controller'=>'customer','action'=>'add')), "MENU_SALES_CUSTOMER_ADD");
+	$url_sals_agent = array($this->url(array('module'=>'sales','controller'=>'sale-agent','action'=>'index')), "MENU_SALES_AGENT");
+	$url_return_in = array($this->url(array('module'=>'sales','controller'=>'return','action'=>'index')), "MENU_SALES_RETURN_INT");
+	$url_return_out = array($this->url(array('module'=>'sales','controller'=>'return','action'=>'return-out')), "MENU_SALES_RETURN_OUT");
+	
+	//module user 
+	$url_user_list = array($this->url(array('module'=>'rsvAcl','controller'=>'user','action'=>'index')), "MENU_RSVACL_USER_INDEX");
+	$url_user_add = array($this->url(array('module'=>'rsvAcl','controller'=>'user','action'=>'add-user')), "MENU_RSVACL_USER_ADD_USER");
+	$url_add_user_access = array($this->url(array('module'=>'rsvAcl','controller'=>'user-access','action'=>'index')), "MENU_RSVACL_USER_ACCESS_ADD");
+	$url_user_acl_list = array($this->url(array('module'=>'rsvAcl','controller'=>'acl','action'=>'index')), "MENU_RSVACL_USER_ACL_LIST");
+	$url_user_type = array($this->url(array('module'=>'rsvAcl','controller'=>'user-type','action'=>'index')), "MENU_RSVACL_USER_TYPE_LIST");
+	
+	//module report$url_report_summary
+	$url_report_list = array($this->url(array('module'=>'report','controller'=>'index','action'=>'index')), "MENU_REPORT_INDEX_INDEX");
+	$url_report_sale = array($this->url(array('module'=>'report','controller'=>'index','action'=>'index')), "MENU_REPORT_SALES_INDEX");
+	$url_report_summary = array($this->url(array('module'=>'report','controller'=>'index','action'=>'rpt-summary')), "MENU_REPORT_INDEX_RPT_SUMMARY");
+	$url_report_pro = array($this->url(array('module'=>'report','controller'=>'product','action'=>'index')), "MENU_REPORT_PRODUCT_INDEX");
+	$url_report_purchase = array($this->url(array('module'=>'report','controller'=>'index','action'=>'rptpurchase')), "MENU_REPORT_PURCHASE_INDEX");
+	$url_report_transfer = array($this->url(array('module'=>'report','controller'=>'index','action'=>'rpt-transfer')), "MENU_REPORT_INDEX_RPT-TRANSFER");
+	$url_report_all_in_one = array($this->url(array('module'=>'report','controller'=>'index','action'=>'rpt-product-detail')), "MENU_REPORT_INDEX_RPT_PRODUCT_DETAIL");
+	$url_chart_po =  array($this->url(array('module'=>'report','controller'=>'index','action'=>'pochart')), "MENU_REPORT_INDEX_POCHART");
+	$url_chart_so =  array($this->url(array('module'=>'report','controller'=>'index','action'=>'sochart')), "MENU_REPORT_INDEX_SOCHART");
+	?>
+<style>
+	.accordionContent li img{
+		height: 24px;
+		width: 24px;	
+	}
+	
+	.nav1,.nav2{
+		overflow: auto;	
+		display: block;	
+	}
+	.nav1img{
+		float: left;		
+	}
+	.nav2img{
+		float: left;
+		padding-top: 3px;	
+	}
+	.navtext{
+		float: left;
+		padding: 3px;
+		font-size: 13px;
+	}
+	.nav2last{
+		margin-bottom: -1px;	
+	}
+	.accordionContent ul li{
+	 border-bottom: 1px solid #bbb;
+	}
+		
+</style>
+<div style="width:95%; border-right: 1px solid #bbb; border-bottom: 1px solid #bbb;">
+	<div class="accordionButton" style="font-weight:normal;">
+		<div class="nav1">
+	         <div class="nav1img">
+	         	<img src="<?php echo BASE_URL; ?>/images/icon-inventory.png" alt="">
+	         </div>
+	         <div class="navtext"><?php echo $tr->translate("INVENTORY")?></div>
+        </div>
+	<!-- <img src="<?php echo BASE_URL; ?>/images/icon4.gif" alt="" />INVENTORY -->
+	
+	</div>
+		<div class="accordionContent" style="display: none;">
+            	<ul>
+            	<?php if($result["level"]==1 OR $result["level"]==2 ){ ?>
+            		<li>
+            			<a id="add" class="add" href="<?php echo $url_pro_add[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-new-products.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_pro_add[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            	<?php }?>
+            		<li>
+            			<a href="<?php echo $url_pro_list[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_pro_list[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_curr[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/curr-stock.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_curr[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<?php if($result["level"]==3 ){ ?>
+            		<li>
+            			<a href="<?php echo $url_adj[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/edit1.jpg" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_adj[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_transfer[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/products-transfer.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_transfer[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<?php }?>
+            		<?php if($result["level"]==1 OR $result["level"]==2 ){ ?>
+            		<li>
+            			<a href="<?php echo $url_adj[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/edit1.jpg" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_adj[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_transfer[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/products-transfer.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_transfer[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_category[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/categories-icon.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_category[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_brand[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/categories-icon.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_brand[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		
+            		
+            		<li>
+            			<a href="<?php echo $url_adj_price[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-dollar.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_adj_price[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_location[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/home-icon.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_location[1])?></div>
+					        </div>
+	            		</a>
+            		</li>   
+            		<li>
+            			<a href="<?php echo $url_alert[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/setting.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_alert[1])?></div>
+					        </div>
+	            		</a>
+            		</li>   
+            		<?php }?>                
+            	</ul>        
+        </div>
+        <?php //if($result["level"]==1 OR $result["level"]==2 OR $result["level"]==4){ ?>
+		<div class="accordionButton" style="font-weight:normal;">
+			<div class="nav1">
+		         <div class="nav1img">
+		         	<img src="<?php echo BASE_URL; ?>/images/purchase.png" alt="">
+		         </div>
+		         <div class="navtext"><?php echo $tr->translate("PURCHASING")?></div>
+	        </div>
+        </div>
+		<div class="accordionContent" style="display: none;">
+        		<ul>
+            		<li>
+            			<a href="<?php echo $url_purchase[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-purchase.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_purchase[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<?php if($result["level"]==1 OR $result["level"]==2){?>
+            		<li>
+            			<a href="<?php echo $url_add_purchase[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-new-purchase.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_add_purchase[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		
+            		<li>
+            			<a href="<?php echo $url_return[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/stock-out.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_return[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_return_vendor_in[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/stock_in.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_return_vendor_in[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_vendor[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-vendor.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_vendor[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_vendor_add[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-new-vendor.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_vendor_add[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<?php }?>
+            </ul>                      
+        </div>
+        <?php //}?>
+		<div class="accordionButton" style="font-weight:normal;">
+			<div class="nav1">
+		         <div class="nav1img">
+		         	<img src="<?php echo BASE_URL; ?>/images/sales.png" alt="">
+		         </div>
+		         <div class="navtext"><?php echo strtoupper($tr->translate("SALES")); ?></div>
+	        </div>
+        </div>
+		<div class="accordionContent" style="display: none;">
+           <ul>
+            		<li>
+            			<a href="<?php echo $url_sales_list[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-sales.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_sales_list[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_sales_add[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-new-sales.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_sales_add[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<?php if($result["level"]==3 ){ ?>
+            		<li>
+            			<a href="<?php echo  $url_return_in[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/stock_in.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_return_in[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo  $url_return_out[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/stock-out.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_return_out[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<?php };?>
+            		
+            		<?php if($result["level"]==1 OR $result["level"]==2 ){ ?>
+            		<li>
+            			<a href="<?php echo  $url_return_in[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/stock_in.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_return_in[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo  $url_return_out[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/stock-out.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_return_out[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<!--  
+            		<li>
+            			<a href="<?php //echo $url_sales_quote[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php //echo BASE_URL; ?>/images/add-new-sales-quote.png" alt="" /></div>
+						         <div class="navtext"><?php //echo $tr->translate($url_sales_quote[1])?></div>
+					        </div>
+	            		</a>
+            		</li> -->
+            		<li>
+            			<a href="<?php echo $url_cust_list[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-customer.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_cust_list[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_add_cust[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-new-customer.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_add_cust[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_sals_agent[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-customer.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_sals_agent[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		
+            		<?php }?> 
+           </ul>               
+        </div>
+        <?php if($result["level"]==1 OR $result["level"]==2 ): ?>
+        <div class="accordionButton" style="font-weight:normal;">
+			<div class="nav1">
+		         <div class="nav1img">
+		         	<img src="<?php echo BASE_URL; ?>/images/icon-library.png" alt="">
+		         </div>
+		         <div class="navtext"><?php echo strtoupper($tr->translate("REPORT"));?></div>
+	        </div>
+        </div>
+		<div class="accordionContent" style="display: none;">
+        	<ul>
+        			<li>
+            			<a href="<?php echo $url_report_all_in_one[0];?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/pur_report.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate( $url_report_all_in_one[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+        			<li>
+            			<a href="<?php echo $url_report_purchase[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/pur_report.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_report_purchase[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_report_sale[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/sales-report.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_report_sale[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_report_summary[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/pro-report.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_report_summary[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_report_transfer[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/sales-report.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_report_transfer[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_chart_po[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/chart-po.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_chart_po[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_chart_so[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/chart-so.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_chart_so[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            </ul>                        
+        </div>
+        <?php else:?>
+         <div class="accordionButton" style="font-weight:normal;">
+				<div class="nav1">
+			         <div class="nav1img">
+			         	<img src="<?php echo BASE_URL; ?>/images/icon-library.png" alt="">
+			         </div>
+			         <div class="navtext"><?php echo strtoupper($tr->translate("REPORT"));?></div>
+		        </div>
+	        </div>
+			<div class="accordionContent" style="display: none;">
+	        	<ul>
+	            		<li>
+	            			<a href="<?php echo $url_report_sale[0]; ?>">
+		            			<div class="nav2">
+							         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/sales-report.png" alt="" /></div>
+							         <div class="navtext"><?php echo $tr->translate($url_report_sale[1])?></div>
+						        </div>
+		            		</a>
+	            		</li> 
+	            		<li>
+	            			<a href="<?php echo $url_report_transfer[0]; ?>">
+		            			<div class="nav2">
+							         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/sales-report.png" alt="" /></div>
+							         <div class="navtext"><?php echo $tr->translate($url_report_transfer[1])?></div>
+						        </div>
+		            		</a>
+	            		</li> 
+	            </ul>                        
+	        </div>
+        <?php endif;?>
+        <?php if($result["level"]==1){ ?>
+        <div class="accordionButton" style="font-weight:normal;">
+			<div class="nav1">
+		         <div class="nav1img">
+		         	<img src="<?php echo BASE_URL; ?>/images/clients.png" alt="">
+		         </div>
+		         <div class="navtext"><?php echo strtoupper($tr->translate("USER_ACCESS"));?></div>
+	        </div>
+        </div>
+		<div class="accordionContent" style="display: none;">
+        	<ul>
+            		<li>
+            			<a href="<?php echo $url_user_list[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-user.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_user_list[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_user_add[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-user.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_user_add[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_add_user_access[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/add-user-access.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_add_user_access[1])?></div>
+					        </div>
+	            		</a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $url_user_acl_list[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-user-access.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_user_acl_list[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		<li>
+            			<a href="<?php echo $url_user_type[0]; ?>">
+	            			<div class="nav2">
+						         <div class="nav2img"><img src="<?php echo BASE_URL; ?>/images/icon-list-user-access.png" alt="" /></div>
+						         <div class="navtext"><?php echo $tr->translate($url_user_type[1])?></div>
+					        </div>
+	            		</a>
+            		</li> 
+            		
+            </ul>                        
+        </div>
+        <?php }?>
+       <!--  <div class="accordionButton" style="font-weight:normal;">
+        	<a href="<?php //echo $this->url(array('module'=>'','controller'=>'index','action'=>'logout', 'value'=>1));?>" >
+			<div class="nav1">
+		         <div class="nav1img">
+		         	<img src="<?php //echo BASE_URL; ?>/images/icon-close.png" alt="">
+		         </div>
+		         <div class="navtext"><?php //echo strtoupper($tr->translate("Exit"));?></div>
+	        </div>
+	        </a>
+        </div> -->
+		
+</div>

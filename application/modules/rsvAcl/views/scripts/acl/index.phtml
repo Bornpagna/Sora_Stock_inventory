@@ -1,0 +1,20 @@
+<?php 
+	$url_new = $this->url(array('module'=>'rsvAcl','controller'=>'acl','action'=>'add-acl',	));
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<title><?php echo $tr->translate("VEIW_USER_CONTROLLER");?></title>
+<div class="right" style="width: 97%; padding: 10px;">
+	<div class="btn" align="right">
+		<a href="<?php echo $url_new;?>">
+			<img alt="" src="<?php echo BASE_URL?>/images/icon/add.png">
+			<?php echo $tr->translate('ADD');?>
+		</a>
+	</div>
+	
+	<div class="head_form">
+		<?php echo $tr->translate('VEIW_USER_CONTROLLER');?>
+	</div>
+	<div class="contain_form">
+		<?php echo $this->form;?>
+	</div>
+</div>
