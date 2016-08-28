@@ -1,0 +1,143 @@
+//---------------------more--------------------
+      var more = [];        
+      more.push( {
+          "id" : 'pdbs_analysis_project_disbursement',
+          "text" : 'Project of Disbursement',
+          "value" : 'pdbs_analysis_project_disbursement',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });   
+	   more.push( {
+          "id" : 'pdbs_analysis_actual_disbursement',
+          "text" : 'Actual of Disbursement',
+          "value" : 'pdbs_analysis_actual_disbursement',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       }); 
+	   more.push( {
+          "id" : 'pdbs_analysis_payment_order',
+          "text" : 'Payment Order',
+          "value" : 'pdbs_analysis_payment_order',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_tracking_wa',
+          "text" : 'Tracking W/A',
+          "value" : 'pdbs_analysis_tracking_wa',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_payment_order',
+          "text" : 'Payment Order',
+          "value" : 'pdbs_analysis_payment_order',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_more_support',
+          "text" : 'more Support',
+          "value" : 'pdbs_analysis_more_support',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_sale_bidding',
+          "text" : 'Sale of Bidding',
+          "value" : 'pdbs_analysis_sale_bidding',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+		more.push( {
+          "id" : 'pdbs_analysis_capitalized_amount',
+          "text" : 'Capitalized Amount',
+          "value" : 'pdbs_analysis_capitalized_amount',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_capitalized_amount',
+          "text" : 'Capitalized Amount',
+          "value" : 'pdbs_analysis_capitalized_amount',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_capitalized_amount',
+          "text" : 'Capitalized Amount',
+          "value" : 'pdbs_analysis_capitalized_amount',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_capitalized_amount',
+          "text" : 'Capitalized Amount',
+          "value" : 'pdbs_analysis_capitalized_amount',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_capitalized_amount',
+          "text" : 'Capitalized Amount',
+          "value" : 'pdbs_analysis_capitalized_amount',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   more.push( {
+          "id" : 'pdbs_analysis_capitalized_amount',
+          "text" : 'Capitalized Amount',
+          "value" : 'pdbs_analysis_capitalized_amount',
+          "showcheck" : true,
+          complete : true,
+          "isexpand" : false,
+          "checkstate" : 0,
+          "hasChildren" : false
+       });
+	   portfolio.push( {
+  	      "id" : "dudget",
+  	      "text" : "more",
+  	      "value" : "more",
+  	      "showcheck" : true,
+  	      complete : true,
+  	      "isexpand" : false,
+  	      "checkstate" : 0,
+  	      "hasChildren" : true,
+  	      "ChildNodes" : more
+  	    });  

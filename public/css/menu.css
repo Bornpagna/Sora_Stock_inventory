@@ -1,0 +1,106 @@
+#nav {
+    position:relative;
+    z-index:2;
+}
+#nav ul {
+    //background-color:#B8D1F8;
+	//background-color:#0f84d6;
+   // border:1px solid #000C80;
+    height:50px;
+    list-style:none outside none;
+    margin:0;
+    padding-top:10px;
+}
+#nav ul li span:hover{
+    border:none !importance;
+	background:none !importance;
+}
+
+#nav ul ul {
+    background-color:#FFFFFF;
+    border:1px solid #000;
+    display:none;
+    height:auto;
+    left:0;
+    padding:0;
+    position:absolute;
+    top:38px;
+    width:250px;
+    background-image:-webkit-gradient(left center , #F8FAFF 0%, #B8D1F8 15%, #FFFFFF 15%, #FFFFFF 100%);
+    background-image:-moz-linear-gradient(left center , #F8FAFF 0%, #B8D1F8 15%, #FFFFFF 15%, #FFFFFF 100%);
+}
+#nav ul ul ul {
+    display:none;
+    left:250px;
+    position:absolute;
+    top:-1px;
+    border:1px solid #000;
+    width:210px;
+}
+#nav ul li {
+    float:left;
+    margin-right:1px;
+    position:relative;
+}
+#nav ul li a {
+    border:1px solid #B8D1F8;
+    color:#000;
+    cursor:default;
+    display:block;
+    font:12px Tahoma,Arial;
+    padding:1px 3px 4px;
+    text-decoration:none;
+}
+#nav ul li span {
+	-webkit-border-radius: 4px 4px 0 0;
+	color: #222;
+	display: block;
+	padding: 32px 23px 4px;
+}
+#nav ul ul li span {
+    background:url("../images/s.gif") no-repeat scroll 97% center transparent;
+}
+#nav ul ul li {
+    float:none;
+    margin-right:0;
+    padding:1px;
+    text-indent:10px;
+}
+#nav ul ul li a,#nav ul ul li span {
+    border:1px solid transparent;
+    padding:10px 3px 10px 0px; cursor:pointer;
+}
+#nav ul li a:hover{ border:1px solid #ccc;}
+#nav ul ul li a img,#nav ul ul li span img {
+    border-width:0;
+    float:left;
+	margin-top:-8px;
+    margin-right:5px;
+    vertical-align:middle;
+}
+#nav ul li:hover > a {
+    background-color:#FFF2C8;
+    border:1px solid #000C80;
+    color:#000;
+}/*
+#nav ul li:hover > a,#nav ul li:hover > span {
+    background-color:#FFF2C8;
+    border:1px solid #000C80;
+    color:#000;
+}*/
+//#nav 
+#nav ul li:>hover span.file{ background:none; border:none;}
+#nav .file{ cursor:pointer;}
+#nav .file:hover > span{ border:none; background:none !importance; }
+#nav img.close {
+    display:none;
+    height:100%;
+    left:0;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:-1;
+}
+#nav ul li span:focus + ul,#nav ul li ul:hover,#nav ul:hover + img.close {
+    display:block;
+}

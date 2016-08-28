@@ -1,0 +1,44 @@
+/*** Case Color Style ***/
+.colorcase{
+	width: 30px;
+	height: 30px;	
+	border-radius:25px;
+	border:2px solid #a1a1a1;
+	display: inline-block;
+}
+.red{
+	background-color: #FF0000;
+}
+.yellow{
+	background-color: #FFFF00;
+}
+.green{
+	background-color: #008B00;
+}
+.blue{
+	background-color: #0000FF;
+}
+.black{
+	background-color: #000000;
+}
+.center{
+	margin: 0px auto;
+}
+/*** Fields width auto ***/
+.autowidth{
+	width: auto !important;
+}
+
+/*** Custom Style Input box ***/
+#case_info td.add-edit input[type="text"], 
+#case_info td.add-edit select,
+#case_info td.add-edit textarea,
+#community td.add-edit input[type="text"], 
+#community td.add-edit select,
+#community td.add-edit textarea{
+	width: 400px;
+}
+
+#individual td.add-edit textarea{
+	width: 260px;
+}
