@@ -72,7 +72,7 @@ tr.normal{
     background: none repeat scroll 0 0 #FFFFFF;
 }
 tr.alternate{
-    background: none repeat scroll 0 0 #eeeeee;
+    background: #f9f9f9;
 }
 
 /* :hover is a pseudo selector to use to set the mouseover attributes */
@@ -139,8 +139,11 @@ table.collape {
 }
 
 table.collape td{
-	//padding: 0 5px 0 5px;
-	border: 1px solid #CCCCCC;
+	//
+	padding: 0 5px 0 5px;
+	border: 1px solid #ddd;
+	font-family: "Open Sans", sans-serif;
+	font-size: 14px;
 }
 
 table.collape td.no-border{
@@ -426,6 +429,8 @@ table.collape a:link {
 }
 table.collape a {
     text-decoration: none;
+    /* font-family: "Open Sans", sans-serif; */
+    /* font-size: 12px; */
 }
 a:link {
     outline: medium none;
