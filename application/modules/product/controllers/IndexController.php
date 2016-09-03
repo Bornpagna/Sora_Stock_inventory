@@ -663,40 +663,7 @@ public function init()
 		echo Zend_Json::encode($result);
 		exit();
 	}
-	public function testAction(){
-		//echo "this is testing only ";
-	   // $this->_helper->layout()->disableLayout();
-	   if($this->getRequest()->getPost()){
-	   	$data = $this->getRequest()->getPost();
-	   	print_r($data);exit();
-	   	
-	   }
-		$formProduct = new Application_Form_FrmProduct(null);
-		$formStockAdd = $formProduct->AddProductForm(null);
-		Application_Model_Decorator::removeAllDecorator($formStockAdd);
-		$this->view->form = $formStockAdd;
-			
-		//control
-		$formAddProdcut = new Application_Form_FrmAction(null);
-		$FrmAdd = $formAddProdcut->AllAction(null);
-		Application_Model_Decorator::removeAllDecorator($FrmAdd);
-		$this->view->control = $FrmAdd;
-			
-		///view on select form
-		$items = new Application_Model_GlobalClass();
-		$locationRows = $items->getLocationOption();
-		$this->view->locations = $locationRows;
-			
-		//for add location
-		$formpopup = new Application_Form_FrmPopup(null);
-		$formAdd = $formpopup->popuLocation(null);
-		Application_Model_Decorator::removeAllDecorator($formAdd);
-		$this->view->form_addstock = $formAdd;
-			
-		$form_catory = $formpopup->popupCategory(null);
-		Application_Model_Decorator::removeAllDecorator($form_catory);
-		$this->view->form_category = $form_catory;
-	}
+	
 	public function checkCodeAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -799,7 +766,6 @@ public function init()
 		$items = new Application_Model_GlobalClass();
 		$itemRows = $items->getProductOption();
 		$this->view->items = $itemRows;
-			
 		$rows = $dbprice->getAlertbyItem($id);
 		$this->view->rowalert = $rows;
 	}
@@ -814,9 +780,12 @@ public function init()
 			}
 			echo Zend_Json::encode($result);
 			exit();
-			
 		}
 	}
+	function testAction(){
+		
+	}
+		
 	
 }
 

@@ -20,10 +20,6 @@ class purchase_indexController extends Zend_Controller_Action
 		
 		$list = new Application_Form_Frmlist();
 		$db = new Application_Model_DbTable_DbGlobal();
-// 		$vendor_sql = "SELECT p.order_id, p.order, p.date_order, p.status, v.v_name, p.all_total,u.username
-// 						FROM tb_purchase_order AS p ,
-// 						tb_vendor AS v,rsv_acl_user u
-// 		                WHERE v.vendor_id=p.vendor_id AND u.user_id = p.user_mod ";
 		$vendor_sql="SELECT 
 				  p.order_id,
 				  p.order,
@@ -80,9 +76,9 @@ class purchase_indexController extends Zend_Controller_Action
 		// url link to update purchase order
 		
 		$urlEdit = BASE_URL . "/purchase/index/update-purchase-order";
-		$this->view->list=$list->getCheckList(1, $columns, $rows, array('order'=>$link),$urlEdit);
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('order'=>$link),$urlEdit);
 	}
-	public function addPurchaseAction(){
+	public function addAction(){
 		$db = new Application_Model_DbTable_DbGlobal();
 		
 		if($this->getRequest()->isPost()) {
@@ -126,12 +122,6 @@ class purchase_indexController extends Zend_Controller_Action
 		$formViewControl = $formControl->AllAction(null);
 		Application_Model_Decorator::removeAllDecorator($formViewControl);
 		$this->view->control = $formViewControl;
-		
-// 		//for search
-// 		$search = new purchase_Form_FrmSearch();
-// 		$frmsearch= $search->formSearch();
-// 		Application_Model_Decorator::removeAllDecorator($frmsearch);
-// 		$this->view->get_frmsearch= $frmsearch;
 		
 		//for view left purchase order 
 		$vendor_sql = "SELECT p.order, p.all_total,p.paid,p.balance
