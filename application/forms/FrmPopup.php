@@ -134,23 +134,23 @@ class Application_Form_FrmPopup extends Zend_Form
     	$db=new Application_Model_DbTable_DbGlobal();
     	
     	$vendor_Element = new Zend_Form_Element_Text('vendor_name');
-    	$vendor_Element ->setAttribs(array('placeholder' => 'Enter Vendor Name','class' => 'validate[required]'));
+    	$vendor_Element ->setAttribs(array('placeholder' => 'Enter Vendor Name','class' => 'form-control validate[required]'));
     	$this->addElement($vendor_Element); 
 
     	$contact_Element = new Zend_Form_Element_Text('txt_contact_name');
-    	$contact_Element ->setAttribs(array('placeholder' => 'Contact To','class' => 'validate[required]'));
+    	$contact_Element ->setAttribs(array('placeholder' => 'Contact To','class' => 'form-control validate[required]'));
     	$this->addElement($contact_Element);
     	
     	$phone_Element = new Zend_Form_Element_Text('v_phone');
-    	$phone_Element ->setAttribs(array('placeholder' => 'Contact Number'));
+    	$phone_Element ->setAttribs(array('placeholder' => 'Contact Number','class'=>'form-control'));
     	$this->addElement($phone_Element);
     	
     	$address_Element = new Zend_Form_Element_Textarea('txt_address');
-    	$address_Element ->setAttribs(array('placeholder' => 'Customer Address'));
+    	$address_Element ->setAttribs(array('placeholder' => 'Customer Address','rows'=>"3",'class'=>'form-control'));
     	$this->addElement($address_Element);
 
     	 $email_Element = new Zend_Form_Element_Text('txt_mail');
-    	$email_Element ->setAttribs(array('placeholder' => 'Email Address','class' => 'validate[custom[email]]'));
+    	$email_Element ->setAttribs(array('placeholder' => 'Email Address','class' => 'form-control validate[custom[email]]'));
     	$this->addElement($email_Element);
     	    	
      	return $this;

@@ -11,6 +11,9 @@ class Application_Form_Frmsearch extends Zend_Form
 		//get sales or purchase id text
 		$nameValue = $request->getParam('order');
 		$nameElement = new Zend_Form_Element_Text('order');
+		$nameElement->setAttribs(array(
+				'class'=>'form-control'
+				));
 		$nameElement->setValue($nameValue);
 		$this->addElement($nameElement);
 		
@@ -26,12 +29,12 @@ class Application_Form_Frmsearch extends Zend_Form
 		$vendor_element->setMultiOptions($options);
 		$vendor_element->setAttribs(array(
 				'id'=>'vendor_id',
+				'class'=>'form-control'
 				//'onchange'=>'this.form.submit()',
 				//'class'=>'demo-code-language',
 		));
 		$vendor_element->setValue($vendorValue);
 		$this->addElement($vendor_element);
-		
 
 		$rs=$db->getGlobalDb( ('SELECT agent_id, name FROM tb_sale_agent WHERE name!="" ORDER BY agent_id DESC'));
 		$options=array($tr->translate('Please_Select'));
@@ -50,32 +53,28 @@ class Application_Form_Frmsearch extends Zend_Form
 		/////////////Date of lost item		/////////////////
 		$startDateValue = $request->getParam('search_start_date');
 		$endDateValue = $request->getParam('search_end_date');
+		
+		//
 		if($endDateValue==""){
-			$endDateValue=date("Y-m-d");
-			$startDateValue=date("Y-m-d");
+			$endDateValue=date("m-d-Y");
+			$startDateValue=date("m-d-Y");
 		}
 		
 		
 		$startDateElement = new Zend_Form_Element_Text('search_start_date');
 		$startDateElement->setValue($startDateValue);
+		$startDateElement->setAttribs(array(
+				'class'=>'form-control form-control-inline input-small date-picker'
+		));
 		
 		$this->addElement($startDateElement);
 		$endDateElement = new Zend_Form_Element_Text('search_end_date');
 		
 		$endDateElement->setValue($endDateValue);
 		$this->addElement($endDateElement);
-		
-		//status of purchase or sales
-// 		$statusValue = $request->getParam('status');
-// 		$optionsStatus=array(''=>'Please Select',1=>'Quote',2=>'Open',3=>'In Progress',4=>'Invoice',5=>'Paid',6=>"Cancel");
-// 		$status=new Zend_Form_Element_Select('status');
-// 		$status->setMultiOptions($optionsStatus);
-// 		$status->setattribs(array(
-// 				'id'=>'status',
-// 			//	'onchange'=>'this.form.submit()',
-// 		));
-// 		$status->setValue($statusValue);
-// 		$this->addElement($status);
+		$endDateElement->setAttribs(array(
+				'class'=>'form-control form-control-inline input-small date-picker'
+		));
 		
 		$rs=$db->getGlobalDb('SELECT DISTINCT Name,LocationId FROM tb_sublocation WHERE Name!="" AND status=1 ');
 		$options=array($tr->translate('Please_Select'));
@@ -86,12 +85,13 @@ class Application_Form_Frmsearch extends Zend_Form
 		$location_id->setAttribs(array(
 				'id'=>'LocationId',
 				'onchange'=>'this.form.submit()',
+				'class'=>'form-control'
+				
 		));
 		$location_id->setValue($locationValue);
 		$this->addElement($location_id);
 	
 	   ////////////////////////////////////////////////*******////////////////////////////////
-		
 		//Customer
 		$rowCustomers=$db->getGlobalDb('SELECT customer_id, cust_name FROM tb_customer WHERE cust_name!="" AND is_active=1 ORDER BY customer_id DESC');
 		$agentValue = $request->getParam('customer_id');
@@ -101,7 +101,8 @@ class Application_Form_Frmsearch extends Zend_Form
 		$customer_id->setMultiOptions($optionsCUS);
 		$customer_id->setattribs(array(
 				'id'=>'customer_id',
-				'class'=>'validate[required]'
+				'class'=>'validate[required]',
+				'class'=>'form-control'
 		));
 		$customer_id->setValue($agentValue);
 		$this->addElement($customer_id);
@@ -114,11 +115,13 @@ class Application_Form_Frmsearch extends Zend_Form
 		$statusCO->setMultiOptions($optionsCOStatus);
 		$statusCO->setattribs(array(
 				'id'=>'status',
+				'class'=>'form-control'
 			//	'onchange'=>'this.form.submit()',
 		));
 		if($statusCOValue==""){
 			//$statusCOValue=4;
 		}
+		
 		$statusCO->setValue($statusCOValue);
 		$this->addElement($statusCO);
 		

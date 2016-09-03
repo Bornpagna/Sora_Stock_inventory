@@ -31,7 +31,7 @@ class Application_Form_purchase extends Zend_Form
     	if(!empty($rs)) foreach($rs as $read) $options[$read['vendor_id']]=$read['v_name'];
     	$vendor_id=new Zend_Form_Element_Select('v_name');
     	$vendor_id ->setAttribs(array(
-    			'class' => 'validate[required]',
+    			'class' => 'validate[required] form-control',
     			'Onchange'=>'getCustomerInfo()'
     			));
     	$vendor_id->setMultiOptions($options);
@@ -39,27 +39,8 @@ class Application_Form_purchase extends Zend_Form
     	$vendor_id->setValue($customerValue);
     	$this->addElement($vendor_id);
     	
-    	
-    	
-    	
-//     	$rowsCategory= $db->getGlobalDb('SELECT CategoryId, Name FROM tb_category ORDER BY CategoryId DESC ');
-//     	$options = "";
-//     	if($result["level"]==1 OR $result["level"]==2){
-//     		$options = array("1"=>"Defaul Catogory","-1"=>"Add New Category");
-//     	}
-//     	if($rowsCategory) {
-//     		foreach($rowsCategory as $readCategory) $options[$readCategory['CategoryId']]=$readCategory['Name'];
-//     	}
-//     	$categoryElement = new Zend_Form_Element_Select('category');
-//     	$categoryElement->setAttribs(array('class' => 'validate[required] demo-code-language',"Onchange"=>"showPopupCategory()"));
-//     	$categoryElement->setMultiOptions($options);
-//     	$this->addElement($categoryElement);
-    	
-    	
-    	
-    	
     	$roder_element= new Zend_Form_Element_Text("txt_order");
-    	$roder_element->setAttribs(array('placeholder' => 'Optional',
+    	$roder_element->setAttribs(array('placeholder' => 'Optional','class'=>'form-control',
     			"onblur"=>"CheckPOInvoice();"));
     	$this->addElement($roder_element);
     	
@@ -74,30 +55,7 @@ class Application_Form_purchase extends Zend_Form
     	$phoneElement = new Zend_Form_Element_Text('txt_phone');
     	$phoneElement->setAttribs(array('placeholder' => 'Enter Phone Number'));
     	$this->addElement($phoneElement);
-    	
-    	
-//     	$option_loc = 'SELECT LocationId, Name FROM tb_sublocation WHERE Name!="" ';
-//     	if($result['level']!=1 || $result['level']!=2){//if this isn't super user or inventory manager
-//     		$option_loc .= " AND LocationId = ".$result['location_id'];//select only this user location
-//     	}
-    	
-//     	$option_loc .= ' ORDER BY LocationId DESC';
-//     	$rs=$db->getGlobalDb($option_loc);
-//     	$productValue = $request->getParam('LocationId');
-//     	$option =array();
-//     	if($result['level']==1 || $result['level']==2){//if this is super user
-//    			$option =array("1"=>"Defaul Location","-1"=>"Add New Location");
-//     	}
-    	
-//     	if(!empty($rs)) foreach($rs as $read) $option[$read['LocationId']]=$read['Name'];
-//     	$locationID=new Zend_Form_Element_Select('LocationId');
-//     	$locationID->setMultiOptions($option);
-//     	$locationID->setattribs(array('id'=>'LocationId',
-//     			'Onchange'=>'AddLocation()',
-//     			'class'=>'demo-code-language'
-//     			));
-//     	$locationID->setValue($productValue);
-//     	$this->addElement($locationID);  
+    
     	
     	$user= $this->GetuserInfo();
     	$options="";
@@ -113,7 +71,7 @@ class Application_Form_purchase extends Zend_Form
     	$productValue = $request->getParam('LocationId');
     	if(!empty($rs)) foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
     	$locationID = new Zend_Form_Element_Select('LocationId');
-    	$locationID ->setAttribs(array('class'=>'validate[required]'));
+    	$locationID ->setAttribs(array('class'=>'validate[required] form-control'));
     	$locationID->setMultiOptions($options);
     	$locationID->setattribs(array(
     			'id'=>'LocationId',
@@ -207,7 +165,7 @@ class Application_Form_purchase extends Zend_Form
     	
     	$statusElement = new Zend_Form_Element_Select('status');
     	$opt_status = array(""=>"Please Select status",2=>'Open',3=>'In Progress',4=>'Paid',5=>"Recieved",6=>'Cancel');
-    	$statusElement ->setAttribs(array('class'=>'validate[required] ','onchange'=>'calculatePrice();'));
+    	$statusElement ->setAttribs(array('class'=>'validate[required] form-control','onchange'=>'calculatePrice();'));
     	$statusElement->setMultiOptions($opt_status);
 //     	$statusElement->setAttribs(array('1'=>'Active',));
 //     	$statusElement->setValue("Open");
@@ -215,13 +173,13 @@ class Application_Form_purchase extends Zend_Form
 
     	$date_inElement = new Zend_Form_Element_Text('date_in');
     	$date =new Zend_Date();
-    	$date_inElement ->setAttribs(array('class'=>'validate[required]'));
-    	$date_inElement ->setValue($date->get('YYYY-MM-dd'));
+    	$date_inElement ->setAttribs(array('class'=>'validate[required] form-control form-control-inline date-picker'));
+    	$date_inElement ->setValue($date->get('d-M-Y'));
     	$this->addElement($date_inElement);
     	
     	$dateOrderElement = new Zend_Form_Element_Text('order_date');
-    	$dateOrderElement ->setAttribs(array('class'=>'validate[required]','placeholder' => 'Click to Choose Date'));
-    	$dateOrderElement ->setValue($date->get('YYYY-MM-dd'));
+    	$dateOrderElement ->setAttribs(array('class'=>'col-md-3 validate[required] form-control form-control-inline date-picker','placeholder' => 'Click to Choose Date'));
+    	$dateOrderElement ->setValue($date->get('d-M-Y'));
     	$this->addElement($dateOrderElement);
     	 
     	$addressElement = new Zend_Form_Element_Text('address');
