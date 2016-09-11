@@ -3,10 +3,10 @@
 class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 {
     // set name value
-	public function setName($name){
-		$this->_name=$name;
-	}
-	
+// 	public function setName($name){
+// 		$this->_name=$name;
+// 	}
+	protected $_name = 'tb_purchase_order';
 	/**
 	 * get selected record of $sql
 	 * @param string $sql
@@ -99,18 +99,32 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     
     public function productLocationInventory($pro_id, $location_id){
     	$db=$this->getAdapter();
-    	
-    	$sql="SELECT pl.ProLocationID,pl.qty,pl.qty_onorder,pl.qty_onsold,pl.qty_avaliable
-    	,(SELECT p.qty_onorder FROM tb_product AS p WHERE p.pro_id= pl.pro_id LIMIT 1)AS pqty_onorder
-    	,(SELECT p.qty_onhand 	FROM tb_product AS p WHERE p.pro_id = pl.`pro_id` LIMIT 1) AS qty_onhand
-    	,(SELECT p.qty_available 	FROM tb_product AS p WHERE p.pro_id = pl.`pro_id` LIMIT 1) AS qty_available
-    	,(SELECT p.qty_onsold FROM tb_product AS p WHERE p.`pro_id` = pl.pro_id LIMIT 1) AS pqty_onsold 
-    	FROM tb_prolocation AS pl WHERE pl.pro_id =".$pro_id." AND pl.LocationId=".$location_id." LIMIT 1";
-    	//echo $sql;exit();
-    	
+    	$sql="SELECT id,pro_id,location_id,qty,qty_warning,user_id,last_mod_date,last_mod_userid
+    	 FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 ";  
     	$row = $db->fetchRow($sql);
-    	//if(!$row) return false;
-    	return $row;   	
+    	if(empty($row)){
+    		$session_user=new Zend_Session_Namespace('auth');
+    		$userName=$session_user->user_name;
+    		$GetUserId= $session_user->user_id;
+    		
+    		$array = array(
+    				"pro_id"=>$pro_id,
+    				"location_id"=>$location_id,
+    				"qty"=>0,
+    				"qty_warning"=>0,
+    				"last_mod_userid"=>$GetUserId,
+    				"user_id"=>$GetUserId,
+    				"last_mod_date"=>date("Y-m-d")
+    				);
+    		$this->_name="tb_prolocation";
+    		$this->insert($array);
+    		
+    		$sql="id,pro_id,location_id,qty,qty_warning,user_id,last_mod_date,last_mod_userid
+    		FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 ";
+    		return $row = $db->fetchRow($sql);
+    	}else{
+    	return $row; 
+    	}  	
     }
     //for get product product inventory but if have in prodcut location
     public function productInventoryExist($itemId){
@@ -278,11 +292,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
      * @param int $id
      * @param string $tbl_name
      */
-//     public function updateRecord($data,$id,$tbl_name){
-//     	$this->setName($tbl_name);
-//     	$where=$this->getAdapter()->quoteInto('pro_id=?',$id);
-//     	$this->update($data,$where);
-//     }
 	public function updateRecord($data,$id,$updateby,$tbl_name){
 		$tb = $this->setName($tbl_name);
 		$where=$this->getAdapter()->quoteInto($updateby.'=?',$id);
@@ -327,12 +336,24 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return mysql_fetch_assoc($result);
     }
-    public function getAccessPermission($level, $str_condition,  $location_id){
-    	if($level==1 OR $level==2){
-    		return false;
+    public function getUserInfo(){
+    	$session_user=new Zend_Session_Namespace('auth');
+    	$userName=$session_user->user_name;
+    	$GetUserId= $session_user->user_id;
+    	$level = $session_user->level;
+    	$location_id = $session_user->location_id;
+    	$info = array("user_name"=>$userName,"user_id"=>$GetUserId,"level"=>$level,"branch_id"=>$location_id);
+    	return $info;
+    }
+    
+    public function getAccessPermission(){
+    	$result = $this->getUserInfo();
+    	if($result['level']==1 OR $result['level']==2){
+    		$result = "";
+    		return $result;
     	}
     	else{
-    		$result = "$str_condition =".$location_id;
+    		$result = " AND branch_id =".$result['branch_id'];
     		return $result;
     	} 
     }
