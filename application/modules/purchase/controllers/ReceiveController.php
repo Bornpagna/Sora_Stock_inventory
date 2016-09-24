@@ -1,5 +1,5 @@
 <?php
-class purchase_ReceiveController extends Zend_Controller_Action
+class Purchase_ReceiveController extends Zend_Controller_Action
 {	
     public function init()
     {
@@ -14,72 +14,27 @@ class purchase_ReceiveController extends Zend_Controller_Action
     }
 	public function indexAction()
 		{
-			$formFilter = new Application_Form_Frmsearch();
-			$this->view->formFilter = $formFilter;
-			Application_Model_Decorator::removeAllDecorator($formFilter);
-			
-			$list = new Application_Form_Frmlist();
-			$db = new Application_Model_DbTable_DbGlobal();
-	// 		$vendor_sql = "SELECT p.order_id, p.order, p.date_order, p.status, v.v_name, p.all_total,u.username
-	// 						FROM tb_purchase_order AS p ,
-	// 						tb_vendor AS v,rsv_acl_user u
-	// 		                WHERE v.vendor_id=p.vendor_id AND u.user_id = p.user_mod ";
-			$vendor_sql="SELECT 
-							recieve_id
-							,ro.recieve_no
-							,ro.date_recieve
-							
-							,(SELECT v.v_name FROM tb_vendor AS v WHERE v.vendor_id = ro.vendor_id) AS VendorName
-							,ro.all_total
-							,(SELECT u.username FROM rsv_acl_user AS u WHERE u.user_id = ro.user_recieve) AS userName
-						
-						FROM tb_recieve_order AS ro WHERE is_active=1";
-			
-			$user = $this->GetuserInfoAction();
-			$str_condition = " AND p.LocationId" ;
-			$vendor_sql .= $db->getAccessPermission($user["level"], $str_condition, $user["location_id"]);
-			
-			$this->view->level = $user["level"];
-			
 			if($this->getRequest()->isPost()){
-					$post = $this->getRequest()->getPost();
-					//echo $post["order"];
-					if($post['order'] !=''){
-							$vendor_sql .= " AND ro.recieve_no LIKE '%".$post['order']."%'";
-					}
-					if($post['vendor_name'] !='' AND $post['vendor_name'] !=0){
-						$vendor_sql .= " AND ro.user_recieve =".$post['vendor_name'];
-									}
-	// 				if($post['phone'] !=''){
-	// 					$vendor_sql .= " AND v.phone LIKE '%".$post['phone']."%'";
-	// 				}
-// 					if($post['status'] !=''){
-// 						$vendor_sql .= " AND ro.status =".$post['status'];
-// 					}
-					$start_date = $post['search_start_date'];
-					$end_date = $post['search_end_date'];
-					
-					if($start_date != "" && $end_date != "" && strtotime($end_date) >= strtotime($start_date)) {
-						$vendor_sql .= " AND ro.date_recieve BETWEEN '$start_date' AND '$end_date'";
-					}
+					$search = $this->getRequest()->getPost();
+			}else{
+				$search= array();
 			}
-			
-			//echo $vendor_sql;exit();
-			$vendor_sql.=" ORDER BY ro.recieve_no DESC";
-			//**************************************
-			$rows=$db->getGlobalDb($vendor_sql);
-			//print_r($rows);exit();
+			$db = new Purchase_Model_DbTable_DbRecieveOrder();
+			$rows = $db->getAllReceivedOrder($search);
 			$glClass = new Application_Model_GlobalClass();
-			//$rows = $glClass->getStatusType($rows, BASE_URL, true);
-			$columns=array("PURCHASE_ORDER_CAP","ORDER_DATE_CAP", "VENDOR_NAME_CAP",
-					 "TOTAL_CAP_DOLLAR",strtoupper("BY_USER_CAP"));
+			$columns=array("PURCHASE_ORDER_CAP","ORDER_DATE_CAP", "VENDOR_NAME_CAP","TOTAL_CAP_DOLLAR","BY_USER_CAP");
 			$link=array(
 					'module'=>'purchase','controller'=>'receive','action'=>'detail-purchase-order',
 			);
 			// url link to update purchase order
 			
 			$urlEdit = BASE_URL . "/purchase/index/update-purchase-order-test";
+			$list = new Application_Form_Frmlist();
 			$this->view->list=$list->getCheckList(1, $columns, $rows, array('order'=>$link),$urlEdit);
+			
+			$formFilter = new Application_Form_Frmsearch();
+			$this->view->formFilter = $formFilter;
+			Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
 	public function addRecievePurchaseAction(){
 		if($this->getRequest()->getPost()){

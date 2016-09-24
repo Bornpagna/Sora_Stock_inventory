@@ -3,7 +3,7 @@
 class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'rsv_acl_user';
+    protected $_name = 'tb_acl_user';
     
     public function setName($name)
     {
@@ -12,8 +12,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	//function get user info from database
 	public function getUserInfo($user_id)	{
 		$sql = "SELECT au.`fullname`,au.`email`, au.`username`, au.`user_type_id`, aut.`user_type`, au.`LocationId`
-				FROM `rsv_acl_user` AS au
-				INNER JOIN `rsv_acl_user_type` AS aut ON(au.`user_type_id` = aut.`user_type_id`)
+				FROM `tb_acl_user` AS au
+				INNER JOIN `tb_acl_user_type` AS aut ON(au.`user_type_id` = aut.`user_type_id`)
 				WHERE user_id=" . $user_id;
 		$row = $this->getAdapter()->fetchRow($sql);
 		if(!$row) return NULL;
@@ -140,8 +140,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	 */
 	public function getArrAcl($user_type_id){
 		$db = $this->getAdapter();
-		$sql = "SELECT aa.module, aa.controller, aa.action FROM rsv_acl_user_access AS ua  
-		INNER JOIN rsv_acl_acl AS aa ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_type_id."'";
+		$sql = "SELECT aa.module, aa.controller, aa.action FROM tb_acl_user_access AS ua  
+		INNER JOIN tb_acl_acl AS aa ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$user_type_id."'";
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
@@ -149,8 +149,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 	public function getArrConMod( $user_type_id, $module){
 		$db = $this->getAdapter();
 		$sql = "SELECT DISTINCT aa.controller 
-				FROM rsv_acl_user_access AS ua  
-					 INNER JOIN rsv_acl_acl AS aa ON (ua.acl_id=aa.acl_id) 
+				FROM tb_acl_user_access AS ua  
+					 INNER JOIN tb_acl_acl AS aa ON (ua.acl_id=aa.acl_id) 
 				WHERE ua.user_type_id='".$user_type_id."' AND aa.module = '" . $module ."' AND aa.status = 1 ORDER BY aa.rank ASC";
 		//echo $sql;exit;
 		$cols = $db->fetchCol($sql);

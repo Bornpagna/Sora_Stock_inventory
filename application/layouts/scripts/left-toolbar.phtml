@@ -17,18 +17,19 @@
 	$url_alert = array($this->url(array('module'=>'product','controller'=>'index','action'=>'itemalert')), "MENU_PRODUCT_INDEX_ITEMALERT");
 	//module purchase
 	$url_purchase =  array($this->url(array('module'=>'purchase','controller'=>'index','action'=>'index')), "MENU_PURCHASE_INDEX_INDEX");
-	$url_add_purchase = array($this->url(array('module'=>'purchase','controller'=>'index','action'=>'add-purchase')), "MENU_PURCHASE_INDEX_ADD_PURCHASE");
+	$url_add_purchase = array($this->url(array('module'=>'purchase','controller'=>'index','action'=>'add')), "MENU_PURCHASE_INDEX_ADD_PURCHASE");
 	$url_vendor = array($this->url(array('module'=>'purchase','controller'=>'vendor','action'=>'index')), "MENU_PURCHASE_VENDOR_INDEX");
 	$url_vendor_add = array($this->url(array('module'=>'purchase','controller'=>'vendor','action'=>'add')), "MENU_PURCHASE_VENDOR_ADD");
 	$url_return = array($this->url(array('module'=>'purchase','controller'=>'return','action'=>'index')), "MENU_PURCHASE_RETURN");
 	$url_return_vendor_in = array($this->url(array('module'=>'purchase','controller'=>'return','action'=>'return-in')), "MENU_PURCHASE_RETURN_IN");
+	$url_recieved  = array($this->url(array('module'=>'purchase','controller'=>'receive','action'=>'index')), "Receive Stock");
 	// module sales
-	$url_sales_list = array($this->url(array('module'=>'sales','controller'=>'sales-order','action'=>'index')), "MENU_SALES_SALES_ORDER_INDEX");
-	$url_sales_add = array($this->url(array('module'=>'sales','controller'=>'sales-order','action'=>'sales')), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_ORDER");
-	$url_sales_quote = array($this->url(array('module'=>'sales','controller'=>'sales-order','action'=>'add-customer-quote')), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_QUOTE");
+	$url_sales_list = array($this->url(array('module'=>'sales','controller'=>'index','action'=>'index')), "MENU_SALES_SALES_ORDER_INDEX");
+	$url_sales_add = array($this->url(array('module'=>'sales','controller'=>'index','action'=>'add')), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_ORDER");
+	$url_sales_quote = array($this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add')), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_QUOTE");
 	$url_cust_list = array($this->url(array('module'=>'sales','controller'=>'customer','action'=>'index')), "MENU_SALES_CUSTOMER_INDEX");
 	$url_add_cust = array($this->url(array('module'=>'sales','controller'=>'customer','action'=>'add')), "MENU_SALES_CUSTOMER_ADD");
-	$url_sals_agent = array($this->url(array('module'=>'sales','controller'=>'sale-agent','action'=>'index')), "MENU_SALES_AGENT");
+	$url_sals_agent = array($this->url(array('module'=>'sales','controller'=>'saleagent','action'=>'index')), "MENU_SALES_AGENT");
 	$url_return_in = array($this->url(array('module'=>'sales','controller'=>'return','action'=>'index')), "MENU_SALES_RETURN_INT");
 	$url_return_out = array($this->url(array('module'=>'sales','controller'=>'return','action'=>'return-out')), "MENU_SALES_RETURN_OUT");
 	
@@ -147,12 +148,13 @@
 						        <i class="icon-arrow-right"></i><?php echo $tr->translate($url_purchase[1]);?>
 	            			</a>
 	            		</li> 
-	            		<?php if($result["level"]==1 OR $result["level"]==2){?>
 	            		<li>
 	            			<a href="<?php echo $url_add_purchase[0]; ?>">
 							         <i class="icon-arrow-right"></i><?php echo $tr->translate($url_add_purchase[1]);?>
 		            		</a>
 	            		</li> 
+	            		<?php if($result["level"]==1 OR $result["level"]==2){?>
+	            		<!-- 
 	            		
 	            		<li>
 	            			<a href="<?php echo $url_return[0]; ?>">
@@ -165,6 +167,12 @@
 		            		</a>
 	            		</li> 
 	            		<li>
+	            			<a href="<?php echo $url_recieved[0]; ?>">
+		            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_recieved[1]);?>
+		            		</a>
+	            		</li>  
+	            		-->
+	            		<li>
 	            			<a href="<?php echo $url_vendor[0]; ?>">
 		            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_vendor[1])?>
 		            		</a>
@@ -174,6 +182,7 @@
 		            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_vendor_add[1]);?>
 		            		</a>
 	            		</li> 
+	            		
 	            		<?php }?>
 					</ul>
 				</li>
@@ -195,7 +204,7 @@
 	            		</a>
             		</li>
             		<?php //if($result["level"]==3 ){ ?>
-            		<li>
+            		<!-- <li>
             			<a href="<?php echo  $url_return_in[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_return_in[1]);?>
 	            		</a>
@@ -216,16 +225,13 @@
             			<a href="<?php echo  $url_return_out[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_return_out[1]);?>
 	            		</a>
-            		</li>
-            		<!--  
-            		<li>
-            			<a href="<?php //echo $url_sales_quote[0]; ?>">
-	            			<div class="nav2">
-						         <div class="nav2img"><img src="<?php //echo BASE_URL; ?>/images/add-new-sales-quote.png" alt="" /></div>
-						         <div class="navtext"><?php //echo $tr->translate($url_sales_quote[1])?></div>
-					        </div>
-	            		</a>
             		</li> -->
+            		
+            		<li>
+            			<a href="<?php echo $url_sales_quote[0]; ?>">
+	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_quote[1])?>
+	            		</a>
+            		</li> 
             		<li>
             			<a href="<?php echo $url_cust_list[0]; ?>">
 						    <i class="icon-arrow-right"></i><?php echo $tr->translate($url_cust_list[1]);?>

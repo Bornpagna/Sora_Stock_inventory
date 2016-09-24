@@ -1,42 +1,64 @@
 <?php
 
-class sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
+class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 {
 	protected $_name = "tb_sale_agent";
-	public function setName($name)
-	{
-		$this->_name=$name;
+	function getAllSaleAgent($search){
+		$sql = "SELECT sg.id,l.name AS branch_name, sg.name, sg.phone, sg.email, sg.address, sg.job_title, sg.description
+		FROM tb_sale_agent AS sg
+		INNER JOIN tb_sublocation As l ON sg.branch_id = l.id WHERE 1 ";
+		$order=" ORDER BY sg.id DESC ";
+		
+		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " l.name LIKE '%{$s_search}%'";
+			$s_where[] = " sg.name LIKE '%{$s_search}%'";
+			$s_where[] = " sg.phone LIKE '%{$s_search}%'";
+			$s_where[] = " sg.email LIKE '%{$s_search}%'";
+			$s_where[] = " sg.address LIKE '%{$s_search}%'";
+			$s_where[] = " sg.job_title LIKE '%{$s_search}%'";
+			$s_where[] = " sg.description LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['branch_id']>0){
+			$where .= " AND branch_id = ".$search['branch_id'];
+		}
+		$order=" ORDER BY id DESC ";
+		$db =$this->getAdapter();
+		return $db->fetchAll($sql.$where.$order);
 	}
-	
-	//for click add new sales agent
 	public function addSalesAgent($data)
 	{
-		$db = $this->getAdapter();	
+		$session_user=new Zend_Session_Namespace('auth');
+		$userName=$session_user->user_name;
+		$GetUserId= $session_user->user_id;
 		$datainfo=array(
 				"name"		 =>$data['name'],
+				"user_name"  =>$data['user_name'],
+				"password"   => md5($data['password']),
 				"phone"      =>$data['phone'],
 				"email"      =>$data['email'],
 				"address"    =>$data['address'],
+				"pob"		 =>$data['pob'],
+				"dob"		 =>$data['dob'],
 				"job_title"  =>$data['job_title'],
-				"stock_id"   =>$data['main_stock_id'],
+				"branch_id"   =>$data['branch_id'],
 				"description"=>$data['description'],	
+				'user_id'=>$GetUserId,
+				"date"=>date("Y-m-d")
 		);
-		$db->insert("tb_sale_agent", $datainfo);
+		if(!empty($data['id'])){
+			$where=$this->getAdapter()->quoteInto('agent_id=?',$data['id']);
+			$this->update($datainfo,$where);
+		}else{
+			$this->insert($datainfo);
+		}
 	}
-	public function updateSalesAgent($data){
-		$sale_agent=array(
-				"name"		 =>$data['name'],
-				"phone"      =>$data['phone'],
-				"email"      =>$data['email'],
-				"address"    =>$data['address'],
-				"job_title"  =>$data['job_title'],
-				"stock_id"   =>$data['main_stock_id'],
-				"description"=>$data['description'],
-		);
-
-		$where=$this->getAdapter()->quoteInto('agent_id=?',$data['id']);
-		$this->update($sale_agent,$where);
-	}
+	
 	public function addNewAgent($data){
 		$db = new Application_Model_DbTable_DbGlobal();
 		$datainfo=array(

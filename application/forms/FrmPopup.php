@@ -18,46 +18,47 @@ class Application_Form_FrmPopup extends Zend_Form
     	$db=new Application_Model_DbTable_DbGlobal();
     	
     	$product_element= new Zend_Form_Element_Text("txt_name");
-    	$product_element->setAttribs(array('placeholder' => 'Enter Product Name','class' => 'validate[required]'));
+    	$product_element->setAttribs(array('placeholder' => 'Enter Product Name','class' => 'validate[required] form-control'));
     	$this->addElement($product_element);
     	
     	$code_element= new Zend_Form_Element_Text("item_code");
-    	$code_element->setAttribs(array('placeholder' => 'Enter Product Code'));
+    	$code_element->setAttribs(array('placeholder' => 'Enter Product Code','class'=>'form-control'));
     	$this->addElement($code_element);
     	
     	$productname_element= new Zend_Form_Element_Text("product_name");
-    	$productname_element->setAttribs(array('placeholder' => 'Enter Product Name','class' => 'validate[required]'));
+    	$productname_element->setAttribs(array('placeholder' => 'Enter Product Name','class' => 'validate[required] form-control'));
     	$this->addElement($productname_element);
     	
     	$price_element= new Zend_Form_Element_Text("price");
-    	$price_element->setAttribs(array('placeholder' => 'Enter Product Price'));
+    	$price_element->setAttribs(array('placeholder' => 'Enter Product Price',"class"=>'form-control'));
     	$this->addElement($price_element);
     	
     	$item_price_element= new Zend_Form_Element_Text("item_price");
-    	$item_price_element->setAttribs(array('placeholder' => 'Enter Product Price'));
+    	$item_price_element->setAttribs(array('placeholder' => 'Enter Product Price',"class"=>'form-control'));
     	$this->addElement($item_price_element);
     	
     	$remark_element= new Zend_Form_Element_Textarea("remark_order");
-    	$remark_element->setAttribs(array('placeholder' =>'Product Description'));
+    	$remark_element->setAttribs(array('placeholder' =>'Product Description',"class"=>'form-control',"rows"=>3));
     	$this->addElement($remark_element);
     	
-    	$rs=$db->getGlobalDb('SELECT CategoryId, Name FROM tb_category WHERE Name!="" AND IsActive=1 ');
+    	$rs=$db->getGlobalDb('SELECT id, name FROM tb_category WHERE name!="" AND status=1 ');
     	$options="";
-    	foreach($rs as $read) $options[$read['CategoryId']]=$read['Name'];
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
     	$cate_element=new Zend_Form_Element_Select('category_id');
     	$cate_element->setMultiOptions($options);
     	$cate_element->setAttribs(array(
     			'id'=>'category_id',
+    			"class"=>'form-control select2me'
     	));
     	$this->addElement($cate_element);
-    	 
-    	$rs=$db->getGlobalDb('SELECT branch_id, Name FROM tb_branch WHERE Name!=""  AND IsActive=1  ORDER BY Name');
+    	$rs=$db->getGlobalDb('SELECT id, name FROM tb_brand WHERE name!="" AND status=1 ORDER BY id DESC ');
     	$options="";
-    	foreach($rs as $read) $options[$read['branch_id']]=$read['Name'];
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
     	$branch_element=new Zend_Form_Element_Select('brand_id');
     	$branch_element->setMultiOptions($options);
     	$branch_element->setAttribs(array(
     			'id'=>'brand_id',
+    			"class"=>'form-control select2me',
     	));
     	$this->addElement($branch_element);
     	
@@ -69,23 +70,23 @@ class Application_Form_FrmPopup extends Zend_Form
     	$db=new Application_Model_DbTable_DbGlobal();
     	 
     	$stockname_element= new Zend_Form_Element_Text("StockName");
-    	$stockname_element->setAttribs(array('placeholder' => 'Enter Stock Name','class' => 'validate[required]'));
+    	$stockname_element->setAttribs(array('placeholder' => 'Enter Stock Name','class' => 'validate[required] form-control'));
     	$this->addElement($stockname_element);
     	
     	$contact_element= new Zend_Form_Element_Text("ContactName");
-    	$contact_element->setAttribs(array('placeholder' => 'Contact To','class' => 'validate[required]'));
+    	$contact_element->setAttribs(array('placeholder' => 'Contact To','class' => 'validate[required] form-control'));
     	$this->addElement($contact_element);
     		
     	$phone_element= new Zend_Form_Element_Text("ContactNumber");
-    	$phone_element->setAttribs(array('placeholder' => 'Contact Number',));
+    	$phone_element->setAttribs(array('placeholder' => 'Contact Number ','class'=>'form-control'));
     	$this->addElement($phone_element);
     	
     	$address_element= new Zend_Form_Element_Text("location_add");
-    	$address_element->setAttribs(array('placeholder'=>'Branch Location',));
+    	$address_element->setAttribs(array('placeholder'=>'Branch Location','class'=>'form-control'));
     	$this->addElement($address_element); 
     	
     	$description_element= new Zend_Form_Element_Textarea("description");
-    	$description_element->setAttribs(array('placeholder'=>'Description Here...',));
+    	$description_element->setAttribs(array('placeholder'=>'Description Here...','class'=>'form-control','rows'=>3));
     	$this->addElement($description_element);
     	    	
     	return $this;
@@ -136,6 +137,10 @@ class Application_Form_FrmPopup extends Zend_Form
     	$vendor_Element = new Zend_Form_Element_Text('vendor_name');
     	$vendor_Element ->setAttribs(array('placeholder' => 'Enter Vendor Name','class' => 'form-control validate[required]'));
     	$this->addElement($vendor_Element); 
+    	
+    	$phone_Element = new Zend_Form_Element_Text('com_phone');
+    	$phone_Element ->setAttribs(array('placeholder' => 'Contact Number','class'=>'form-control'));
+    	$this->addElement($phone_Element);
 
     	$contact_Element = new Zend_Form_Element_Text('txt_contact_name');
     	$contact_Element ->setAttribs(array('placeholder' => 'Contact To','class' => 'form-control validate[required]'));
@@ -218,10 +223,10 @@ class Application_Form_FrmPopup extends Zend_Form
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$db=new Application_Model_DbTable_DbGlobal();
     	 
-    	$rowscate= $db->getGlobalDb('SELECT CategoryId, Name FROM tb_category WHERE Name!="" ORDER BY Name ');
+    	$rowscate= $db->getGlobalDb('SELECT id, name FROM tb_category WHERE name!="" ORDER BY id DESC ');
     	$options = array(""=>"No Parent Category");
     	if($rowscate) {
-    		foreach($rowscate as $readcate) $options[$readcate['CategoryId']]=$readcate['Name'];
+    		foreach($rowscate as $readcate) $options[$readcate['id']]=$readcate['name'];
     	}
     	$catelsElement = new Zend_Form_Element_Select('main_category');
     	$catelsElement->setMultiOptions($options);

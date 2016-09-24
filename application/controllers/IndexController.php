@@ -8,9 +8,7 @@ class IndexController extends Zend_Controller_Action
     }
     public function indexAction()
     {
-    	
     	$this->_helper->layout()->disableLayout();///sopharat disablelayout to display login
-    	
   		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		if($this->getRequest()->isPost()){
 			$formdata=$this->getRequest()->getPost();

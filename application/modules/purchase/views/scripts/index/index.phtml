@@ -1,10 +1,9 @@
 <?php 					
-	$url_new = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'add-purchase',));
-	$url_delete = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'delete-purchase-order',));
+	$url_new = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'add',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->formFilter;
-	$mylevel = $this->level;
 ?>
+<title><?php echo $tr->translate("MENU_PURCHASE_ADVANCE_INDEX");?></title>
 <meta charset="utf-8" />
 <div class="row">
 	<div class="col-md-12">
@@ -13,30 +12,26 @@
 				<div class="caption">
 					<i class="fa fa-globe"></i><?php echo $tr->translate("MENU_PURCHASE_ADVANCE_INDEX");?>
 				</div>
+				<a href="<?php echo $url_new;?>" class="btn btn-sm green  pull-right">
+					<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("ADD_NEW");?>
+				</a>
 			</div>
-			<div class="portlet-body form">
+			<div class="portlet-body form frmfilter">
 				<form method="post" action="<?php echo $formFilter->getAction(); ?>">
-					<div class="form-group" style="padding-top: 20px;">
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('order');?></label>
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('vendor_name');?></label>
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('status');?></label>
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('search_start_date');?></label>
-						<label class="control-label col-md-1"><?php echo $formFilter->getElement('search_end_date');?></label>
-						<label class="control-label">
-							<button class="btn btn-primary" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
-							<?php 
-								if($mylevel==1 OR $mylevel==2){
-										$formList = new Application_Form_Frmlist();
-										echo $formList->showAddBuntton($url_new);
-							     }
-							?>
-							</label>
+					<div class="form-group" style="padding-top: 6px;">
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('text_search');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('suppliyer_id');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('purchase_status');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('start_date');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('end_date');?></label>
+						<label class="control-label col-md-2">
+							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+						</label>
 					</div>			
-					
 				</form> 
-					<div class="contain_form">
+				<div class="contain_form" style="clear: both;">
 						<?php echo $this->list; ?>
-					</div>
+			    </div>
 		   </div>
 		</div>
 	</div>

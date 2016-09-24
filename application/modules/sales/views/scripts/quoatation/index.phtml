@@ -1,0 +1,24 @@
+<?php 					
+	$url_new = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'add',));
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$formFilter = $this->formFilter;
+	$mylevel = $this->level;
+?>
+<meta charset="utf-8" />
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-globe"></i><?php echo $tr->translate("MENU_PURCHASE_ADVANCE_INDEX");?>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				
+					<div class="contain_form">
+						<?php echo $this->list; ?>
+					</div>
+		   </div>
+		</div>
+	</div>
+</div>

@@ -1,52 +1,81 @@
 <?php 
-class sales_Form_FrmSearch extends Zend_Form
+class Sales_Form_FrmSearch extends Zend_Form
 {
-	public function init()
+public function init()
 	{
-		
-	}
-	//affter not use 
-	public function FrmSearchFromCustomer(){
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db=new Application_Model_DbTable_DbGlobal();
 		
-		$nameValue = $request->getParam('order');
-		$nameElement = new Zend_Form_Element_Text('order');
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$nameValue = $request->getParam('text_search');
+		$nameElement = new Zend_Form_Element_Text('text_search');
+		$nameElement->setAttribs(array(
+				'class'=>'form-control'
+				));
 		$nameElement->setValue($nameValue);
 		$this->addElement($nameElement);
 		
-		$returninValue = $request->getParam('return_in');
-		$returninElement = new Zend_Form_Element_Text('return_in');
-		$returninElement->setValue($returninValue);
-		$this->addElement($returninElement);
+		$rs=$db->getGlobalDb('SELECT id,cust_name FROM tb_customer WHERE cust_name!="" AND status=1 ');
+		$options=array($tr->translate('Choose Customer'));
+		$vendorValue = $request->getParam('customer_id');
+		if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['cust_name'];
+		$vendor_element=new Zend_Form_Element_Select('customer_id');
+		$vendor_element->setMultiOptions($options);
+		$vendor_element->setAttribs(array(
+				'id'=>'customer_id',
+				'class'=>'form-control select2me'
+		));
+		$vendor_element->setValue($vendorValue);
+		$this->addElement($vendor_element);
 		
-		$startDateValue = $request->getParam('search_start_date');
-		$startDateElement = new Zend_Form_Element_Text('search_start_date');
+		$startDateValue = $request->getParam('start_date');
+		$endDateValue = $request->getParam('end_date');
+		
+		if($endDateValue==""){
+			$endDateValue=date("m/d/Y");
+			//$startDateValue=date("m/d/Y");
+		}
+		
+		$startDateElement = new Zend_Form_Element_Text('start_date');
 		$startDateElement->setValue($startDateValue);
+		$startDateElement->setAttribs(array(
+				'class'=>'form-control form-control-inline date-picker',
+				'placeholder'=>'Start Date'
+		));
 		$this->addElement($startDateElement);
-			
-		$endDateValue = $request->getParam('search_end_date');
-		$endDateElement = new Zend_Form_Element_Text('search_end_date');
+		
+		$options="";
+		$sql = "SELECT id, name FROM tb_sublocation WHERE name!='' ";
+		$sql.=" ORDER BY id DESC ";
+		$rs=$db->getGlobalDb($sql);
+		$options=array(0=>"Choose Branch");
+		if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['name'];
+		$locationID = new Zend_Form_Element_Select('branch_id');
+		$locationID ->setAttribs(array('class'=>'validate[required] form-control select2me'));
+		$locationID->setMultiOptions($options);
+		$locationID->setattribs(array(
+				'Onchange'=>'AddLocation()',));
+		$this->addElement($locationID);
+		
+		$endDateElement = new Zend_Form_Element_Text('end_date');
 		$endDateElement->setValue($endDateValue);
 		$this->addElement($endDateElement);
-		
-		$rowCustomers=$db->getGlobalDb('SELECT customer_id, cust_name FROM tb_customer WHERE cust_name!="" AND is_active=1 ORDER BY customer_id DESC');
-		$agentValue = $request->getParam('customer_id');
-		$options=array(''=>$tr->translate('Please_Select_Customer'));
-		if(!empty($rowCustomers)) foreach($rowCustomers as $rowCustomer) $options[$rowCustomer['customer_id']]=$rowCustomer['cust_name'];
-		$customer_id=new Zend_Form_Element_Select('customer_id');
-		$customer_id->setMultiOptions($options);
-		$customer_id->setattribs(array(
-				'id'=>'customer_id',
-				'class'=>'validate[required]'
+		$endDateElement->setAttribs(array(
+				'class'=>'form-control form-control-inline date-picker'
 		));
-		$customer_id->setValue($agentValue);
-		$this->addElement($customer_id);
 		
-		Application_Form_DateTimePicker::addDateField(array('search_start_date', 'search_end_date'));
+		$options="";
+		$sql = "SELECT id,name FROM `tb_price_type` WHERE name!='' ";
+		$sql.=" ORDER BY id DESC ";
+		$rs=$db->getGlobalDb($sql);
+		$options=array(0=>"Choose Level");
+		if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['name'];
+		$locationID = new Zend_Form_Element_Select('level');
+		$locationID ->setAttribs(array('class'=>'validate[required] form-control select2me'));
+		$locationID->setMultiOptions($options);
+		$locationID->setattribs(array(
+				'Onchange'=>'AddLocation()',));
+		$this->addElement($locationID);
 		
-		return $this;
 	}
-    		
 }

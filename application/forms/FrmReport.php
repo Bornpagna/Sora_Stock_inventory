@@ -53,10 +53,10 @@ class Application_Form_FrmReport extends Zend_Form
     	));
     	$location_id->setValue($locationValue);
     	
-    	$rs=$db->getGlobalDb('SELECT CategoryId, Name FROM tb_category WHERE Name!="" ');
+    	$rs=$db->getGlobalDb('SELECT id, name FROM tb_category WHERE name!="" ');
     	$options=array(''=>$tr->translate('Please_Select'));
     	$cateValue = $request->getParam('category_id');
-    	foreach($rs as $read) $options[$read['CategoryId']]=$read['Name'];
+    	foreach($rs as $read) $options[$read['id']]=$read['Name'];
     	$cate_element=new Zend_Form_Element_Select('category_id');
     	$cate_element->setMultiOptions($options);
     	$cate_element->setAttribs(array(
@@ -66,7 +66,7 @@ class Application_Form_FrmReport extends Zend_Form
     	$cate_element->setValue($cateValue);
     	$this->addElement($cate_element);
     	 
-    	$rs=$db->getGlobalDb('SELECT branch_id, Name FROM tb_branch WHERE Name!="" ORDER BY Name');
+    	$rs=$db->getGlobalDb('SELECT branch_id, name FROM tb_branch WHERE name!="" ORDER BY name');
     	$options=array(''=>$tr->translate('Please_Select'));
     	$branchValue = $request->getParam('branch_id');
     	foreach($rs as $read) $options[$read['branch_id']]=$read['Name'];
@@ -103,30 +103,14 @@ class Application_Form_FrmReport extends Zend_Form
     	$db=new Application_Model_DbTable_DbGlobal();
     	$request = Zend_Controller_Front::getInstance()->getRequest();
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    	$location = $data["LocationId"];
-    	$brand= $data["branch_id"];
-    	$category = $data["category_id"];
+    	
      	$item = new report_Model_DbQuery();
-     	
-    	$sql="SELECT p.pro_id, p.item_name,p.item_code FROM tb_product AS p ";
-			
-    		if($data["LocationId"]!="" OR $data["LocationId"]!=0){
-    			$sql.= " INNER JOIN tb_prolocation AS pl ON pl.pro_id = p.pro_id AND pl.`LocationId`= ".trim($data["LocationId"]);
-    		}
-    		$sql.=" WHERE p.item_name!=''";
-    		
-			if(@$data["branch_id"]!="" OR @$data["branch_id"]!=0){
-				$sql.= " AND p.`brand_id`=".trim($data["branch_id"]);
-			}
-			if(@$data["category_id"]!="" OR @$data["category_id"]!=0){
-				$sql.=" AND p.`cate_id`=".trim($data["category_id"]);
-			}
-			$sql.=" ORDER BY p.item_name" ;
-		//echo $sql;//exit();
+    	$sql="SELECT p.id, p.item_name,p.item_code FROM tb_product AS p WHERE p.item_name!='' ";
+			$sql.=" ORDER BY p.item_name " ;
 		$rs=$db->getGlobalDb($sql);
 		if($rs){
-    	$options=array(''=>$tr->translate('Select_Products'));
-    	foreach($rs as $read) $options[$read['pro_id']]=$read['item_code']." ".$read['item_name'];
+    	$options=array(''=>$tr->translate('CHOOSE_PRODUCT'));
+    	foreach($rs as $read) $options[$read['id']]=$read['item_code']." ".$read['item_name'];
 		}else{
 			$options=array(''=>'No Items Results');
 		}
@@ -135,106 +119,169 @@ class Application_Form_FrmReport extends Zend_Form
     	$proValue = $request->getParam('item');
     	$pro_id->setAttribs(array(
     			'id'=>'item',
-    			//'onchange'=>'getItemById()'
+    			'class'=>'form-control select2me'
     	));
     	$pro_id->setValue($proValue);
     	$this->addElement($pro_id);
     	
-    	$reportTypeElement = new Zend_Form_Element_Select("report_type");
-    	$opt = array(""=>$tr->translate('REPORT_TYPE'),1=>"All Report",2=>"Purchase Report",3=>"Sales Report",4=>"Transfer Report",5=>"Poduct Information Report",6=>"Customize Report");
-    	$reportTypeElement->setMultiOptions($opt);
-    	$reportTypeElement->setAttribs(array('onChange'=>'report();getTransfer();'));
-    	$reportTypeValue = $request->getParam('report_type');
-    	$reportTypeElement->setValue($reportTypeValue);
-    	$this->addElement($reportTypeElement);
-    	
-    	$check = new Zend_Form_Element_MultiCheckbox("report_num");
-    	$check->setAttribs(array("class"=>"validate[required]"));
-    	$opt_check = array(1=>'Purchase Report',2=>'Sales Report',3=>'Transfer Report',4=>'Poduct Information Report');
-    	$check->setMultiOptions($opt_check);
-    	$check_value = $request->getParam("report_num");
-    	$check->setValue($check_value);
-    	$this->addElement($check);
-    	 
-    	$sql='SELECT DISTINCT Name,LocationId FROM tb_sublocation WHERE Name!="" AND status=1 ';
+    	$sql='SELECT DISTINCT name,id FROM tb_sublocation WHERE name!="" AND status=1 ';
     	$user = $this->GetuserInfo();
     	if($user["level"]!=1 AND $user["level"]!=2){
-    		$sql .= " AND LocationId= ".$user["location_id"];
+    		$sql .= " AND id= ".$user["location_id"];
     		 
     	}
     	$rs=$db->getGlobalDb($sql);
-    	$options=array(''=>$tr->translate('Please_Select_Location'));
-    	$locationValue = $request->getParam('LocationId');
-    	foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
-    	$location_id=new Zend_Form_Element_Select('LocationId');
+    	$options=array(''=>$tr->translate('CHOOSE_BRANCH'));
+    	$locationValue = $request->getParam('branch_id');
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
+    	$location_id=new Zend_Form_Element_Select('branch_id');
     	$location_id->setMultiOptions($options);
     	$location_id->setAttribs(array(
     			'id'=>'LocationId',
     			'onchange'=>'getProductFilter();',
+    			'class'=>'form-control select2me'
     	));
     	$location_id->setValue($locationValue);
     	
-//     	$sql='SELECT DISTINCT Name,LocationId FROM tb_sublocation WHERE Name!="" AND status=1 ';
-//     	$user = $this->GetuserInfo();
-//     	if($user["level"]!=1 AND $user["level"]!=2){
-//     		$sql .= " AND LocationId= ".$user["location_id"];
-    		 
-//     	}
-//     	$rs=$db->getGlobalDb($sql);
-    	$options=array(''=>$tr->translate('Please_Select_Location'));
-    	$locationValues = $request->getParam('to_LocationId');
-    	foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
-    	$to_location_id=new Zend_Form_Element_Select('to_LocationId');
-    	$to_location_id->setMultiOptions($options);
-    	$to_location_id->setAttribs(array(
-    			'id'=>'to_LocationId',
-    			//'onchange'=>'getTransfer()'
-    	));
-    	$to_location_id->setValue($locationValues);
-    	$this->addElement($to_location_id);
-    	 
-    	$rs=$db->getGlobalDb('SELECT CategoryId, Name FROM tb_category WHERE Name!="" ORDER BY CategoryId');
-    	$options=array(''=>$tr->translate('Please_Select'));
+    	$rs=$db->getGlobalDb('SELECT id, name FROM tb_category WHERE name!="" ORDER BY id DESC ');
+    	$options=array(''=>$tr->translate('CHOOSE_CATEGORY'));
     	$cateValue = $request->getParam('category_id');
-    	foreach($rs as $read) $options[$read['CategoryId']]=$read['Name'];
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
     	$cate_element=new Zend_Form_Element_Select('category_id');
     	$cate_element->setMultiOptions($options);
     	$cate_element->setAttribs(array(
     			'id'=>'category_id',
     			'onchange'=>'getProductFilter()',
+    			'class'=>'form-control select2me'
     	));
     	$cate_element->setValue($cateValue);
     	$this->addElement($cate_element);
     
-    	$rs=$db->getGlobalDb('SELECT branch_id, Name FROM tb_branch WHERE Name!="" ORDER BY branch_id ');
-    	$options=array(''=>$tr->translate('Please_Select'));
+    	$rs=$db->getGlobalDb('SELECT id, name FROM tb_brand WHERE name!="" ORDER BY id ');
+    	$options=array(''=>$tr->translate('CHOOSE_BRAND'));
     	$branchValue = $request->getParam('branch_id');
-    	foreach($rs as $read) $options[$read['branch_id']]=$read['Name'];
-    	$branch_element=new Zend_Form_Element_Select('branch_id');
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
+    	
+    	$branch_element=new Zend_Form_Element_Select('brand_id');
     	$branch_element->setMultiOptions($options);
     	$branch_element->setAttribs(array(
     			'id'=>'branch_id',
     			'onchange'=>'getProductFilter()',
+    			'class'=>'form-control select2me'
     	));
-    	$branch_element->setValue($branchValue);
+    	$brandValue = $request->getParam('brand_id');
+    	$branch_element->setValue($brandValue);
     	$this->addElement($branch_element);
     	 
-    	$date = new Zend_Date();
     	$startDate = new Zend_Form_Element_Text("start_date");//echo date("Y-m-d");
     	$startDatevalue = $request->getParam("start_date");
-    	//$startDate->setAttribs(array("class"=>"validate[required]"));
+    	$startDate->setAttribs(array(
+    			'class'=>'form-control date-picker',
+    			'placeHolder'=>'Start Date'
+    			));
     	$startDate->setValue($startDatevalue);
     	 
     	$endDate = new Zend_Form_Element_Text("end_date");
-    	//$endDate->setValue($date->get("DD-MM-YY"));
+    	$endDate->setAttribs(array(
+    			'class'=>'form-control date-picker'
+    	));
+    	
     	$endDatevalue = $request->getParam("end_date");
-    	//$endDate->setAttribs(array("class"=>"validate[required]"));
+    	if(empty($endDatevalue)){$endDatevalue = date("m/d/Y");}
     	$endDate->setValue($endDatevalue);
-    
-    	$this->addElements(array($startDate,$endDate,$location_id));
-    	Application_Form_DateTimePicker::addDateField(array('start_date','end_date'));
+    	
+    	$txt_search = new Zend_Form_Element_Text("txt_search");
+    	$txt_search->setAttribs(array(
+    			'class'=>'form-control'));
+    	$txt_searchvalue = $request->getParam("txt_search");
+    	$txt_search->setValue($txt_searchvalue);
+    	$this->addElements(array($txt_search,$startDate,$endDate,$location_id));
     	return $this;
-    
+    }
+    function FrmReportPurchase(){
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
+    	$db=new Application_Model_DbTable_DbGlobal();
+    	
+    	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$nameValue = $request->getParam('text_search');
+    	$nameElement = new Zend_Form_Element_Text('text_search');
+    	$nameElement->setAttribs(array(
+    			'class'=>'form-control'
+    	));
+    	$nameElement->setValue($nameValue);
+    	$this->addElement($nameElement);
+    	
+    	$rs=$db->getGlobalDb('SELECT vendor_id, v_name FROM tb_vendor WHERE v_name!="" AND status=1 ');
+    	$options=array($tr->translate('Choose Suppliyer'));
+    	$vendorValue = $request->getParam('suppliyer_id');
+    	if(!empty($rs)) foreach($rs as $read) $options[$read['vendor_id']]=$read['v_name'];
+    	$vendor_element=new Zend_Form_Element_Select('suppliyer_id');
+    	$vendor_element->setMultiOptions($options);
+    	$vendor_element->setAttribs(array(
+    			'id'=>'suppliyer_id',
+    			'class'=>'form-control select2me'
+    	));
+    	$vendor_element->setValue($vendorValue);
+    	$this->addElement($vendor_element);
+    	
+    	$startDateValue = $request->getParam('start_date');
+    	$endDateValue = $request->getParam('end_date');
+    	
+    	if($endDateValue==""){
+    		$endDateValue=date("m/d/Y");
+    	}
+    	
+    	$startDateElement = new Zend_Form_Element_Text('start_date');
+    	$startDateElement->setValue($startDateValue);
+    	$startDateElement->setAttribs(array(
+    			'class'=>'form-control form-control-inline date-picker',
+    			'placeholder'=>'Start Date'
+    	));
+    	
+    	$this->addElement($startDateElement);
+    	$endDateElement = new Zend_Form_Element_Text('end_date');
+    	
+    	$endDateElement->setValue($endDateValue);
+    	$this->addElement($endDateElement);
+    	$endDateElement->setAttribs(array(
+    			'class'=>'form-control form-control-inline date-picker'
+    	));
+    	 
+    	$statusCOValue=4;
+    	$statusCOValue = $request->getParam('purchase_status');
+    	$optionsCOStatus=array(0=>$tr->translate('CHOOSE_STATUS'),2=>$tr->translate('OPEN'),3=>$tr->translate('IN_PROGRESS'),4=>$tr->translate('PAID'),5=>$tr->translate('RECEIVED'),6=>$tr->translate('MENU_CANCEL'));
+    	$statusCO=new Zend_Form_Element_Select('purchase_status');
+    	$statusCO->setMultiOptions($optionsCOStatus);
+    	$statusCO->setattribs(array(
+    			'id'=>'status',
+    			'class'=>'form-control'
+    	));
+    	
+    	$statusCO->setValue($statusCOValue);
+    	$this->addElement($statusCO);
+    	
+    	$sql='SELECT DISTINCT name,id FROM tb_sublocation WHERE name!="" AND status=1 ';
+    	$user = $this->GetuserInfo();
+    	if($user["level"]!=1 AND $user["level"]!=2){
+    		$sql .= " AND id= ".$user["location_id"];
+    		 
+    	}
+    	$rs=$db->getGlobalDb($sql);
+    	$options=array(''=>$tr->translate('CHOOSE_BRANCH'));
+    	$locationValue = $request->getParam('branch_id');
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
+    	$location_id=new Zend_Form_Element_Select('branch_id');
+    	$location_id->setMultiOptions($options);
+    	$location_id->setAttribs(array(
+    			'id'=>'LocationId',
+    			'onchange'=>'getProductFilter();',
+    			'class'=>'form-control select2me'
+    	));
+    	$location_id->setValue($locationValue);
+    	$this->addElement($location_id);
+    	
+    	
+    	return $this;
     }
 	
 }

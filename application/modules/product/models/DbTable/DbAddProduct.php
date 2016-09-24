@@ -317,15 +317,18 @@ class Product_Model_DbTable_DbAddProduct extends Zend_Db_Table_Abstract
 			$session_user = new Zend_Session_Namespace('auth');
 			$GetUserId= $session_user->user_id;
 			$data=array(
-					'cate_id'		=> 1,
-					'type'			=> 2,
-					'last_usermod'	=> $GetUserId,
-					'last_mod_date'	=> new Zend_Date(),//test
+					'cate_id'		=> $post["pro_name"],
+					//'type'			=> $post["pro_name"],
+					
 					'item_name'		=> $post["pro_name"],
 					'p_code'		=> $post["pro_code"],
+					'barcode'=>
+// 					'brand_id'
 					'cate_id'		=> $post["category_id"],//test
-					'branch_id'	 	=> $post["brand_id"],//test
-					'remark'		=> $post['remark']
+					'branch_id'	 	=> 
+					'remark'		=> $post['remark'],
+					'last_usermod'	=> $GetUserId,
+					'last_mod_date'	=> new Zend_Date(),//test
 			);
 			$GetProductId = $db_global->addRecord($data, "tb_product");
 			$dataproduct=array

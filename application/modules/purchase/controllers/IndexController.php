@@ -1,5 +1,5 @@
 <?php
-class purchase_indexController extends Zend_Controller_Action
+class Purchase_indexController extends Zend_Controller_Action
 {	
     public function init()
     {
@@ -7,105 +7,54 @@ class purchase_indexController extends Zend_Controller_Action
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     }
-    protected function GetuserInfoAction(){
-    	$user_info = new Application_Model_DbTable_DbGetUserInfo();
-    	$result = $user_info->getUserInfo();
-    	return $result;
-    }
 	public function indexAction()
 	{
+		if($this->getRequest()->isPost()){
+				$search = $this->getRequest()->getPost();
+				$search['start_date']=date("Y-m-d",strtotime($search['start_date']));
+				$search['end_date']=date("Y-m-d",strtotime($search['end_date']));
+		}
+		else{
+			$search =array(
+					'text_search'=>'',
+					'start_date'=>date("Y-m-d"),
+					'end_date'=>date("Y-m-d"),
+					'suppliyer_id'=>0,
+					'purchase_status'=>0,
+					);
+		}
+		$db = new Purchase_Model_DbTable_DbPurchaseOrder();
+		$rows = $db->getAllPurchaseOrder($search);
+		$list = new Application_Form_Frmlist();
+		$columns=array("BRANCH_NAME","VENDOR_NAME","PURCHASE_ORDER","ORDER_DATE","DATE_IN",
+				 "CURRNECY_TYPE","TOTAL_AMOUNT","PAID","BALANCE","ORDER_STATUS","STATUS","BY_USER");
+		$link=array(
+				'module'=>'purchase','controller'=>'index','action'=>'edit',
+		);
+		
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'vendor_name'=>$link,'order_number'=>$link,'date_order'=>$link));
 		$formFilter = new Application_Form_Frmsearch();
 		$this->view->formFilter = $formFilter;
 		Application_Model_Decorator::removeAllDecorator($formFilter);
-		
-		$list = new Application_Form_Frmlist();
-		$db = new Application_Model_DbTable_DbGlobal();
-		$vendor_sql="SELECT 
-				  p.order_id,
-				  p.order,
-				  p.date_order,
-				  p.status,
-				  (SELECT v.v_name FROM tb_vendor AS v WHERE v.vendor_id = p.vendor_id) AS VendorName,
-				  p.all_total,
-				  (SELECT u.username FROM rsv_acl_user AS u WHERE u.user_id = p.user_mod) AS userName
-				  FROM tb_purchase_order AS p WHERE 1";
-		
-		$user = $this->GetuserInfoAction();
-		$str_condition = " AND p.LocationId" ;
-		$vendor_sql .= $db->getAccessPermission($user["level"], $str_condition, $user["location_id"]);
-		
-		$this->view->level = $user["level"];
-		
-		if($this->getRequest()->isPost()){
-				$post = $this->getRequest()->getPost();
-				//echo $post["order"];
-				if($post['order'] !=''){
-						$vendor_sql .= " AND p.order LIKE '%".$post['order']."%'";
-				}
-				if($post['vendor_name'] !='' AND $post['vendor_name'] !=0){
-					$vendor_sql .= " AND p.vendor_id =".$post['vendor_name'];
-								}
-// 				if($post['phone'] !=''){
-// 					$vendor_sql .= " AND v.phone LIKE '%".$post['phone']."%'";
-// 				}
-				if($post['status'] !=''){
-					$vendor_sql .= " AND p.status =".$post['status'];
-				}
-				$start_date = $post['search_start_date'];
-				$end_date = $post['search_end_date'];
-				
-				if($start_date != "" && $end_date != "" && strtotime($end_date) >= strtotime($start_date)) {
-					$vendor_sql .= " AND p.date_order BETWEEN '$start_date' AND '$end_date'";
-				}
-		}
-		else{
-			$vendor_sql.=" AND p.status=4 ";
-		}
-		//echo $vendor_sql;exit();
-		$vendor_sql.=" ORDER BY p.order_id DESC";
-		//**************************************
-		$rows=$db->getGlobalDb($vendor_sql);
-		//print_r($rows);exit();
-		$glClass = new Application_Model_GlobalClass();
-		$rows = $glClass->getStatusType($rows, BASE_URL, true);
-		$columns=array("PURCHASE_ORDER_CAP","ORDER_DATE_CAP","STATUS_CAP", "VENDOR_NAME_CAP",
-				 "TOTAL_CAP_DOLLAR",strtoupper("BY_USER_CAP"));
-		$link=array(
-				'module'=>'purchase','controller'=>'index','action'=>'detail-purchase-order',
-		);
-		// url link to update purchase order
-		
-		$urlEdit = BASE_URL . "/purchase/index/update-purchase-order";
-		$this->view->list=$list->getCheckList(0, $columns, $rows, array('order'=>$link),$urlEdit);
 	}
 	public function addAction(){
 		$db = new Application_Model_DbTable_DbGlobal();
-		
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			try {
-			$payment_purchase_order = new purchase_Model_DbTable_DbPurchaseVendor();
-			$payment_purchase_order->vendorPurchaseOrderPayment($data);
-			//print_r($data);exit();
-
-				if(!empty($data['SaveNew'])){
-					Application_Form_FrmMessage::message("Purchase has been Saved!");
-					Application_Form_FrmMessage::redirectUrl("/purchase/index/add-purchase");
-					//print_r($data);
-				}
-				//not yet use in this version
-				elseif(!empty($data['Save'])){
-					Application_Form_FrmMessage::redirectUrl("/purchase/index/index");
+			$payment_purchase_order = new Purchase_Model_DbTable_DbPurchaseVendor();
+			$payment_purchase_order->addPurchaseOrder($data);
+			Application_Form_FrmMessage::message("Purchase has been Saved!");
+				if(!empty($data['btnsavenew'])){
+					Application_Form_FrmMessage::redirectUrl("/purchase/index");
 				}
 			}catch (Exception $e){
-				Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
+				Application_Form_FrmMessage::message('INSERT_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
 		
-		$user = $this->GetuserInfoAction();
-		if($user["level"]!=1 AND $user["level"]!=2){
-				$this->_redirect("purchase/index/index");
-		}
 		///link left not yet get from DbpurchaseOrder 	
 		$frm_purchase = new Application_Form_purchase(null);
 		$form_add_purchase = $frm_purchase->productOrder(null);
@@ -114,20 +63,7 @@ class purchase_indexController extends Zend_Controller_Action
 		
 		// item option in select
 		$items = new Application_Model_GlobalClass();
-		$itemRows = $items->getProductOption();
-		$this->view->items = $itemRows;
-		
-		//get control
-		$formControl = new Application_Form_FrmAction(null);
-		$formViewControl = $formControl->AllAction(null);
-		Application_Model_Decorator::removeAllDecorator($formViewControl);
-		$this->view->control = $formViewControl;
-		
-		//for view left purchase order 
-		$vendor_sql = "SELECT p.order, p.all_total,p.paid,p.balance
-		FROM tb_purchase_order AS p INNER JOIN tb_vendor AS v ON v.vendor_id=p.vendor_id ORDER BY p.timestamp DESC ";
-		$rows=$db->getGlobalDb($vendor_sql);
-		$this->view->list=$rows;
+		$this->view->items = $items->getProductOption();;
 		
 		//for add product;
 		$formpopup = new Application_Form_FrmPopup(null);
@@ -143,10 +79,9 @@ class purchase_indexController extends Zend_Controller_Action
 		//for add location
 		$formAdd = $formpopup->popuLocation(null);
 		Application_Model_Decorator::removeAllDecorator($formAdd);
-		$this->view->form_addstock = $formAdd;	
+		$this->view->form_branch = $formAdd;	
 	}
 	public function updatePurchaseOrderAction(){
-	
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
 		$db_global = new Application_Model_DbTable_DbGlobal();
 		$sql = "SELECT * FROM tb_purchase_order WHERE order_id =".$id;
@@ -164,6 +99,14 @@ class purchase_indexController extends Zend_Controller_Action
 				
 		}else
 			$this->ActionPurchaseAction();
+	}
+	public function addNewproudctAction(){
+		$post=$this->getRequest()->getPost();
+		$add_new_product = new Product_Model_DbTable_DbAddProduct();
+		$pid = $add_new_product->addNewItem($post);
+		$result = array("pid"=>$pid);
+		echo Zend_Json::encode($result);
+		exit();
 	}
 	protected function ActionPurchaseAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
@@ -666,12 +609,9 @@ class purchase_indexController extends Zend_Controller_Action
   	if($this->getRequest()->isPost()){
   		$post=$this->getRequest()->getPost();
   		$item_id = $post['item_id'];
-  		$sql = "SELECT `qty_perunit` FROM tb_product WHERE pro_id= '$item_id' LIMIT 1 ";
+  		$sql = "SELECT `qty_perunit` FROM tb_product WHERE id= $item_id LIMIT 1 ";
   		$db = new Application_Model_DbTable_DbGlobal();
   		$row=$db->getGlobalDbRow($sql);
-  		/*if(!$result){
-  		 $result = array('contact'=>'','phone'=>'');
-  		}*/
   		echo Zend_Json::encode($row);
   		exit();
   	}

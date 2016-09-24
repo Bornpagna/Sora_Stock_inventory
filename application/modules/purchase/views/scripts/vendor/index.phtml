@@ -5,57 +5,34 @@
 	$formFilter = $this->formFilter;
 ?>
 <title><?php echo $tr->translate("VENDOR_LIST");?></title>
-<div class="right" style="padding:10px; width: 97%">
-<div class="wrapper">
-  <div style="width:98%; margin:0 auto;">
-  	
-	  		<form method="post" action="<?php echo $formFilter->getAction(); ?>">
-	  			<div class="select view-table shadow" style="width: 100%;">
-							<table style="width: 100%">
-									<tr class="height">
-										<td><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-										<td width="30%"><?php echo $formFilter->getElement('name');?></td>
-										<td><?php echo $tr->translate("CON_NAME")."/".$tr->translate("CON_NUM");?></td>
-										<td width="30%"><?php echo $formFilter->getElement('phone');?></td>
-									</tr>
-									<tr class="height">
-										<td><?php echo $tr->translate("EMAIL")."/".$tr->translate("WEBSITE");?></td>
-										<td><?php echo $formFilter->getElement('email');?></td>
-										<td><?php echo $tr->translate("ADDR");?></td>
-										<td><?php echo $formFilter->getElement('address');?></td>
-									</tr>
-									<tr class="height">
-										<td colspan="2" class="btn"></td>
-										<td class="btn"></td>
-										<td class="btn"><input type="submit" value="<?php echo $tr->translate("REFRESH");?>" /></td>
-									</tr>
-									<tr class="height">
-										<td colspan="2" class="btn"></td>
-										<td class="btn"></td>
-										<td class="btn">
-											<div class="btn" align="right">
-												<?php 
-													$formList = new Application_Form_Frmlist();
-													echo $formList->showAddBuntton($url_new);
-												?>
-											</div>
-										</td>
-									</tr>
-							</table>
-					</div>
-						<br/>
-		    <!-- table here -->
-		   <div style="position: relative; clear: both;">
-		   		<div class="">
-					<div class="head_form">
-						<?php echo $tr->translate("VENDOR_LIST");?>
-					</div>
-					<div class="contain_form">
-						<?php echo $this->list; ?>
-					</div>
+<meta charset="utf-8" />
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-globe"></i><?php echo $tr->translate("VENDOR_LIST");?>
 				</div>
-		  </div>
-		 </form>
+				<a href="<?php echo $url_new;?>" class="btn btn-sm green  pull-right">
+					<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("ADD_NEW");?>
+				</a>
+			</div>
+			<div class="portlet-body form">
+				<form method="post" action="<?php echo $formFilter->getAction(); ?>">
+					<div class="form-group" style="padding-top: 6px;">
+						<label class="control-label col-md-3"><?php echo $formFilter->getElement('text_search');?></label>
+						<label class="control-label col-md-3"><?php echo $formFilter->getElement('suppliyer_id');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('start_date');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('end_date');?></label>
+						<label class="control-label col-md-2">
+							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+						</label>
+					</div>			
+				</form> 
+				<div class="contain_form" style="clear:both;">
+					<?php echo $this->list; ?>
+				</div>
+		   </div>
+		</div>
 	</div>
-</div><!-- end wrapper -->
-</div><!-- end of .right -->
+</div>

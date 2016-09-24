@@ -1,8 +1,33 @@
 <?php
 
-class purchase_Model_DbTable_DbRecieveOrder extends Zend_Db_Table_Abstract
+class Purchase_Model_DbTable_DbRecieveOrder extends Zend_Db_Table_Abstract
 {
-	//use for add purchase order 29-13
+	function getAllReceivedOrder($search){
+		$db = $this->getAdapter();
+		$sql=" SELECT ro.order_id ,ro.recieve_number ,
+				ro.date_order ,date_in,
+				(SELECT v.v_name FROM tb_vendor AS v WHERE v.vendor_id = ro.vendor_id) AS vendor_name ,
+				ro.all_total ,(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = ro.user_mod)
+				 AS userName FROM tb_recieve_order AS ro WHERE status=1 ";
+		$order=" ORDER BY ro.order_id DESC  ";
+// 		$db = new Application_Model_DbTable_DbGlobal();
+// 		$user = $this->GetuserInfoAction();
+// 		$str_condition = " AND p.LocationId" ;
+// 		$vendor_sql .= $db->getAccessPermission($user["level"], $str_condition, $user["location_id"]);
+// 		if($post['order'] !=''){
+// 			$vendor_sql .= " AND ro.recieve_no LIKE '%".$post['order']."%'";
+// 		}
+// 		if($post['vendor_name'] !='' AND $post['vendor_name'] !=0){
+// 			$vendor_sql .= " AND ro.user_recieve =".$post['vendor_name'];
+// 		}
+// 		$start_date = $post['search_start_date'];
+// 		$end_date = $post['search_end_date'];
+// 		if($start_date != "" && $end_date != "" && strtotime($end_date) >= strtotime($start_date)) {
+// 			$vendor_sql .= " AND ro.date_recieve BETWEEN '$start_date' AND '$end_date'";
+// 		}
+		return $db->fetchAll($sql.$order);
+	}
+	
 	public function vendorPurchaseOrderPayment($data)
 	{
 		try{
@@ -14,15 +39,7 @@ class purchase_Model_DbTable_DbRecieveOrder extends Zend_Db_Table_Abstract
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
 			
-		//	print_r($data);
 			$idrecord=$data['v_name'];
-	// 		$datainfo=array(
-					
-	// 				"contact_name"=>$data['contact'],
-	// 				"phone"       =>$data['txt_phone'],
-	// 		);
-	// 		//updage vendor info
-	// 		$itemid=$db_global->updateRecord($datainfo,$idrecord,"vendor_id","tb_vendor");
 			if($data['txt_order']==""){
 				$date= new Zend_Date();
 				$order_add="PO".$date->get('hh-mm-ss');

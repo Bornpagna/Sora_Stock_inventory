@@ -1,5 +1,5 @@
 <?php 
-class sales_Form_FrmStockFilter extends Zend_Form
+class Sales_Form_FrmStockFilter extends Zend_Form
 {
 	public function init()
     {
@@ -17,10 +17,10 @@ class sales_Form_FrmStockFilter extends Zend_Form
     	$phoneElement->setValue($phonevalue);
     	$this->addElement($phoneElement);
     	
-    	$rs=$db->getGlobalDb('SELECT LocationId,Name FROM tb_sublocation ORDER BY LocationId DESC ');
+    	$rs=$db->getGlobalDb('SELECT id,name FROM tb_sublocation WHERE name!="" ORDER BY id DESC ');
     	$options=array(''=>$tr->translate('Please_Select'));
     	$agentValue = $request->getParam('stock_location');
-    	foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
     	$sale_agent=new Zend_Form_Element_Select('stock_location');
     	$sale_agent->setMultiOptions($options);
     	$sale_agent->setAttribs(array(

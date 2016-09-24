@@ -174,8 +174,6 @@ function Clickheretoprint()
 								<td>&nbsp;<?php echo $tr->translate("ITEM_NAME");?></td>
 								<td>&nbsp;<?php echo $tr->translate("ITEM_CODE");?></td>
 								<td width="10%">&nbsp;<?php echo $tr->translate("DATE_ORDER");?></td>
-								<!-- <td><?php //echo $tr->translate("BRANCH_NAME");?></th>
-								<td><?php //echo $tr->translate("CATEGORY");?></th> -->
 								<td>&nbsp;<?php echo $tr->translate("QTY_PO");?></td>
 								<td width="12%">&nbsp;<?php echo $tr->translate("LOCATION");?></td>
 								<td>&nbsp;<?php echo $tr->translate("QTY_ON_HAND");?></td>
@@ -183,7 +181,7 @@ function Clickheretoprint()
 					 <?php $num=1; foreach ($get_purchase_item AS $index => $item_purchase): $index = $index + 1?>
 							<tr height="30" class='row-format<?php echo $num; ?>' id="item_<?php echo $index; ?>">
 								<td align="center">&nbsp;<?php echo $index ?></td>
-								<td>&nbsp;<?php echo $item_purchase["order"]?></td>
+								<td>&nbsp;<?php //echo $item_purchase["order"]?></td>
 								<td>&nbsp;<?php echo $item_purchase["item_name"]?></td>
 								<td>&nbsp;<?php echo $item_purchase["item_code"]?></td>
 								<td>&nbsp;<?php echo $item_purchase["date_in"]?></td>
@@ -200,7 +198,6 @@ function Clickheretoprint()
 // 								$a = $index 
 // 							}
 							?> 
-							
 					<?php endforeach; ?>
 					<tr><td colspan="8"><input type="text" id="total"></td></tr>
 					<input type="hidden" name="identify" id="identify" />
@@ -283,10 +280,10 @@ function Clickheretoprint()
 					 <?php $num=1; foreach ($sales_item AS $index => $item_sale):?>
 							<tr height="30" class='row-format<?php echo $num; $num=1-$num;?> font'>
 								<td align="center"><?php echo $index+1?></td>
-								<td>&nbsp;<?php echo $item_sale["order"]?></td>
+								<td>&nbsp;<?php //echo $item_sale["order"]?></td>
 								<td>&nbsp;<?php echo $item_sale["item_name"]?></td>
 								<td>&nbsp;<?php echo $item_sale["item_code"]?></td>
-								<td>&nbsp;<?php echo $item_sale["date_order"]?></td>
+								<td>&nbsp;<?php //echo $item_sale["date_order"]?></td>
 								<!-- <td>&nbsp;<?php //echo $item_sale["Brand"]?></td>
 								<td>&nbsp;<?php //echo $item_sale["cate_name"]?></td> -->
 								<td>&nbsp;<?php echo $item_sale["qty_order"]?></td>
@@ -416,9 +413,9 @@ function Clickheretoprint()
 								<td>&nbsp;<?php echo $product["item_code"]?></td>
 								<td>&nbsp;<?php echo $product["location"]?></td>
 								<td>&nbsp;<?php echo $product["qty"]?></td>
-								<td>&nbsp;<?php echo $product["qty_avaliable"]?></td>
-								<td>&nbsp;<?php echo $product["qty_onorder"]?></td>
-								<td>&nbsp;<?php echo $product["qty_onsold"]?></td>
+								<td>&nbsp;<?php //echo $product["qty_avaliable"]?></td>
+								<td>&nbsp;<?php //echo $product["qty_onorder"]?></td>
+								<td>&nbsp;<?php //echo $product["qty_onsold"]?></td>
 								<!-- <td width="10%">&nbsp;<?php //echo $product["category"]?></td> -->
 							</tr>
 					<?php endforeach; ?>

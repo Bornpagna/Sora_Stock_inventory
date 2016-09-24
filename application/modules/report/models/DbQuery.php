@@ -6,6 +6,211 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		$result = $user_info->getUserInfo();
 		return $result;
 	}
+	public function getAllPurchaseReport($search){//1
+		$db= $this->getAdapter();
+		$sql=" SELECT id,
+		(SELECT name FROM `tb_sublocation` WHERE tb_sublocation.id = branch_id AND status=1 AND name!='' LIMIT 1) AS branch_name,
+		(SELECT v_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=tb_purchase_order.vendor_id LIMIT 1 ) AS vendor_name,
+		order_number,date_order,date_in,
+		(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
+		currency_id,
+		net_total,paid,balance,
+		(SELECT name_en FROM `tb_view` WHERE key_code = purchase_status AND `type`=1) As purchase_status,
+		(SELECT name_en FROM `tb_view` WHERE key_code =tb_purchase_order.status AND type=2 LIMIT 1),
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = user_mod LIMIT 1 ) AS user_name
+		FROM `tb_purchase_order` ";
+		$from_date =(empty($search['start_date']))? '1': " date_order >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " date_order <= '".$search['end_date']." 23:59:59'";
+		$where = " WHERE ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " order_number LIKE '%{$s_search}%'";
+			$s_where[] = " net_total LIKE '%{$s_search}%'";
+			$s_where[] = " paid LIKE '%{$s_search}%'";
+			$s_where[] = " balance LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['suppliyer_id']>0){
+			$where .= " AND vendor_id = ".$search['suppliyer_id'];
+		}
+		if($search['branch_id']>0){
+			$where .= " AND branch_id =".$search['branch_id'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbg->getAccessPermission();
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+	function getProductPruchaseById($id){//2
+		$db = $this->getAdapter();
+		$sql=" SELECT 
+				 (SELECT name FROM `tb_sublocation` WHERE id=po.branch_id) AS branch_name,
+				 p.order_number,p.date_order,p.date_in,p.remark,
+				 (SELECT item_name FROM `tb_product` WHERE id= po.pro_id LIMIT 1) AS item_name,
+				 (SELECT item_code FROM `tb_product` WHERE id=po.pro_id LIMIT 1 ) AS item_code,
+				 (SELECT symbal FROM `tb_currency` WHERE id=p.currency_id limit 1) As curr_name,
+				 (SELECT v_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS vendor_name,
+				 (SELECT v_phone FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS v_phone,
+				 (SELECT contact_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS contact_name,
+				 (SELECT add_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS add_name,
+				 (SELECT name_en FROM `tb_view` WHERE key_code = purchase_status AND `type`=1 LIMIT 1) As purchase_status,
+				 (SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = p.user_mod LIMIT 1 ) AS user_name,
+				 po.qty_order,po.price,po.sub_total,p.net_total,
+				 p.paid,p.discount_real,p.tax,
+				 p.balance
+				 FROM `tb_purchase_order` AS p,
+				`tb_purchase_order_item` AS po WHERE p.id=po.purchase_id
+				 AND po.status=1 AND p.id = $id ";
+		return $db->fetchAll($sql);
+	}
+	function getPruchaseProductDetail($search){//3
+		$db = $this->getAdapter();
+		$sql=" SELECT
+			(SELECT name FROM `tb_sublocation` WHERE id=p.branch_id) AS branch_name,
+			it.item_name,
+		    it.item_code,
+			(SELECT name FROM `tb_category` WHERE id=it.cate_id LIMIT 1) AS cate_name,
+		    (SELECT name FROM `tb_brand` WHERE id=it.brand_id LIMIT 1) AS brand_name,
+			(SELECT symbal FROM `tb_currency` WHERE id=p.currency_id limit 1) As curr_name,
+			(SELECT v_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS vendor_name,
+			(SELECT v_phone FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS v_phone,
+			(SELECT contact_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS contact_name,
+			(SELECT add_name FROM `tb_vendor` WHERE tb_vendor.vendor_id=p.vendor_id LIMIT 1 ) AS add_name,
+			(SELECT name_en FROM `tb_view` WHERE key_code = purchase_status AND `type`=1 LIMIT 1) As purchase_status,
+			(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = p.user_mod LIMIT 1 ) AS user_name,
+			po.qty_order,po.price,po.sub_total,p.currency_id,p.net_total,
+			p.id,p.order_number,p.date_order,p.date_in,p.remark,
+			p.paid,p.discount_real,p.tax,
+			p.balance
+			FROM `tb_purchase_order` AS p,
+			`tb_purchase_order_item` AS po,
+             tb_product AS it
+			 WHERE p.id=po.purchase_id AND it.id=po.pro_id 
+			AND po.status=1  AND p.status=1 ";
+		$from_date =(empty($search['start_date']))? '1': " p.date_order >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " p.date_order <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['txt_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['txt_search']));
+			$s_where[] = " it.item_name LIKE '%{$s_search}%'";
+			$s_where[] = " it.item_code LIKE '%{$s_search}%'";
+			$s_where[] = " it.barcode LIKE '%{$s_search}%'";
+			$s_where[] = " p.order_number LIKE '%{$s_search}%'";
+			$s_where[] = " p.net_total LIKE '%{$s_search}%'";
+			$s_where[] = " p.paid LIKE '%{$s_search}%'";
+			$s_where[] = " p.balance LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['item']>0){
+			$where .= " AND it.id =".$search['item'];
+		}
+		if($search['category_id']>0){
+			$where .= " AND it.cate_id =".$search['category_id'];
+		}
+		if($search['brand_id']>0){
+			$where .= " AND it.brand_id =".$search['brand_id'];
+		}
+		if($search['branch_id']>0){
+			$where .= " AND p.branch_id =".$search['branch_id'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbg->getAccessPermission();
+		$order=" ORDER BY p.id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+	public function getAllSaleOrderReport($search){//4
+		$db= $this->getAdapter();
+		$sql=" SELECT id,
+		(SELECT name FROM `tb_sublocation` WHERE tb_sublocation.id = s.branch_id AND status=1 AND name!='' LIMIT 1) AS branch_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT name FROM `tb_sale_agent` WHERE id=s.saleagent_id LIMIT 1) AS agent_name,
+		s.sale_no,s.date_sold,s.all_total,s.tax,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id limit 1) As curr_name,
+		s.currency_id,
+		s.net_total,s.paid,s.balance,
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name
+		FROM `tb_sales_order` AS s ";
+		$from_date =(empty($search['start_date']))? '1': " s.date_sold >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " s.date_sold <= '".$search['end_date']." 23:59:59'";
+		$where = " WHERE ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " s.order_number LIKE '%{$s_search}%'";
+			$s_where[] = " s.net_total LIKE '%{$s_search}%'";
+			$s_where[] = " s.paid LIKE '%{$s_search}%'";
+			$s_where[] = " s.balance LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['customer_id']>0){
+			$where .= " AND s.customer_id = ".$search['customer_id'];
+		}
+		if($search['branch_id']>0){
+			$where .= " AND branch_id =".$search['branch_id'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbg->getAccessPermission();
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+	function getProductSaleById($id){//5
+		$db = $this->getAdapter();
+		$sql=" SELECT
+		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		s.sale_no,s.date_sold,s.remark,
+		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
+		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS vendor_name,
+		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS v_phone,
+		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
+		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
+		so.qty_order,so.price,so.sub_total,s.net_total,
+		s.paid,s.discount_real,s.tax,
+		s.balance
+		FROM `tb_sales_order` AS s,
+		`tb_salesorder_item` AS so WHERE s.id=so.saleorder_id
+		AND s.status=1 AND s.id = $id ";
+		return $db->fetchAll($sql);
+	}
+	
+	
+	function getProductPurchaseDetail($search){
+		$start_date = trim($data["start_date"]);
+		$end_date = trim($data["end_date"]);
+		$sql= " SELECT
+		pur.id,
+		pur.`order_number`,
+		pur.`date_in`,
+		p.item_name,
+		p.item_code,
+		SUM(pio.qty_order) AS qty_order,
+		br.Name AS Brand,
+		cg.Name AS cate_name,
+		(SELECT
+		NAME
+		FROM
+		tb_sublocation
+		WHERE `id` = pur.`branch_id`) AS branch ,
+		pl.qty AS qty_location
+		FROM
+		tb_product AS p,
+		tb_category AS cg,
+		tb_brand AS br,
+		tb_purchase_order_item AS pio,
+		tb_purchase_order AS pur,
+		tb_prolocation AS pl
+		WHERE p.id = pio.pro_id
+		AND cg.id = p.cate_id
+		AND br.id = p.brand_id
+		AND pl.`id`=pur.`id`
+		AND pl.`pro_id`=pio.`pro_id`
+		AND pio.purchase_id = pur.id
+		AND pur.`date_in` BETWEEN '$start_date' AND '$end_date'";
+	}
 	
 	public function getItem($data){
 		$db = $this->getAdapter();
@@ -29,61 +234,33 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 	
 	public function getSalesItem($data){
 		$db=$this->getAdapter();
-		//$start_date = strtotime($start);
-		//$end_date =strtotime($end)+86400;//bonus 24h/day
-		
-// 		echo"after ";
-// 		echo $sec=strtotime($star);
-// 		echo "time to date".date('Y/m/d H:i:s', $sec);exit();
 		
 		$start_date = trim($data["start_date"]);
 		$end_date = trim($data["end_date"]);
-// 		if($start_date=="" OR $end_date=""){
-// 			$start_date = $lastMonth;
-// 			$end_date = new Zend_Date();
-// 		}else{
-// 			$start_date = trim($data["start_date"]);
-// 			$end_date = trim($data["end_date"]);
-// 		}
-		
-// 		$sql = "SELECT p.item_name, p.item_code, SUM( si.qty_order ) AS qty,br.Name AS Brand,cg.Name AS cate_name,s.`order`,
-//   s.`date_order`
-// 					FROM tb_product AS p,tb_category As cg,tb_branch AS br, tb_sales_order_item AS si, tb_sales_order AS s
-// 					WHERE p.pro_id = si.pro_id
-// 					AND cg.CategoryId=p.cate_id
-// 					AND br.branch_id=p.brand_id
-// 					AND si.order_id = s.order_id AND s.status=4 AND s.date_order BETWEEN '$start_date' AND '$end_date'";
 		$sql= "SELECT 
-				  p.item_name,
-				  p.item_code,
-				  p.`qty_onhand`,
-				  SUM(si.qty_order) AS qty_order,
-				  br.Name AS Brand,
-				  cg.Name AS cate_name,
-				  s.`order`,
-				  s.`date_order` ,
-				  (SELECT 
-				    NAME 
-				  FROM
-				    tb_sublocation 
-				  WHERE `LocationId` = s.`LocationId`) AS branch,
-				  pl.qty 
-				FROM
-				  tb_product AS p,
-				  tb_category AS cg,
-				  tb_branch AS br,
-				  tb_sales_order_item AS si,
-				  tb_sales_order AS s ,
-				  tb_prolocation AS pl
-				WHERE p.pro_id = si.pro_id 
-				  AND cg.CategoryId = p.cate_id 
-				  AND br.branch_id = p.brand_id 
-				  AND si.order_id = s.order_id 
-				  AND pl.`pro_id`=si.`pro_id`
-				  AND si.order_id = s.order_id 
+					p.item_name,
+					p.item_code,
+					SUM(si.qty_order) AS qty_order,
+					br.Name AS Brand,
+					cg.Name AS cate_name,
+					s.`sale_no`,
+					s.`date_sold` , 
+					(SELECT NAME FROM tb_sublocation WHERE `id` = s.`branch_id`) AS branch,
+					pl.qty 
+					FROM tb_product AS p,
+					tb_category AS cg,
+					tb_brand AS br,
+					`tb_salesorder_item` AS si,
+					tb_sales_order AS s ,
+					tb_prolocation AS pl 
+					WHERE p.id = si.pro_id AND cg.id = p.cate_id 
+					AND br.id = p.brand_id 
+					AND si.saleorder_id = s.id 
+					AND pl.`pro_id`=si.`pro_id` 
+					AND si.saleorder_id = s.id ";
 				  
-				  AND s.date_order BETWEEN '$start_date' 
-				  AND '$end_date' ";
+
+// 				  AND '$end_date' ";
 			if(($data["item"]!="" AND $data["item"]!=0 )){
 				//$sql.=" AND "."(p.item_name LIKE '%".trim($data["item"])."%' OR p.item_code LIKE '%".trim($data["item"]."%')");
 				$sql.=" AND p.pro_id = ".trim($data["item"]);
@@ -101,9 +278,9 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 			if ($result["level"]!=1 AND $result["level"]!=2 ){
 				$sql.=" AND s.LocationId = ".trim($result["location_id"]);
 			}
-			//echo $sql;
+// 			echo $sql;exit();
 			
-		$sql.=" GROUP BY si.id ORDER BY s.date_order DESC";
+// 		$sql.=" GROUP BY si.id ORDER BY s.date_order DESC";
 		return $db->fetchAll($sql);
 	}
 	public function getProductSummary($data){
@@ -161,7 +338,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 	//get location name for report at other location
 	public function getLocationName($location_id){
 		$db=$this->getAdapter();
-		$sql="SELECT Name FROM tb_sublocation WHERE LocationId = ".$location_id;
+		$sql="SELECT name FROM tb_sublocation WHERE id = ".$location_id;
 		$row=$db->fetchRow($sql);
 		return $row;
 	}
@@ -178,69 +355,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		}
 		
 	}
-	public function getPurchaseItem($data){
-		$db=$this->getAdapter();
-		$start_date = trim($data["start_date"]);
-		$end_date = trim($data["end_date"]);
-		
-// 		$sql = "SELECT p.item_name, p.item_code, SUM( pi.qty_order ) AS qty,br.Name AS Brand,cg.Name AS cate_name
-// 				FROM tb_product AS p,tb_category As cg,tb_branch AS br, tb_purchase_order_item AS pi, tb_purchase_order AS pur
-// 				WHERE p.pro_id = pi.pro_id
-// 				AND cg.CategoryId=p.cate_id
-// 				AND br.branch_id=p.brand_id
-// 				AND pi.order_id = pur.order_id
-				
-// 				AND pur.date_in BETWEEN '$start_date' AND '$end_date'";
-		$sql= "SELECT 
-				  pur.order_id,
-				  pur.`order`, 
-				  p.item_name,
-				  p.item_code,
-				  p.qty_onhand,
-				  pur.`date_in`,
-				  SUM(pio.qty_order) AS qty_order,
-				  br.Name AS Brand,
-				  cg.Name AS cate_name,
-				  (SELECT 
-				    NAME 
-				  FROM
-				    tb_sublocation 
-				  WHERE `LocationId` = pur.`LocationId`) AS branch ,
-				  pl.qty as qty_location
-				FROM
-				  tb_product AS p,
-				  tb_category AS cg,
-				  tb_branch AS br,
-				  tb_purchase_order_item AS pio,
-				  tb_purchase_order AS pur,
-				  tb_prolocation AS pl 
-				WHERE p.pro_id = pio.pro_id 
-				  AND cg.CategoryId = p.cate_id 
-				  AND br.branch_id = p.brand_id 
-				  AND pl.`LocationId`=pur.`LocationId`
-				  AND pl.`pro_id`=pio.`pro_id`
-				  AND pio.order_id = pur.order_id 
-				  AND pur.`date_in` BETWEEN '$start_date' AND '$end_date'";
-				
-		
-			if(($data["item"]!="" AND $data["item"]!=0 )){
-				$sql.=" AND p.pro_id = ".trim($data["item"]);
-			}
-			if($data["category_id"]!="" AND $data["category_id"]!=0){
-				$sql.=" AND cg.CategoryId = ".trim($data["category_id"]);
-			}
-			if($data["branch_id"]!="" AND $data["branch_id"]!=0){
-				$sql.=" AND br.branch_id = ".trim($data["branch_id"]);
-			}
-			if($data["LocationId"]!="" AND $data["LocationId"]!=0){
-				$sql.=" AND pur.LocationId = ".trim($data["LocationId"]);
-			}
-			
-			//ORDER BY pur.`date_in` DES";
-			$sql.=" GROUP BY pio.`id` ";
-				$sql.=" ORDER BY pur.`order_id`,pur.`date_in` DESC ";
-		return $db->fetchAll($sql);
-	}
+	
 	public function getQtyTransfer($data){
 		$db=$this->getAdapter();
 		$start_date = trim($data["start_date"]);
@@ -254,7 +369,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 // 				 AND cg.CategoryId=p.cate_id
 // 				 AND br.branch_id=p.brand_id
 // 		AND t.transfer_date  BETWEEN '$start_date' AND '$end_date'";
-		$sql = "SELECT 
+		$sql = " SELECT 
 					  p.item_name,
 					  p.item_code,
 					  SUM(ti.qty) AS qty,
@@ -263,61 +378,62 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 					  cg.Name AS cate_name,
 					  t.`transfer_date`,
 					  (SELECT 
-					    sl.`Name` 
+					    sl.`name` 
 					  FROM
 					    `tb_sublocation` AS sl 
-					  WHERE sl.`LocationId` = t.`from_location`) AS From_location,
+					  WHERE sl.`id` = t.`from_location`) AS From_location,
 					  (SELECT 
-					    sl.`Name` 
+					    sl.`name` 
 					  FROM
 					    `tb_sublocation` AS sl 
-					  WHERE sl.`LocationId` = t.`to_location`) AS to_location ,
+					  WHERE sl.`id` = t.`to_location`) AS to_location ,
 					  (SELECT 
 					    u.title 
 					  FROM
-					    `rsv_acl_user` AS u 
+					    `tb_acl_user` AS u 
 					  WHERE u.user_id = t.`user_id`) AS title,
 					  (SELECT 
 					    u.fullname 
 					  FROM
-					    `rsv_acl_user` AS u 
+					    `tb_acl_user` AS u 
 					  WHERE u.user_id = t.`user_id`) AS user_name 
 					FROM
 					  tb_product AS p,
 					  tb_category AS cg,
-					  tb_branch AS br,
+					  tb_brand AS br,
 					  tb_transfer_item AS ti,
 					  tb_stocktransfer AS t,
 					  tb_sublocation AS sl 
 					WHERE ti.transfer_id = t.transfer_id 
-					  AND p.pro_id = ti.pro_id 
-					  AND cg.CategoryId = p.cate_id 
-					  AND br.branch_id = p.brand_id 
-					  AND t.transfer_date BETWEEN '$start_date' 
-					  AND '$end_date' ";
+					  AND p.id = ti.pro_id 
+					  AND cg.id = p.cate_id 
+					  AND br.id = p.brand_id ";
+					  
+// 					  AND t.transfer_date BETWEEN '$start_date' 
+// 					  AND '$end_date' ";
 		
-		if(($data["item"]!="" AND $data["item"]!=0 )){
-			$sql.=" AND p.pro_id = ".trim($data["item"]);
-		}
-		if($data["category_id"]!="" AND $data["category_id"]!=0){
-			$sql.=" AND cg.CategoryId = ".trim($data["category_id"]);
-		}
-		if($data["branch_id"]!="" AND $data["branch_id"]!=0){
-			$sql.=" AND br.branch_id = ".trim($data["branch_id"]);
-		}
-		if($data["LocationId"]!="" AND $data["LocationId"]!=0){
-			$sql.=" AND t.From_location = ".trim($data["LocationId"]);
-		}
+// 		if(($data["item"]!="" AND $data["item"]!=0 )){
+// 			$sql.=" AND p.pro_id = ".trim($data["item"]);
+// 		}
+// 		if($data["category_id"]!="" AND $data["category_id"]!=0){
+// 			$sql.=" AND cg.CategoryId = ".trim($data["category_id"]);
+// 		}
+// 		if($data["branch_id"]!="" AND $data["branch_id"]!=0){
+// 			$sql.=" AND br.branch_id = ".trim($data["branch_id"]);
+// 		}
+// 		if($data["LocationId"]!="" AND $data["LocationId"]!=0){
+// 			$sql.=" AND t.From_location = ".trim($data["LocationId"]);
+// 		}
 		
-		if($data["to_LocationId"]!="" AND $data["to_LocationId"]!=0){
-			$sql.=" AND t.to_location = ".trim($data["to_LocationId"]);
-		}
-		$result =  $this->GetuserInfo();
-		if ($result["level"]!=1 AND $result["level"]!=2 ){
-			$sql.=" AND t.to_location = ".trim($result["location_id"]);
-		}
+// 		if($data["to_LocationId"]!="" AND $data["to_LocationId"]!=0){
+// 			$sql.=" AND t.to_location = ".trim($data["to_LocationId"]);
+// 		}
+// 		$result =  $this->GetuserInfo();
+// 		if ($result["level"]!=1 AND $result["level"]!=2 ){
+// 			$sql.=" AND t.to_location = ".trim($result["location_id"]);
+// 		}
 			
-		$sql.=" GROUP BY transfer_no,p.pro_id ";
+// 		$sql.=" GROUP BY transfer_no,p.pro_id ";
 		return $db->fetchAll($sql);
 	}
 	
@@ -334,46 +450,42 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		// 				 AND cg.CategoryId=p.cate_id
 		// 				 AND br.branch_id=p.brand_id
 		// 		AND t.transfer_date  BETWEEN '$start_date' AND '$end_date'";
-		$sql = "SELECT 
-				  pl.pro_id,
+		$sql = " SELECT 
+				  pl.id,
 				  p.`item_name`,
 				  p.`item_code`,
 				  pl.qty,
-				  pl.`qty_avaliable`,
-				  pl.`qty_onorder`,
-				  pl.`qty_onsold`,
-				  pl.`LocationId` ,
-				  (SELECT p.`qty_onhand` FROM tb_product AS p WHERE p.pro_id =pl.pro_id) AS all_qty,
-				  (SELECT sl.Name FROM `tb_sublocation` AS sl WHERE sl.LocationId = pl.`LocationId`) AS location,
-				  b.`Name` AS branch,
-				  c.`Name` AS category
+				
+				  (SELECT sl.name FROM `tb_sublocation` AS sl WHERE sl.id = pl.`location_id`) AS location,
+				  b.`name` AS branch,
+				  c.`name` AS category
 				FROM
 				  tb_prolocation  AS pl,
-				  `tb_branch` AS b,
+				  `tb_brand` AS b,
 				  `tb_category` AS c,
-				  tb_product AS p
-				  WHERE b.`branch_id`=p.`brand_id`
-				  AND c.`CategoryId`=p.`cate_id`
-				  AND pl.`pro_id`=p.`pro_id`";	
+				   tb_product AS p
+				  WHERE b.`id`=p.`brand_id`
+				  AND c.`id`=p.`cate_id`
+				  AND pl.`pro_id`=p.`id` ";	
 					
-		if(($data["item"]!="" AND $data["item"]!=0 )){
-		$sql.="AND p.pro_id = ".trim($data["item"]);
-	}
-	if($data["category_id"]!="" AND $data["category_id"]!=0){
-	$sql.=" AND c.`CategoryId` = ".trim($data["category_id"]);
-	}
-			if($data["branch_id"]!="" AND $data["branch_id"]!=0){
-			$sql.=" AND b.`branch_id` = ".trim($data["branch_id"]);
-	}
-	if($data["LocationId"]!="" AND $data["LocationId"]!=0){
-	$sql.=" AND LocationId = ".trim($data["LocationId"]);
-	}
-			$result =  $this->GetuserInfo();
-			if ($result["level"]!=1 AND $result["level"]!=2 ){
-	$sql.=" AND LocationId = ".trim($result["location_id"]);
-	}
+// 		if(($data["item"]!="" AND $data["item"]!=0 )){
+// 		$sql.="AND p.pro_id = ".trim($data["item"]);
+// 	    }
+// 		if($data["category_id"]!="" AND $data["category_id"]!=0){
+// 		$sql.=" AND c.`CategoryId` = ".trim($data["category_id"]);
+// 		}
+// 				if($data["branch_id"]!="" AND $data["branch_id"]!=0){
+// 				$sql.=" AND b.`branch_id` = ".trim($data["branch_id"]);
+// 		}
+// 		if($data["LocationId"]!="" AND $data["LocationId"]!=0){
+// 		$sql.=" AND LocationId = ".trim($data["LocationId"]);
+// 		}
+// 				$result =  $this->GetuserInfo();
+// 				if ($result["level"]!=1 AND $result["level"]!=2 ){
+// 		$sql.=" AND LocationId = ".trim($result["location_id"]);
+// 		}
 			
-		$sql.=" ORDER BY pl.pro_id ";
+// 		$sql.=" ORDER BY pl.pro_id ";
 		return $db->fetchAll($sql);
 	}
 	public function getTopTenProductSO(){

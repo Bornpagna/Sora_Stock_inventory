@@ -1,7 +1,8 @@
 <?php
-class sales_CustomerController extends Zend_Controller_Action
+class Sales_CustomerController extends Zend_Controller_Action
 {
 	
+
     public function init()
     {
         /* Initialize action controller here */
@@ -10,81 +11,60 @@ class sales_CustomerController extends Zend_Controller_Action
     }
 	public function indexAction()
 	{
-		$formFilter = new Application_Form_Frmsearch();
-		$frmfillter = $formFilter->customerSearch();
-		Application_Model_Decorator::removeAllDecorator($frmfillter);
-		$this->view->formFilter = $frmfillter;
-		$list = new Application_Form_Frmlist();
-		Application_Model_Decorator::removeAllDecorator($formFilter);
-		$db = new Application_Model_DbTable_DbGlobal();
-		$vendorSql = "SELECT c.customer_id, c.cust_name,c.contact_name, c.phone, c.email, c.website,
-		tp.price_type_name ,c.is_active
-		FROM tb_customer AS c,tb_price_type as tp
-		WHERE tp.type_id=c.type_price AND c.cust_name!='' ";
 		if($this->getRequest()->isPost()){
-			$post = $this->getRequest()->getPost();			
-			if($post['name'] !=''){
-				$vendorSql .= " AND c.cust_name LIKE '%".trim($post['name'])."%'";
-			}
-			if($post['phone'] !=''){
-				$vendorSql .= " AND ( c.contact_name LIKE '%".trim($post['phone'])."%'";
-				$vendorSql .= " OR c.phone LIKE '%".trim($post['phone'])."%')";
-			}
-			if($post['email'] !=''){
-				$vendorSql .= " AND c.email LIKE '%".trim($post['email'])."%'";
-				$vendorSql .= " OR c.website LIKE '%".trim($post['email'])."%'";
-			}
-			if($post['type_price'] !='' AND $post['type_price'] !=0){
-				$vendorSql .= " AND tp.type_id = ".trim($post['type_price']);
-			}
+			$search = $this->getRequest()->getPost();
+			$search['start_date']=date("Y-m-d",strtotime($search['start_date']));
+			$search['end_date']=date("Y-m-d",strtotime($search['end_date']));
+		}else{
+			$search =array(
+					'text_search'=>'',
+					'branch_id'=>0,
+					'customer_id'=>0,
+					'level'=>0,
+					'start_date'=>date("Y-m-d"),
+					'end_date'=>date("Y-m-d"),
+			);
 		}
-		$vendorSql.=" ORDER BY c.cust_name,c.is_active ";
-		$rows=$db->getGlobalDb($vendorSql);
-		$glClass = new Application_Model_GlobalClass();
-		$rows = $glClass->getImgActive($rows, BASE_URL, true);
-		
-		$columns=array("CUSTOMER_NAME_CAP","CON_NAME_CAP","CONTACT_NUM_CAP","EMAIL_CAP","WEBSITE_CAP","TYPE_PRICE","STATUS_CAP");
+		$db = new Sales_Model_DbTable_DbCustomer();
+		$rows = $db->getAllCustomer($search);
+		$list = new Application_Form_Frmlist();
+		$columns=array("BRANCH_NAME","CUSTOMER_NAME","COMPANY_NUMBER","CUSTOMER_LEVEL","CONTACT_NAME","CONTACT_NUMBER","ADDRESS","STATUS","BY_USER");
 		$link=array(
-				'module'=>'sales','controller'=>'customer','action'=>'update-customer',
+				'module'=>'sales','controller'=>'customer','action'=>'edit',
 		);
-		$urlEdit = BASE_URL . "/sales/customer/update-customer";
-		$this->view->list=$list->getCheckList(1, $columns, $rows, array('c.v_name'=>$link,'c.cust_name'=>$link),$urlEdit);
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'cust_name'=>$link,'phone'=>$link,'level'=>$link));
+		
+        $formFilter = new Sales_Form_FrmSearch();
+		$this->view->formFilter = $formFilter;
+		Application_Model_Decorator::removeAllDecorator($formFilter);
 		
 	}
 	public function addAction()
-	{	
-		
+	{
 		if($this->getRequest()->isPost())
 		{
 			$post = $this->getRequest()->getPost();
-			//print_r($post); exit();
-			if(@$post['Save']!="")
-			{
-				$customer= new sales_Model_DbTable_DbCustomer();
-				$customer->addCustomer($post);
-				$this->_redirect('/sales/customer/index');
-			}
-			elseif(@$post['SaveNew']!="")
-			{
-				$customer= new sales_Model_DbTable_DbCustomer();
-				$customer->addCustomer($post);
-				Application_Form_FrmMessage::message("Customer has been saved !");
-			}
-			elseif(@$post['btn_new']=='New')
-			{
-				$this->_redirect('/sales/customer/add');
-				
+			try{
+				$db = new Sales_Model_DbTable_DbCustomer();
+				$db->addCustomer($post);
+				if(!empty($post['saveclose']))
+				{
+// 					Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', sel . '/customer/index');
+				}else{
+					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				}
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message('INSERT_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$formStock = new sales_Form_FrmVendor(null);
-		$formStockAdd = $formStock->AddCustomerForm(null);
-		Application_Model_Decorator::removeAllDecorator($formStockAdd);
-		$this->view->form = $formStockAdd;
-		//.end controller
-		$formControl = new Application_Form_FrmAction(null);
-		$formViewControl = $formControl->AllAction(null);
-		Application_Model_Decorator::removeAllDecorator($formViewControl);
-		$this->view->control = $formViewControl;
+		/////////////////for veiw form
+		$formcustomer = new Sales_Form_FrmCustomer(null);
+		$formStockAdd = $formcustomer->Formcustomer(null);
+		Application_Model_Decorator::removeAllDecorator($formcustomer);
+		$this->view->form = $formcustomer;
+	
 	}	
 	public function updateCustomerAction() {
 		
