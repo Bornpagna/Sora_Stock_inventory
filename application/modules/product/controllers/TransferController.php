@@ -1,5 +1,5 @@
 <?php
-class Product_indexController extends Zend_Controller_Action
+class Product_transferController extends Zend_Controller_Action
 {
 public function init()
     {
@@ -13,30 +13,27 @@ public function init()
     }
     public function indexAction()
     {
-    	$db = new Product_Model_DbTable_DbProduct();
+    	$db = new Product_Model_DbTable_DbTransfer();
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
     	}else{
     		$data = array(
-    			'ad_search'	=>	'',
-    			'branch'	=>	'',
-    			'brand'		=>	'',
-    			'category'	=>	'',
-    			'model'		=>	'',
-    			'color'		=>	'',
-    			'size'		=>	'',
-    			'status'	=>	1
+    			'tran_num'	=>	'',
+    			'tran_date'	=>	date("m/d/Y"),
+    			'type'		=>	'',
+    			'status'	=>	1,
+    			'to_loc'	=>	'',
     		);
     	}
-    	$this->view->product = $db->getAllProduct($data);
-    	$formFilter = new Product_Form_FrmProduct();
-    	$this->view->formFilter = $formFilter->productFilter();
+    	$this->view->product = $db->getTransfer($data);
+    	$formFilter = new Product_Form_FrmTransfer();
+    	$this->view->formFilter = $formFilter->frmFilter();
     	Application_Model_Decorator::removeAllDecorator($formFilter);
         
 	}
 	public function addAction()
 	{
-		$db = new Product_Model_DbTable_DbProduct();
+		$db = new Product_Model_DbTable_DbTransfer();
 			if($this->getRequest()->isPost()){ 
 				try{
 					$post = $this->getRequest()->getPost();
@@ -44,49 +41,44 @@ public function init()
 					if(isset($post["save_close"]))
 					{
 						Application_Form_FrmMessage::message("INSERT_SUCCESS");
-						Application_Form_FrmMessage::redirectUrl('/product/index');
+						Application_Form_FrmMessage::redirectUrl('/product/transfer');
 					}
 				  }catch (Exception $e){
 				  	Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
 				  }
 			}
-			$rs_branch = $db->getBranch();
-			$this->view->branch = $rs_branch;
-			
-			$this->view->price_type = $db->getPriceType();
-			
-			$formProduct = new Product_Form_FrmProduct();
+			$formProduct = new Product_Form_FrmTransfer();
 			$formStockAdd = $formProduct->add(null);
 			Application_Model_Decorator::removeAllDecorator($formStockAdd);
-			$this->view->form = $formStockAdd;
-			
-			
+			$this->view->formFilter = $formStockAdd;
 	}
 	public function editAction()
 	{
-		$id = $this->getRequest()->getParam("id"); 
-		$db = new Product_Model_DbTable_DbProduct();
-		if($this->getRequest()->isPost()){ 
+		$id = $this->getRequest()->getParam("id");
+		$db = new Product_Model_DbTable_DbTransfer();
+			if($this->getRequest()->isPost()){ 
 				try{
 					$post = $this->getRequest()->getPost();
-					$post["id"] = $id;
-					$db->edit($post);
+					$db->add($post);
 					if(isset($post["save_close"]))
 					{
 						Application_Form_FrmMessage::message("INSERT_SUCCESS");
-						Application_Form_FrmMessage::redirectUrl('/product/index');
+						Application_Form_FrmMessage::redirectUrl('/product/transfer');
 					}
 				  }catch (Exception $e){
 				  	Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
 				  }
-		}
-		$this->view->rs_location = $db->getProductLocation($id);
-		$this->view->rs_price = $db->getProductPrcie($id);
-		$rs = $db->getProductById($id);
-		$formProduct = new Product_Form_FrmProduct();
-		$formStockAdd = $formProduct->add($rs);
-		Application_Model_Decorator::removeAllDecorator($formStockAdd);
-		$this->view->form = $formStockAdd;
+			}
+			
+			$rs = $db->getTransferById($id);
+			$rs_detail = $db->getTransferDettail($id);
+			$this->view->rs_detail = $rs_detail;
+			$formProduct = new Product_Form_FrmTransfer();
+			$formStockAdd = $formProduct->add($rs);
+			Application_Model_Decorator::removeAllDecorator($formStockAdd);
+			$this->view->formFilter = $formStockAdd;
+			
+			
 	}
 	//view category 27-8-2013
 	public function categoryAction()

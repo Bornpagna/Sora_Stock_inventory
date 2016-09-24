@@ -12,14 +12,14 @@ class Product_Form_FrmProductFilter extends Zend_Form
     	$nameElement->setValue($nameValue);
     	$this->addElement($nameElement);
     	
-    	$rs=$db->getGlobalDb('SELECT LocationId, Name FROM tb_sublocation WHERE Name!="" ');
+    	$rs=$db->getGlobalDb('SELECT id, Name FROM tb_sublocation WHERE Name!="" ');
     	$options=array(''=>$tr->translate('Please_Select_Location'));
-    	$locationValue = $request->getParam('LocationId');
-    	foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
-    	$location_id=new Zend_Form_Element_Select('LocationId');
+    	$locationValue = $request->getParam('id');
+    	foreach($rs as $read) $options[$read['id']]=$read['Name'];
+    	$location_id=new Zend_Form_Element_Select('id');
     	$location_id->setMultiOptions($options);
     	$location_id->setAttribs(array(
-    			'id'=>'LocationId',
+    			'id'=>'id',
     			'onchange'=>'this.form.submit()',
     	));
     	$location_id->setValue($locationValue);
@@ -77,7 +77,7 @@ class Product_Form_FrmProductFilter extends Zend_Form
     	$this->addElement($pro_id);
     	
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    	$rs=$db->getGlobalDb('SELECT CategoryId, Name FROM tb_category WHERE Name!="" ');
+    	$rs=$db->getGlobalDb('SELECT id, Name FROM tb_category WHERE Name!="" ');
     	$options=array(''=>$tr->translate('Please_Select'));
     	$cateValue = $request->getParam('category_id');
     	foreach($rs as $read) $options[$read['CategoryId']]=$read['Name'];
@@ -135,6 +135,83 @@ class Product_Form_FrmProductFilter extends Zend_Form
 		$codeElement = new Zend_Form_Element_Text('p_code');
 		$codeElement->setValue($codeValue);
     	$this->addElement($codeElement);
+    }
+    
+    public function add($data=null){
+    	$name = new Zend_Form_Element_Text("name");
+    	$name->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$serial = new Zend_Form_Element_Text("serial");
+    	$serial->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$barcode = new Zend_Form_Element_Text("barcode");
+    	$barcode->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$brand = new Zend_Form_Element_Text("brand");
+    	$brand->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$model = new Zend_Form_Element_Text("model");
+    	$model->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$category = new Zend_Form_Element_Text("category");
+    	$category->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$color = new Zend_Form_Element_Text("color");
+    	$color->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$size = new Zend_Form_Element_Text("size");
+    	$size->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$unit = new Zend_Form_Element_Text("unit");
+    	$unit->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$qty_per_unit = new Zend_Form_Element_Text("qty_unit");
+    	$qty_per_unit->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$measure = new Zend_Form_Element_Text("measure");
+    	$measure->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$label = new Zend_Form_Element_Text("label");
+    	$label->setAttribs(array(
+    			'class'=>'form-control',
+    			'required'=>'required'
+    	));
+    	
+    	$this->addElements(array($name,$serial,$brand,$model,$barcode,$category,$size,$color,$measure,$qty_per_unit,$unit,$label));
+    	return $this;
     }
     public function searchLocation(){
     	$request = Zend_Controller_Front::getInstance()->getRequest();

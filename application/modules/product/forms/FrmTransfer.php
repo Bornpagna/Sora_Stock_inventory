@@ -11,81 +11,132 @@ class Product_Form_FrmTransfer extends Zend_Form
 		return $result;
 	}
 	
-	public function transferItem($data=null) {
-		$db=new Application_Model_DbTable_DbGlobal();
-		// $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	public function add($data=null) {
+		$db=new Product_Model_DbTable_DbTransfer();
+		$db_stock = new Product_Model_DbTable_DbAdjustStock();
+		$rs_loc = $db->getLocation();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	
-		$invoiceElement = new Zend_Form_Element_Text('invoce_num');
-		$invoiceElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($invoiceElement);
+		$tran_num = new Zend_Form_Element_Text('tran_num');
+		$tran_num->setAttribs(array('class'=>'form-control', 'required'=>'required','readOnly'=>true));
+		$tran_num->setValue($db->getTransferNo());
     	
     	
     	$date =new Zend_Date();
-    	$transfer_dateElement = new Zend_Form_Element_Text('transfer_date');
-    	$transfer_dateElement->setValue($date->get('YYYY-MM-dd'));
-    	$transfer_dateElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($transfer_dateElement);
+    	$tran_date = new Zend_Form_Element_Text('tran_date');
+    	$tran_date->setValue($date->get('MM/dd/YYYY'));
+    	$tran_date->setAttribs(array('class'=>'form-control date-picker', 'required'=>'required',));
     	
-    	$remark_element = new Zend_Form_Element_Textarea("remark_transfer");
-    	$this->addElement($remark_element);
+    	$remark = new Zend_Form_Element_Textarea("remark");
+    	$remark->setAttribs(array('class'=>'form-control','style'=>'width: 100%;height:35px'));
     	
-    	$user= $this->GetuserInfo();
-    	$options="";
-    	$sql = "SELECT LocationId, Name FROM tb_sublocation WHERE Name!=''  ";
-    	if($user["level"]==1 OR $user["level"]== 2){
-    		$options=array("1"=>"Defaul Location","-1"=>"Add New Location");
+    	$from_loc = new Zend_Form_Element_Select("from_loc");
+    	$from_loc->setAttribs(array(
+    			'class'=>'form-control select2me',
+    	));
+    	
+    	$opt = array(''=>$tr->translate("SELECT BRANCH"));
+    	$to_loc = new Zend_Form_Element_Select("to_loc");
+    	$to_loc->setAttribs(array(
+    			'class'=>'form-control select2me',
+    	));
+    	if(!empty($rs_loc)){
+    		foreach ($rs_loc as $rs){
+    			$opt[$rs["id"]] = $rs["name"];
+    		}
     	}
-    	else{
-    		$sql.=" AND LocationId = ".$user["location_id"];
+    	$to_loc->setMultiOptions($opt);
+    	
+    	$pro_name =new Zend_Form_Element_Select("pro_name");
+    	$pro_name->setAttribs(array(
+    			'class'=>'form-control select2me',
+    			'onChange'=>'addNew();'
+    	));
+    	$opt= array(''=>$tr->translate("SELECT PRODUCT"));
+    	if(!empty($db_stock->getProductName())){
+    		foreach ($db_stock->getProductName() as $rs){
+    			$opt[$rs["id"]] = $rs["item_name"]." ".$rs["model"]." ".$rs["size"]." ".$rs["color"];
+    		}
     	}
-    	$sql.=" ORDER BY LocationId DESC";
-    	$rs=$db->getGlobalDb($sql);
-    	if(!empty($rs)) foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
-    	$locationID = new Zend_Form_Element_Select('from_location');
-    	$locationID ->setAttribs(array('class'=>'validate[required]'));
-    	$locationID->setMultiOptions($options);
-    	$locationID->setattribs(array(
-    			'id'=>'from_location',
-    			'Onchange'=>'AddLocation()',
-    			));
-    	$this->addElement($locationID);
-    	////////////////////////////////////
-    	$options="";
-    	$sql = "SELECT LocationId, Name FROM tb_sublocation WHERE Name!='' ";
-    	$sql.=" ORDER BY LocationId DESC";
-    	$rs=$db->getGlobalDb($sql);
-    	if(!empty($rs)) foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
-    	$to_locationID = new Zend_Form_Element_Select('to_location');
-    	$to_locationID ->setAttribs(array('class'=>'validate[required]'));
-    	$to_locationID->setMultiOptions($options);
-    	$to_locationID->setattribs(array(
-    			'id'=>'to_location',));
-    	$this->addElement($to_locationID);
+    	$pro_name->setMultiOptions($opt);
+    	
+    	$type =new Zend_Form_Element_Select("type");
+    	$type->setAttribs(array(
+    			'class'=>'form-control select2me',
+    			'onChange'=>'transferType()'
+    	));
+    	$opt= array(''=>$tr->translate("SELECT_TRANSFER_TYPE"),1=>$tr->translate("TRANSFER_IN"),2=>$tr->translate("TRANSFER_OUT"));
+    	$type->setMultiOptions($opt);
     	
     	
-    	Application_Form_DateTimePicker::addDateField(array('transfer_date',));
+    	$status =new Zend_Form_Element_Select("status");
+    	$status->setAttribs(array(
+    			'class'=>'form-control select2me',
+    	));
+    	$opt= array(''=>$tr->translate("SELECT_STATUS"),1=>$tr->translate("ACTIVE"),0=>$tr->translate("DEACTIVE"));
+    	$status->setMultiOptions($opt);
     	//set value when edit
     	if($data != null) {
-    		$idElement = new Zend_Form_Element_Hidden('transfer_id');
-    		$idElement->setValue($data["transfer_id"]);
-    		$this->addElement($idElement);
-    		
-    		$fromElement = new Zend_Form_Element_Hidden('old_from_location');
-    		$fromElement->setValue($data["from_location"]);
-    		$this->addElement($fromElement);
-    		
-    		$toElement = new Zend_Form_Element_Hidden('old_to_location');
-    		$toElement->setValue($data["to_location"]);
-    		$this->addElement($toElement);
-    		
-    		$invoiceElement->setValue($data["invoice_num"]);
-    		$invoiceElement->setAttribs(array("readonly"=>"readonly"));
-    		$transfer_dateElement->setValue($data["transfer_date"]);
-    		$remark_element->setValue($data["remark"]);
-    		$locationID->setValue($data["from_location"]);
-    		$to_locationID->setValue($data["to_location"]);
-    		
+    		$tran_num->setValue($data["tran_no"]);
+    		$tran_date->setValue($data["date"]);
+    		$remark->setValue($data["remark"]);
+    		$to_loc->setValue($data["tran_location"]);
+    		$status->setValue($data["status"]);
+    		$type->setValue($data["type"]);
     	}
+    	$this->addElements(array($status,$type,$pro_name,$tran_num,$tran_date,$remark,$from_loc,$to_loc));
     	return $this;
+	}
+	
+	function frmFilter(){
+		$db=new Product_Model_DbTable_DbTransfer();
+		$db_stock = new Product_Model_DbTable_DbAdjustStock();
+		$rs_loc = $db->getLocation();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		
+		$tran_num = new Zend_Form_Element_Text('tran_num');
+		$tran_num->setAttribs(array('class'=>'form-control'));
+		$tran_num->setValue($request->getParam("tran_num"));
+		 
+		$date =new Zend_Date();
+		$tran_date = new Zend_Form_Element_Text('tran_date');
+		$tran_date->setValue($date->get('MM/dd/YYYY'));
+		$tran_date->setAttribs(array('class'=>'form-control date-picker'));
+		$tran_date->setValue($request->getParam("tran_date"));
+		
+		$type =new Zend_Form_Element_Select("type");
+		$type->setAttribs(array(
+				'class'=>'form-control select2me',
+				'onChange'=>'transferType()'
+		));
+		$opt= array(''=>$tr->translate("SELECT_TRANSFER_TYPE"),1=>$tr->translate("TRANSFER_IN"),2=>$tr->translate("TRANSFER_OUT"));
+		$type->setMultiOptions($opt);
+		$type->setValue($request->getParam("type"));
+		 
+		 
+		$status =new Zend_Form_Element_Select("status");
+		$status->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		$opt= array(1=>$tr->translate("ACTIVE"),0=>$tr->translate("DEACTIVE"));
+		$status->setMultiOptions($opt);
+		$status->setValue($request->getParam("status"));
+		
+		$opt = array(''=>$tr->translate("SELECT BRANCH"));
+		$to_loc = new Zend_Form_Element_Select("to_loc");
+		$to_loc->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		if(!empty($rs_loc)){
+			foreach ($rs_loc as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$to_loc->setMultiOptions($opt);
+		$to_loc->setValue($request->getParam("to_loc"));
+		
+		$this->addElements(array($status,$type,$tran_num,$tran_date,$to_loc));
+		return $this;
 	}
 }

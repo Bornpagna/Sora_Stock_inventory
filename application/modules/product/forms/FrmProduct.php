@@ -3,174 +3,298 @@ class Product_Form_FrmProduct extends Zend_Form
 {
 	public function init()
     {
-
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$request=Zend_Controller_Front::getInstance()->getRequest();
 	}
 	/////////////	Form Product		/////////////////
-	public function showProductForm($data=null) {
-		$db=new Application_Model_DbTable_DbGlobal();
-	
-		$nameElement = new Zend_Form_Element_Text('name');
-		$nameElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($nameElement);
-    	
-		$descriptionElement = new Zend_Form_Element_Textarea('remark');
-    	$this->addElement($descriptionElement);
-    	
-    	// Select Element which get data from other Table
-    	$rows = $db->getGlobalDb('SELECT id, name FROM rsmk_vendor');
-    	$options=array(''=>'Please select');
-    	if($rows) {
-    		foreach($rows as $read) $options[$read['id']]=$read['name'];
-    	}
-		$vendorElement = new Zend_Form_Element_Select('supplier_id');
-		$vendorElement->setMultiOptions($options);
-    	$this->addElement($vendorElement);
-    	
-    	//set value when edit
-    	if($data != null) {
-    		$idElement = new Zend_Form_Element_Hidden('id');
-    		$this->addElement($idElement);
-
-    		$idElement->setValue($data['id']);
-    		$nameElement->setValue($data['name']);
-    		$descriptionElement->setValue($data['description']);
-    		$vendorElement->setValue($data['supplier_id']);
-    	}
-    	return $this;
-	}
-	
-	/////////////	Form Item		/////////////////
-	/* @Desc: show form for change item information
-	 * @param $data value of both form
-	 * */
-	public function showItemForm($data=null) {
-		$db=new Application_Model_DbTable_DbGlobal();
+	public function add($data=null){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	
-		$nameElement = new Zend_Form_Element_Text('name');
-		$nameElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($nameElement);
-    	
-    	$codeElement = new Zend_Form_Element_Text('item_code');
-    	$this->addElement($codeElement);
-    	
-    	$statusElement = new Zend_Form_Element_Select('status');
-		$statusElement->setMultiOptions(array(1=>$tr->translate("ACTIVE"), 2=>$tr->translate("INACTIVE")));
-    	$this->addElement($statusElement);
-    	
-    	$saleStartdateElement = new Zend_Form_Element_Text('sale_startdate');
-    	$this->addElement($saleStartdateElement);
-    	
-    	$saleEnddateElement = new Zend_Form_Element_Text('sale_enddate');
-    	$this->addElement($saleEnddateElement);
-
-    	$rowsUnit = $db->getGlobalDb('SELECT id, name FROM rsmk_productunit');
-    	$optionsUnit=array();
-    	if($rowsUnit) {
-    		foreach($rowsUnit as $readUnit) $optionsUnit[$readUnit['id']]=$readUnit['name'];
-    	}
-		$usageUnitElement = new Zend_Form_Element_Select('usage_unit');
-		$usageUnitElement->setAttribs(array('class'=>'validate[required]',));
-		$usageUnitElement->setMultiOptions($optionsUnit);
-    	$this->addElement($usageUnitElement);
-    	
-    	$qtyPerUnitElement = new Zend_Form_Element_Text('qty_per_unit');
-    	$qtyPerUnitElement->setAttribs(array('class'=>'validate[custom[number]]',));
-    	$this->addElement($qtyPerUnitElement);
-    	
-    	$unitPriceElement = new Zend_Form_Element_Text('unit_price');
-    	$unitPriceElement->setAttribs(array('class'=>'validate[custom[number]]',));
-    	$this->addElement($unitPriceElement);
-    	
-    	$itemImageElement = new Zend_Form_Element_File('item_image');
-    	if($data == null) {
-			$itemImageElement->setAttribs(array('class'=>'validate[required]',));
-    	}
-    	$this->addElement($itemImageElement);
-    	
-		$descriptionElement = new Zend_Form_Element_Textarea('description');
-    	$this->addElement($descriptionElement);
-    	
-    	// Select Element which get data from other Table
-    	$rows = $db->getGlobalDb('SELECT id, name FROM rsmk_product');
-    	$options=array();
-    	if($rows) {
-    		foreach($rows as $read) $options[$read['id']]=$read['name'];
-    	}
-		$productElement = new Zend_Form_Element_Select('product_id');
-		$productElement->setMultiOptions($options);
-    	$this->addElement($productElement);
-    	
-    	// Select Element which get data from table category
-    	$rowsCategory = $db->getGlobalDb('SELECT CategoryId, Name FROM tb_category');
-    	$optionsCategory=array();
-    	if($rowsCategory) {
-    		foreach($rowsCategory as $readCategory) $optionsCategory[$readCategory['CategoryId']]=$readCategory['Name'];
-    	}
-		$categoryElement = new Zend_Form_Element_Select('category');
-		$categoryElement->setMultiOptions($optionsCategory);
-    	$this->addElement($categoryElement);
-    	
-    	Application_Form_DateTimePicker::addDateField(array('sale_startdate', 'sale_enddate'));
-    	//set value when edit
-    	if($data != null) {
-    		$idElement = new Zend_Form_Element_Hidden('pr');
-    		$this->addElement($idElement);
-
-    		$idElement->setValue($data['pro_id']);
-    		$nameElement->setValue($data['name']);
-    		$codeElement->setValue($data['item_code']);
-    		$statusElement->setValue($data['status']);
-    		$saleStartdateElement->setValue($data['sale_startdate']);
-    		$saleEnddateElement->setValue($data['sale_enddate']);
-    		$usageUnitElement->setValue($data['usage_unit']);
-    		$qtyPerUnitElement->setValue($data['qty_per_unit']);
-    		$unitPriceElement->setValue($data['unit_price']);
-    		$itemImageElement->setValue($data['item_image']);
-    		$descriptionElement->setValue($data['description']);
-    		$productElement->setValue($data['product_id']);
-    		$categoryElement->setValue($data['category_id']);
-    		//$stockElement->setValue($data['stock_id']);
-    	}
-    	return $this;
-	}
-	/* @Desc: show form for change item qty,and qty demand in stock
-	 * @param $data value of both form
-	 * */
-	public function showStockQtyItem($data=null) {
-		$qtyStockElement = new Zend_Form_Element_Text('qty_stock');
-		$qtyStockElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($qtyStockElement);
-    	
-    	$qtyDemandElement = new Zend_Form_Element_Text('qty_demand');
-		$qtyDemandElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($qtyDemandElement);
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$db = new Product_Model_DbTable_DbProduct();
+		$p_code = $db->getProductCode();
+		$name = new Zend_Form_Element_Text("name");
+		$name->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
 		
-		if($data != null) {
-			$idElement->setValue($data['id']);
-			$idElement = new Zend_Form_Element_Hidden('id');
-    		$this->addElement($idElement);
-    		
-			$qtyStockElement->setValue($data['qty_stock']);
-	    	$qtyDemandElement->setValue($data['qty_demand']);
+		$pro_code = new Zend_Form_Element_Text("pro_code");
+		$pro_code->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		$pro_code->setValue($p_code);
+		 
+		$serial = new Zend_Form_Element_Text("serial");
+		$serial->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		 
+		$barcode = new Zend_Form_Element_Text("barcode");
+		$barcode->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		 
+		$opt = array(''=>$tr->translate("SELECT_BRAND"));
+		$brand = new Zend_Form_Element_Select("brand");
+		$brand->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required'
+		));
+		if(!empty($db->getBrand())){
+			foreach ($db->getBrand() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
 		}
+		$brand->setMultiOptions($opt);
+		 
+		$opt = array(''=>$tr->translate("SELECT_MODEL"));
+		$model = new Zend_Form_Element_Select("model");
+		$model->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required'
+		));
+		if(!empty($db->getModel())){
+			foreach ($db->getModel() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$model->setMultiOptions($opt);
+		 
+		$opt = array(''=>$tr->translate("SELECT_CATEGORY"));
+		$category = new Zend_Form_Element_Select("category");
+		$category->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required'
+		));
+		if(!empty($db->getCategory())){
+			foreach ($db->getCategory() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$category->setMultiOptions($opt);
+		
+		$opt = array(''=>$tr->translate("SELECT_COLOR"));
+		$color = new Zend_Form_Element_Select("color");
+		$color->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required'
+		));
+		if(!empty($db->getColor())){
+			foreach ($db->getColor() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$color->setMultiOptions($opt);
+		 
+		$opt = array(''=>$tr->translate("SELECT_SIZE"));
+		$size = new Zend_Form_Element_Select("size");
+		$size->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required'
+		));
+		if(!empty($db->getSize())){
+			foreach ($db->getSize() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$size->setMultiOptions($opt);
+		 
+		$unit = new Zend_Form_Element_Text("unit");
+		$unit->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		$unit->setValue(1);
+		 
+		$qty_per_unit = new Zend_Form_Element_Text("qty_unit");
+		$qty_per_unit->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		 
+		$opt = array(''=>$tr->translate("SELECT_MEASURE"));
+		$measure = new Zend_Form_Element_Select("measure");
+		$measure->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required',
+				'Onchange'	=>	'getMeasureLabel()'
+		));
+		if(!empty($db->getMeasure())){
+			foreach ($db->getMeasure() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$measure->setMultiOptions($opt);
+		 
+		$label = new Zend_Form_Element_Text("label");
+		$label->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		 
+		$description = new Zend_Form_Element_Text("description");
+		$description->setAttribs(array(
+				'class'=>'form-control',
+				'required'=>'required'
+		));
+		
+		$status = new Zend_Form_Element_Select("status");
+		$opt = array('1'=>$tr->translate("ACTIVE"),'2'=>$tr->translate("DEACTIVE"));
+		$status->setAttribs(array(
+				'class'=>'form-control select2me',
+				'required'=>'required',
+				//'Onchange'	=>	'getMeasureLabel()'
+		));
+		$status->setMultiOptions($opt);
+		
+		$branch = new Zend_Form_Element_Select("branch");
+		$opt = array(''=>$tr->translate("SELECT_BRANCH"));
+		if(!empty($db->getBranch())){
+			foreach ($db->getBranch() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$branch->setAttribs(array(
+				'class'=>'form-control select2me',
+				//'required'=>'required',
+				'Onchange'	=>	'addNewProLocation()'
+		));
+		$branch->setMultiOptions($opt);
+		
+		$price_type = new Zend_Form_Element_Select("price_type");
+		$opt = array(''=>$tr->translate("SELECT_PRICE_TYPE"));
+		if(!empty($db->getPriceType())){
+			foreach ($db->getPriceType() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$price_type->setAttribs(array(
+				'class'=>'form-control select2me',
+				//'required'=>'required',
+				'Onchange'	=>	'addNewPriceType()'
+		));
+		$price_type->setMultiOptions($opt);
+		
+		if($data!=null){
+			$name->setValue($data["item_name"]);
+			$pro_code->setValue($data["item_code"]);
+			$barcode->setValue($data["barcode"]);
+			$serial->setValue($data["serial_number"]);
+			$brand->setValue($data["brand_id"]);
+			$category->setValue($data["cate_id"]);
+			$model->setValue($data["model_id"]);
+			$color->setValue($data["color_id"]);
+			$size->setValue($data["size_id"]);
+			$measure->setValue($data["measure_id"]);
+			$label->setValue($data["unit_label"]);
+			$description->setValue($data["note"]);
+			$qty_per_unit->setValue($data["qty_perunit"]);
+			$status->setValue($data["status"]);
+		}
+		
+		$this->addElements(array($price_type,$branch,$status,$pro_code,$name,$serial,$brand,$model,$barcode,$category,$size,$color,$measure,$qty_per_unit,$unit,$label,$description));
+		return $this;
 	}
-	
-	/**
-	 * @Desc: show form category with add, edit
-	 * @param $data
-	 * */
-	public function showCategoryForm($data=null) {
-		$nameElement = new Zend_Form_Element_Text('name');
-		$nameElement->setAttribs(array('class'=>'validate[required]',));
-    	$this->addElement($nameElement);
-    	if($data != null) {
-    		$idElement = new Zend_Form_Element_Hidden('id');
-    		$this->addElement($idElement);
-
-    		$idElement->setValue($data['id']);
-    		$nameElement->setValue($data['name']);
-    	}
-    	return $this;
+	function productFilter(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$db = new Product_Model_DbTable_DbProduct();
+		$ad_search = new Zend_Form_Element_Text("ad_search");
+		$ad_search->setAttribs(array(
+				'class'=>'form-control',
+		));
+		$ad_search->setValue($request->getParam("ad_search"));
+		
+		$branch = new Zend_Form_Element_Select("branch");
+		$opt = array(''=>$tr->translate("SELECT_BRANCH"));
+		if(!empty($db->getBranch())){
+			foreach ($db->getBranch() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$branch->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		$branch->setMultiOptions($opt);
+		$branch->setValue($request->getParam("branch"));
+		
+		$status = new Zend_Form_Element_Select("status");
+		$opt = array('1'=>$tr->translate("ACTIVE"),'2'=>$tr->translate("DEACTIVE"));
+		$status->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		$status->setMultiOptions($opt);
+		$status->setValue($request->getParam("status"));
+		
+		$opt = array(''=>$tr->translate("SELECT_BRAND"));
+		$brand = new Zend_Form_Element_Select("brand");
+		$brand->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		if(!empty($db->getBrand())){
+			foreach ($db->getBrand() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$brand->setMultiOptions($opt);
+		$brand->setValue($request->getParam("brand"));
+			
+		$opt = array(''=>$tr->translate("SELECT_MODEL"));
+		$model = new Zend_Form_Element_Select("model");
+		$model->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		if(!empty($db->getModel())){
+			foreach ($db->getModel() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$model->setMultiOptions($opt);
+		$model->setValue($request->getParam("model"));
+			
+		$opt = array(''=>$tr->translate("SELECT_CATEGORY"));
+		$category = new Zend_Form_Element_Select("category");
+		$category->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		if(!empty($db->getCategory())){
+			foreach ($db->getCategory() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$category->setMultiOptions($opt);
+		$category->setValue($request->getParam("category"));
+		
+		$opt = array(''=>$tr->translate("SELECT_COLOR"));
+		$color = new Zend_Form_Element_Select("color");
+		$color->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		if(!empty($db->getColor())){
+			foreach ($db->getColor() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$color->setMultiOptions($opt);
+		$color->setValue($request->getParam("color"));
+			
+		$opt = array(''=>$tr->translate("SELECT_SIZE"));
+		$size = new Zend_Form_Element_Select("size");
+		$size->setAttribs(array(
+				'class'=>'form-control select2me',
+		));
+		if(!empty($db->getSize())){
+			foreach ($db->getSize() as $rs){
+				$opt[$rs["id"]] = $rs["name"];
+			}
+		}
+		$size->setMultiOptions($opt);
+		$size->setValue($request->getParam("size"));
+		
+		$this->addElements(array($ad_search,$branch,$brand,$model,$category,$color,$size,$status));
+		return $this;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-class product_Model_DbTable_DbAddStock extends Zend_Db_Table_Abstract
+class Product_Model_DbTable_DbAddStock extends Zend_Db_Table_Abstract
 {
 
     //protected $_name = 'tb_sublocation';
@@ -9,6 +9,68 @@ class product_Model_DbTable_DbAddStock extends Zend_Db_Table_Abstract
 	 * @Author: May Dara
 	 * */
     //add sub stock name 8/22/13
+    public function add($data){
+    	$db = $this->getAdapter();
+    	
+    	$db->beginTransaction();
+    	try{
+    		$user_info = new Application_Model_DbTable_DbGetUserInfo();
+    		$result = $user_info->getUserInfo();
+    		if(!empty($data['identity'])){
+    			$identitys = explode(',',$data['identity']);
+    			foreach($identitys as $i)
+    			{
+		    		$arr = array(
+		    			'pro_id'		=>	$data["pro_id_".$i],
+		    			'location_id'	=>	$result["location_id"],
+		    			'before_qty'	=>	$data["current_qty_".$i],
+		    			'qty_after'		=>	$data["new_qty_".$i],
+		    			'differ_qty'	=>	$data["difer_qty_".$i],
+		    			'type'			=>	1,
+		    			'date'			=>	new Zend_Date(),
+		    			'Remark'		=>	$data["remark_".$i],
+		    			'user_mod'		=>	$result["user_id"],
+		    		);
+		    		$this->_name="tb_move_history";
+		    		$this->insert($arr);
+		    		
+		    		$rs = $this->getProductById($data["pro_id_".$i],$result["location_id"]);
+		    		
+		    		if(!empty($rs)){
+		    			$arr_p = array(
+		    					'qty'	=>	$data["new_qty_".$i],
+		    			);
+		    			$this->_name="tb_prolocation";
+		    			$where = $db->quoteInto("pro_id=?", $data["pro_id_".$i]);
+		    			$where .=$db->quoteInto("location_id", $result["location_id"]);
+		    			$this->update($arr_p, $where);
+		    		}else{
+		    			$arr_p = array(
+		    					'pro_id'			=>	$data["pro_id_".$i],
+		    					'location_id'		=>	$result["location_id"],
+		    					'qty'				=>	$data["new_qty_".$i],
+		    					'qty_warning'		=>	0,
+		    					'last_mod_userid'	=>	$result["user_id"],
+		    					'last_mod_date'		=>	new Zend_Date(),
+		    			);
+		    			$this->_name="tb_prolocation";
+		    			$this->insert($arr_p);
+		    		}
+    			}
+    		}
+    		$db->commit();
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e);
+    		echo $e->getMessage();exit();
+    	}
+    }
+    
+    function getProductById($id,$location_id){
+    	$db = $this->getAdapter();
+    	$sql = "SELECT p.id,p.`qty` FROM `tb_prolocation` AS p WHERE p.pro_id=$id AND p.`location_id`=$location_id";
+    	return $db->fetchRow($sql);
+    }
 	public function SaveItems($data) {
 		$db_rs = $this->getAdapter();
 		$session_user=new Zend_Session_Namespace('auth');
@@ -28,7 +90,7 @@ class product_Model_DbTable_DbAddStock extends Zend_Db_Table_Abstract
 	
 	public function SelectItem(){
 		$db=$this->getAdapter();
-		 $user_info = new Application_Model_DbTable_DbGetUserInfo();
+		$user_info = new Application_Model_DbTable_DbGetUserInfo();
         $result = $user_info->getUserInfo();
         $db = new Application_Model_DbTable_DbGlobal();
 		

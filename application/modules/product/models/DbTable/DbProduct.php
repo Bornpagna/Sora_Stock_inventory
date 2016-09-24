@@ -9,63 +9,319 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     {
     	$this->_name=$name;
     }
-    /* @Desc: add Order
-     * @Author: May Dara
-    * */
-   //get categetory 8/22/13
-    protected function GetuserInfo(){
-    	$user_info = new Application_Model_DbTable_DbGetUserInfo();
-    	$result = $user_info->getUserInfo();
-    	return $result;
-    }
-  public function getCategory($id){
-    	$db=$this->getAdapter();
-    	$sql="SELECT CategoryId, parent_id, Name,IsActive
-    	FROM tb_category WHERE  CategoryId =".$id." LIMIT 1";
-    	$rows=$db->fetchRow($sql);  
-    	return $rows;  	
+	public function getUserId(){
+		return Application_Model_DbTable_DbGlobal::GlobalgetUserId();
+	}
+    
+  public function getBrand(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT b.`id`,b.`name` FROM `tb_brand` AS b WHERE b.`status`=1";
+  	return $db->fetchAll($sql);
   }
-  public function getBrandName($id){
-  	$db=$this->getAdapter();
-  	$sql="SELECT branch_id, parent_id, Name,IsActive
-  	FROM tb_branch WHERE  branch_id =".$id." LIMIT 1";
-  	$rows=$db->fetchRow($sql);
-  	return $rows;
+  
+  public function getModel(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT v.`id`,v.`name_kh` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 2";
+  	return $db->fetchAll($sql);
   }
-     //add catogory 8/22/13
-   public function addCategory($data) {
+  
+  public function getCategory(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT b.`id`,b.`name` FROM `tb_category` AS b WHERE b.`status`=1";
+  	return $db->fetchAll($sql);
+  }
+  public function getMeasure(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT b.`id`,b.`name` FROM `tb_measure` AS b WHERE b.`status`=1";
+  	return $db->fetchAll($sql);
+  }
+  public function getSize(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT v.`id`,v.`name_kh` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 3";
+  	return $db->fetchAll($sql);
+  }
+  
+  public function getColor(){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT v.`id`,v.`name_en` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 4";
+  	return $db->fetchAll($sql);
+  }
+  
+  function getBranch(){
+  	$db = $this->getAdapter();
+  	$db_globle = new Application_Model_DbTable_DbGlobal();
+  	$sql = "SELECT l.id,l.`name` FROM `tb_sublocation` AS l WHERE l.`status`=1";
+  	$location = $db_globle->getAccessPermission('l.`id`');
+  	return $db->fetchAll($sql.$location);
+  }
+  public function getProductCode(){
+  	$db =$this->getAdapter();
+  	$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+  	$acc_no = $db->fetchOne($sql);
+  	$new_acc_no= (int)$acc_no+1;
+  	$acc_no= strlen((int)$acc_no+1);
+  	$pre = "PR-";
+  	for($i = $acc_no;$i<3;$i++){
+  		$pre.='0';
+  	}
+  	return $pre.$new_acc_no;
+  }
+  
+  function getAllProduct($data){
+  	$db = $this->getAdapter();
+  	$db_globle = new Application_Model_DbTable_DbGlobal();
+  	$sql ="SELECT 
+			  p.`id`,
+			  p.`barcode`,
+			  p.`item_code`,
+			  p.`item_name` ,
+  			  p.`serial_number`,
+  			  p.`status`,
+			  (SELECT b.`name` FROM `tb_brand` AS b WHERE b.`id`=p.`brand_id` LIMIT 1) AS brand,
+			  (SELECT c.name FROM `tb_category` AS  c WHERE c.id=p.`cate_id` LIMIT 1) AS cat,
+			  (SELECT m.name FROM `tb_model` AS m WHERE m.id=p.`model_id` LIMIT 1) AS model,
+			  (SELECT s.name FROM `tb_size` AS s WHERE s.id=p.`size_id` LIMIT 1) AS size,
+			  (SELECT c.name FROM `tb_color` AS c WHERE c.id=p.`color_id` LIMIT 1) AS color,
+			  (SELECT m.name FROM `tb_measure` AS m WHERE m.id = p.`measure_id` LIMIT 1) AS measure,
+			  (SELECT b.name FROM `tb_sublocation` AS b WHERE b.id=pl.`location_id` LIMIT 1) AS branch,
+			  pl.`qty`
+			FROM
+			  `tb_product` AS p ,
+			  `tb_prolocation` AS pl
+			WHERE p.`id`=pl.`pro_id`";
+  	$where = '';
+  	if($data["ad_search"]!=""){
+  		$s_where=array();
+  		$s_search = addslashes(trim($data['ad_search']));
+  		$s_where[]= " p.item_name LIKE '%{$s_search}%'";
+  		$s_where[]=" p.barcode LIKE '%{$s_search}%'";
+  		$s_where[]= " p.item_code LIKE '%{$s_search}%'";
+  		$s_where[]= " p.serial_number LIKE '%{$s_search}%'";
+  		//$s_where[]= " cate LIKE '%{$s_search}%'";
+  		$where.=' AND ('.implode(' OR ', $s_where).')';
+  	}
+  	if($data["branch"]!=""){
+  		$where.=' AND pl.`location_id`='.$data["branch"];
+  	}
+  	if($data["brand"]!=""){
+  		$where.=' AND p.brand_id='.$data["brand"];
+  	}
+  	if($data["category"]!=""){
+  		$where.=' AND p.cate_id='.$data["category"];
+  	}
+  	if($data["category"]!=""){
+  		$where.=' AND p.cate_id='.$data["category"];
+  	}
+  	if($data["model"]!=""){
+  		$where.=' AND p.model_id='.$data["model"];
+  	}
+  	if($data["size"]!=""){
+  		$where.=' AND p.size_id='.$data["size"];
+  	}
+  	if($data["color"]!=""){
+  		$where.=' AND p.color_id='.$data["color"];
+  	}
+  	if($data["status"]!=""){
+  		$where.=' AND p.status='.$data["status"];
+  	}
+  	$location = $db_globle->getAccessPermission('pl.`location_id`');
+  	//echo $location;
+  	return $db->fetchAll($sql.$where.$location);
+  	
+  }
+  
+  function getProductById($id){
+  	$db = $this->getAdapter();
+  	$sql ="SELECT 
+			  p.`id`,
+			  p.`barcode`,
+			  p.`brand_id`,
+			  p.`cate_id`,
+			  p.`color_id`,
+			  p.`item_code`,
+			  p.`item_name`,
+			  p.`measure_id`,
+			  p.`model_id`,
+			  p.`note`,
+			  p.`qty_perunit`,
+			  p.`serial_number`,
+			  p.`size_id`,
+			  p.`status`,
+			  p.`unit_label` 
+			FROM
+			  `tb_product` AS p 
+			WHERE p.id = $id ";
+  	return $db->fetchRow($sql);
+  }
+  function getProductLocation($id){
+  	$db = $this->getAdapter();
+  	$sql = "SELECT 
+			  pl.`id`,
+			  pl.`pro_id`,
+			  pl.`qty`,
+			  pl.`qty_warning`,
+			  pl.`location_id`,
+			  s.`name` 
+			FROM
+			  `tb_prolocation` AS pl,
+			  `tb_sublocation` AS s 
+			WHERE pl.`pro_id` = $id 
+			  AND pl.`location_id` = s.`id` ";
+  	return $db->fetchAll($sql);
+  }
+  
+  function getPriceType(){
+  	$db = $this->getAdapter();
+  	$sql ="SELECT p.`id`,p.`name` FROM `tb_price_type` AS p WHERE p.`status`=1";
+  	return $db->fetchAll($sql);
+  }
+  function getProductPrcie($id){
+  	$db = $this->getAdapter();
+  	$sql ="SELECT p.`id`,p.`pro_id`,p.`price`,pt.`name`,p.`remark`,p.`type_id` FROM `tb_product_price` AS p,`tb_price_type` AS pt WHERE p.`type_id`=pt.`id` AND p.`pro_id`=$id";
+  	return $db->fetchAll($sql);
+  }
+  // Insert and  Update section
+    public function add($data){
+    	//print_r($data);exit();
     	$db = $this->getAdapter();
-    	//print_r($data); exit();
-    	$category= array(
-    			"parent_id" =>$data['ParentCategory'],
-    			"Name"=>    $data['CategoryName'],
-    			"Timestamp"=> new Zend_Date()
-    	);
-    	$db->insert("tb_category",$category);
-      }
-      public function addBrand($data) {
-      	$db = $this->getAdapter();
-      	$_arr= array(
-      			"parent_id" => $data['Parentbrand'],
-      			"Name"		=> $data['brandName'],
-      			"Timestamp"	=> new Zend_Date()
-      	);
-      	$db->insert("tb_branch",$_arr);
-      }
-     //get product qty location
-    public function getOrderItemDetailByID($id){//get qty all location
-    	$db = $this->getAdapter();
-    	$user = $this->GetuserInfo();
-    	$itemSql = "SELECT pl.ProLocationID, pl.LocationId, pl.qty,pl.`qty_warn`
-    	FROM tb_prolocation AS pl
-    	WHERE pl.pro_id =".$db->quote($id);
-    	if($user["level"]!=1){
-			$itemSql.=" AND pl.LocationId = ".$user["location_id"];    		
+    	$db->beginTransaction();
+    	try {
+    		$arr = array(
+    			'item_name'		=>	$data["name"],
+    			'item_code'		=>	$data["pro_code"],
+    			'barcode'		=>	$data["barcode"],
+    			'cate_id'		=>	$data["category"],
+    			'brand_id'		=>	$data["brand"],
+    			'model_id'		=>	$data["model"],
+    			'color_id'		=>	$data["color"],
+    			'measure_id'	=>	$data["measure"],
+    			'size_id'		=>	$data["size"],
+    			'serial_number'	=>	$data["serial"],
+    			'qty_perunit'	=>	$data["qty_unit"],
+    			'unit_label'	=>	$data["label"],
+    			'user_id'		=>	$this->getUserId(),
+    			'note'			=>	$data["description"],
+    			'status'		=>	$data["status"],
+    		);
+    		$this->_name="tb_product";
+    		$id = $this->insert($arr);
+    		
+    		// For Product Location Section
+    		if(!empty($data['identity'])){
+    			$identitys = explode(',',$data['identity']);
+    			foreach($identitys as $i)
+    			{
+    				$arr1 = array(
+    					'pro_id'			=>	$id,
+    					'location_id'		=>	$data["branch_id_".$i],
+    					'qty'				=>	$data["current_qty_".$i],
+    					'qty_warning'		=>	$data["qty_warnning_".$i],
+    					'last_mod_userid'	=>	$this->getUserId(),
+    					'last_mod_date'		=>	new Zend_Date(),
+    				);
+    				$this->_name = "tb_prolocation";
+    				$this->insert($arr1);
+    			}
+    		}
+    		// For Product Price
+    		if(!empty($data['identity_price'])){
+    			$identitys = explode(',',$data['identity_price']);
+    			foreach($identitys as $i)
+    			{
+    				$arr2 = array(
+    						'pro_id'			=>	$id,
+    						'type_id'			=>	$data["price_type_".$i],
+    						//'location_id'		=>	$data["current_qty_".$i],
+    						'price'				=>	$data["price_".$i],
+    						'remark'			=>	$data["price_remark_".$i],
+    						//'last_mod_userid'	=>	$this->getUserId(),
+    						//'last_mod_date'		=>	new Zend_Date(),
+    				);
+    				$this->_name = "tb_product_price";
+    				$this->insert($arr2);
+    			}
+    		}
+    		$db->commit();
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e);
+    		echo $e->getMessage();exit();
     	}
-    	$rows = $db->fetchAll($itemSql);
-    	return $rows;
     }
     
+    public function edit($data){
+    	//print_r($data);exit();
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try {
+    		$arr = array(
+    				'item_name'		=>	$data["name"],
+    				'item_code'		=>	$data["pro_code"],
+    				'barcode'		=>	$data["barcode"],
+    				'cate_id'		=>	$data["category"],
+    				'brand_id'		=>	$data["brand"],
+    				'model_id'		=>	$data["model"],
+    				'color_id'		=>	$data["color"],
+    				'measure_id'	=>	$data["measure"],
+    				'size_id'		=>	$data["size"],
+    				'serial_number'	=>	$data["serial"],
+    				'qty_perunit'	=>	$data["qty_unit"],
+    				'unit_label'	=>	$data["label"],
+    				'user_id'		=>	$this->getUserId(),
+    				'note'			=>	$data["description"],
+    				'status'		=>	$data["status"],
+    		);
+    		$this->_name="tb_product";
+    		$where = $db->quoteInto("id=?", $data["id"]);
+    		$this->update($arr, $where);
+    
+    		// For Product Location Section
+    		$sql = "DELETE FROM tb_prolocation WHERE pro_id=".$data["id"];
+    		$db->query($sql);
+    		if(!empty($data['identity'])){
+    			$identitys = explode(',',$data['identity']);
+    			foreach($identitys as $i)
+    			{
+    				$arr1 = array(
+    						'pro_id'			=>	$data["id"],
+    						'location_id'		=>	$data["branch_id_".$i],
+    						'qty'				=>	$data["current_qty_".$i],
+    						'qty_warning'		=>	$data["qty_warnning_".$i],
+    						'last_mod_userid'	=>	$this->getUserId(),
+    						'last_mod_date'		=>	new Zend_Date(),
+    				);
+    				$this->_name = "tb_prolocation";
+    				$this->insert($arr1);
+    			}
+    		}
+    		
+    		// For Product Price
+    		$sql = "DELETE FROM tb_product_price WHERE pro_id=".$data["id"];
+    		$db->query($sql);
+    		if(!empty($data['identity_price'])){
+    			$identitys = explode(',',$data['identity_price']);
+    			foreach($identitys as $i)
+    			{
+    				$arr2 = array(
+    						'pro_id'			=>	$data["id"],
+    						'type_id'			=>	$data["price_type_".$i],
+    						//'location_id'		=>	$data["current_qty_".$i],
+    						'price'				=>	$data["price_".$i],
+    						'remark'			=>	$data["price_remark_".$i],
+    						//'last_mod_userid'	=>	$this->getUserId(),
+    						//'last_mod_date'		=>	new Zend_Date(),
+    				);
+    				$this->_name = "tb_product_price";
+    				$this->insert($arr2);
+    			}
+    		}
+    		$db->commit();
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e);
+    		echo $e->getMessage();exit();
+    	}
+    }
     public function getOrderItemVeiw($id){
     	$db = $this->getAdapter();
     	$user = $this->GetuserInfo();

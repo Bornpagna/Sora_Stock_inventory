@@ -1,7 +1,7 @@
 <?php 
-	$url_new = $this->url(array('module'=>'product','controller'=>'index','action'=>'add',));
-	$url_edit = $this->url(array('module'=>'product','controller'=>'index','action'=>'edit',));
-	$url_delete = $this->url(array('module'=>'product','controller'=>'index','action'=>'delete',));
+	$url_new = $this->url(array('module'=>'product','controller'=>'transfer','action'=>'add',));
+	$url_edit = $this->url(array('module'=>'product','controller'=>'transfer','action'=>'edit',));
+	$url_delete = $this->url(array('module'=>'product','controller'=>'transfer','action'=>'delete',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->formFilter;
 	
@@ -22,46 +22,38 @@
 			<form class="form-horizontal" method="post" action="" >
 				<div class="form-body">
 							<div class="form-group">
-								<label class="col-md-1 control-label"><?php echo $tr->translate("ADVANCE_SEARCH");?></label>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("ADVANCE_SEARCH");?></label>
 								<div class="col-md-2">
-									<?php echo $formFilter->getElement('ad_search');?>
+									<?php echo $formFilter->getElement('tran_num');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("BRANCH");?></label>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("TRANSFER_LOCATION");?></label>
 								<div class="col-md-2">
-									<?php echo $formFilter->getElement('branch');?>
+									<?php echo $formFilter->getElement('to_loc');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("BRAND");?></label>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("TRANSFER_DATE");?></label>
 								<div class="col-md-2">
-									<?php echo $formFilter->getElement('brand');?>
-								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("CATEGORY");?></label>
-								<div class="col-md-2">
-									<?php echo $formFilter->getElement('category');?>
+									<?php echo $formFilter->getElement('tran_date');?>
 								</div>
 							</div>
+							
 							<div class="form-group">
-								<label class="col-md-1 control-label"><?php echo $tr->translate("MODEL");?></label>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("TRANSFER_TYPE");?></label>
 								<div class="col-md-2">
-									<?php echo $formFilter->getElement('model');?>
+									<?php echo $formFilter->getElement('type');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("SIZE");?></label>
-								<div class="col-md-2">
-									<?php echo $formFilter->getElement('size');?>
-								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("COLOR");?></label>
-								<div class="col-md-2">
-									<?php echo $formFilter->getElement('color');?>
-								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("STATUS");?></label>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("STATUS");?></label>
 								<div class="col-md-2">
 									<?php echo $formFilter->getElement('status');?>
 								</div>
-							</div>		
+								<div class="col-md-4">
+									<button type="submit" class="btn green"><?php echo $tr->translate("SEARCH");?></button>
+								</div>
+							</div>
 							
 						<div class="form-group">
 						<div class="row">
                             <div class="col-md-offset-3 col-md-12">
-                                <button type="submit" class="btn green"><?php echo $tr->translate("SEARCH");?></button>
+                                
                             </div>
                         </div>
 					</div>
@@ -78,7 +70,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="btn-group">
-											<a href="<?php echo $url_new;?>"><button id="sample_editable_1_new" class="btn green">
+											<a href="<?php echo $url_new; ?>"><button id="sample_editable_1_new" class="btn green">
 											Add New <i class="fa fa-plus"></i>
 											</button></a>
 										</div>
@@ -111,16 +103,10 @@
 									<th class="table-checkbox">
 										<input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes"/>
 									</th>
-									<th><?php echo $tr->translate("ITEM_CODE");?></th>
-									<th><?php echo $tr->translate("ITEM_NAME");?></th>
-									<th><?php echo $tr->translate("BARCODE");?></th>
-									<th><?php echo $tr->translate("SERIAL_NO");?></th>
-									<th><?php echo $tr->translate("BRAND");?></th>
-									<th><?php echo $tr->translate("CATEGORY");?></th>
-									<th><?php echo $tr->translate("MODEL");?></th>
-									<th><?php echo $tr->translate("MEASURE");?></th>
-									<th><?php echo $tr->translate("BRANCH");?></th>
-									<th><?php echo $tr->translate("QTY");?></th>
+									<th><?php echo $tr->translate("TRANSFER_NO");?></th>
+									<th><?php echo $tr->translate("TRANSFER_TO");?></th>
+									<th><?php echo $tr->translate("DATE_TRANSFER");?></th>
+									<th><?php echo $tr->translate("TRANSFER_BY");?></th>
 									<th><?php echo $tr->translate("STATUS");?></th>
 									<th><?php echo $tr->translate("ACTION");?></th>
 								</tr>
@@ -129,16 +115,10 @@
 								<?php if(!empty($rs)){ foreach ($rs as $key => $row){?>
 								<tr class="odd gradeX">
 									<td><input type="checkbox" class="checkboxes" value="<?php echo $row["id"]?>"/></td>
-									<td><?php echo $row["item_code"]?></td>
-									<td><?php echo $row["item_name"]?></td>
-									<td><?php echo $row["barcode"]?></td>
-									<td><?php echo $row["serial_number"]?> </td>
-									<td><?php echo $row["brand"]?></td>
-									<td class="center"><?php echo $row["cat"]?></td>
-									<td class="center"><?php echo $row["model"]?></td>
-									<td class="center"><?php echo $row["measure"]?></td>
-									<td class="center"><?php echo $row["branch"]?></td>
-									<td class="center"><?php echo $row["qty"]?></td>
+									<td><?php echo $row["tran_no"]?></td>
+									<td><?php echo $row["tran_location"]?></td>
+									<td><?php echo $row["date"]?></td>
+									<td><?php echo $row["user_tran"]?> </td>
 									<td class="center">
 										<?php if($row["status"] == 1){?>
 										<span class="label label-sm label-success"><?php echo $tr->translate("ACTIVE");?> </span>

@@ -5,25 +5,28 @@ class Product_Form_FrmAdjust extends Zend_Form
     {
 
 	}
-	/////////////	Form Product		/////////////////
-// 	public function showFrmAdjust($data=null) {
-// 		$db=new Application_Model_DbTable_DbGlobal();
+	function add(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = new Product_Model_DbTable_DbAdjustStock();
+		$pro_name =new Zend_Form_Element_Select("pro_name");
+		$pro_name->setAttribs(array(
+				'class'=>'form-control select2me',
+				'onChange'=>'addNew();'
+		));
+		$opt= array(''=>$tr->translate("SELECT PRODUCT"));
+		if(!empty($db->getProductName())){
+			foreach ($db->getProductName() as $rs){
+				$opt[$rs["id"]] = $rs["item_name"]." ".$rs["model"]." ".$rs["size"]." ".$rs["color"];
+			}
+		}
 		
-// 		$descriptionElement = new Zend_Form_Element_Textarea('remark');
-//     	$this->addElement($descriptionElement);
-    	
-//     	$adjustElement = new Zend_Form_Element_Submit("Adjust");
-//     	$this->addElement($adjustElement);
-    	
-//     	$cancelElement = new Zend_Form_Element_Submit("Cancel");
-//     	$this->addElement($cancelElement);
-//     	return $this;
-// 	}
-	
-	/////////////	Form Item		/////////////////
-	/* @Desc: show form for change item information
-	 * @param $data value of both form
-	 * */
+		$pro_name->setMultiOptions($opt);
+		
+		$this->addElements(array($pro_name));
+		return $this;
+	}
+	/////////////	Form Product		/////////////////
+
 	public function showItemForm($data=null) {
 		$db=new Application_Model_DbTable_DbGlobal();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
