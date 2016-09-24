@@ -2726,7 +2726,7 @@ Input icons
   position: relative;
 }
 .input-icon > .form-control {
-  padding-left: 33px;
+  padding-left: 10px;
 }
 .input-group .input-icon > .form-control {
   -webkit-border-radius: 4px 0 0 4px;
@@ -2762,8 +2762,8 @@ Input icons
   color: #F3565D;
 }
 .input-icon.right > .form-control {
-  padding-right: 33px;
-  padding-left: 12px;
+  /* padding-right: 33px; */
+  /* padding-left: 12px; */
 }
 .input-group .input-icon.right > .form-control {
   -webkit-border-radius: 0 4px 4px 0;
@@ -5686,7 +5686,7 @@ Blue Default
 /* Portlet */
 .portlet > .portlet-body.blue,
 .portlet.blue {
-  background-color: #4B8DF8;
+  /*background-color: #4B8DF8;*/
 }
 
 .portlet.solid.blue > .portlet-title,

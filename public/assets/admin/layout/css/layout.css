@@ -86,7 +86,7 @@ Page Header
   float: left;
 }
 .page-header.navbar .page-logo .logo-default {
-  margin: 16px 0 0 0;
+  margin: 4px 0 0 0;
 }
 .page-header.navbar .page-logo .logo-mini {
   display: none;
@@ -1095,7 +1095,7 @@ Page sidebar
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li > a {
   display: block;
   margin: 0;
-  padding: 6px 15px 6px 43px;
+  padding: 6px 15px 6px 24px;
   text-decoration: none;
   font-size: 14px;
   font-weight: 300;

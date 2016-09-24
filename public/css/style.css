@@ -32,7 +32,8 @@ fieldset th.tdheader-delete {
 }
 .tab-links{ background:#006600; cursor: pointer;}
 th.tdheader {
-    background: url("../images/tbheader-bg1.jpg") repeat-x scroll center top #F1F1F1;
+    /* background: url("../images/tbheader-bg1.jpg") repeat-x scroll center top #F1F1F1; */
+    background: #f9f9f9;
     border: 1px solid #CCCCCC;
     color: #333333;
     font-family: Arial,Helvetica,sans-serif;
@@ -143,7 +144,7 @@ table.collape td{
 	padding: 0 5px 0 5px;
 	border: 1px solid #ddd;
 	font-family: "Open Sans", sans-serif;
-	font-size: 14px;
+	font-size: 11px;
 }
 
 table.collape td.no-border{
@@ -746,3 +747,10 @@ table.collape tr.trbody td {
 		width: 214px;
 		padding: 5px;
 	}
+	
+.frmfilter .col-md-2  {
+    position: relative;
+    min-height: 1px;
+    padding-right: 5px !important;
+    padding-left: 5px !important;
+}
