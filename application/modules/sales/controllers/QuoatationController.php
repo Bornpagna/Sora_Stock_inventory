@@ -46,7 +46,9 @@ class Sales_QuoatationController extends Zend_Controller_Action
 			$data = $this->getRequest()->getPost();
 			try {
 				$dbq = new Sales_Model_DbTable_Dbquoatation();
-				$dbq->addQuoatationOrder($data);
+				if(!empty($data['identity'])){
+					$dbq->addQuoatationOrder($data);
+				}
 				Application_Form_FrmMessage::message("INSERT_SUCESS");
 				if(!empty($data['btnsavenew'])){
 					Application_Form_FrmMessage::redirectUrl("/sales/quoatation");

@@ -48,7 +48,9 @@ class Sales_IndexController extends Zend_Controller_Action
 			$data = $this->getRequest()->getPost();
 			try {
 				$dbq = new Sales_Model_DbTable_DbSaleOrder();
-				$dbq->addSaleOrder($data);
+				if(!empty($data['identity'])){
+					$dbq->addSaleOrder($data);
+				}
 				Application_Form_FrmMessage::message("INSERT_SUCESS");
 				if(!empty($data['btnsavenew'])){
 					Application_Form_FrmMessage::redirectUrl("/sales/quoatation");

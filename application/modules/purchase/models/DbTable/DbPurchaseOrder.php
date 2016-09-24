@@ -12,7 +12,7 @@ class Purchase_Model_DbTable_DbPurchaseOrder extends Zend_Db_Table_Abstract
 		(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
 		net_total,paid,balance,
 		(SELECT name_en FROM `tb_view` WHERE key_code = purchase_status AND `type`=1) As purchase_status,
-		(SELECT name_en FROM `tb_view` WHERE key_code =tb_purchase_order.status AND type=2 LIMIT 1),
+		(SELECT name_en FROM `tb_view` WHERE key_code =tb_purchase_order.status AND type=5 LIMIT 1),
 		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = user_mod LIMIT 1 ) AS user_name
 		FROM `tb_purchase_order` ";
 		$from_date =(empty($search['start_date']))? '1': " date_order >= '".$search['start_date']." 00:00:00'";

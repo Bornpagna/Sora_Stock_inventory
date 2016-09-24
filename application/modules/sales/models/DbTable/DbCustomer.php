@@ -16,7 +16,7 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		 cust_name,phone,
 		(SELECT NAME FROM `tb_price_type` WHERE id=customer_level LIMIT 1) As level,
 		 contact_name,contact_phone,address,
-		( SELECT name_en FROM `tb_view` WHERE type=2 AND key_code=status LIMIT 1) status,
+		( SELECT name_en FROM `tb_view` WHERE type=5 AND key_code=status LIMIT 1) status,
 		( SELECT fullname FROM `tb_acl_user` WHERE tb_acl_user.user_id=user_id LIMIT 1) AS user_name
 		 FROM `tb_customer` WHERE cust_name!=''  ";
 		

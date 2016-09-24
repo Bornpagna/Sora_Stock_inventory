@@ -89,6 +89,7 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 				$this->insert($data_item);
 				
 				$rows=$db_global ->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
+				
 				if($rows)
 				{
 					

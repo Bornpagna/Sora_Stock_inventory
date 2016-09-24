@@ -4,6 +4,12 @@
 	$url_submit = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'add'));
 	$url_cancel = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'index'));
 ?>
+<script type="text/javascript">
+	jQuery(Document).ready(function(){
+		jQuery('#frm').validationEngine('attach', {promptPosition : "centerRight"});
+		
+	});
+</script>
 <title><?php echo $tr->translate("ADD_PURCAHSE_ORDER");?></title>
 <div class="row">
 	<div class="col-md-12">

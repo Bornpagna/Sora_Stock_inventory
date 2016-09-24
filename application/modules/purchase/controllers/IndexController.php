@@ -43,7 +43,9 @@ class Purchase_indexController extends Zend_Controller_Action
 			$data = $this->getRequest()->getPost();
 			try {
 			$payment_purchase_order = new Purchase_Model_DbTable_DbPurchaseVendor();
-			$payment_purchase_order->addPurchaseOrder($data);
+			 if(!empty($data['identity'])){
+				$payment_purchase_order->addPurchaseOrder($data);
+			 }
 			Application_Form_FrmMessage::message("Purchase has been Saved!");
 				if(!empty($data['btnsavenew'])){
 					Application_Form_FrmMessage::redirectUrl("/purchase/index");

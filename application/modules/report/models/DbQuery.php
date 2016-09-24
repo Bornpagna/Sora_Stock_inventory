@@ -163,9 +163,10 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
 		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
-		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS vendor_name,
-		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS v_phone,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
 		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
+		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
 		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
 		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
 		so.qty_order,so.price,so.sub_total,s.net_total,
@@ -175,6 +176,63 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		`tb_salesorder_item` AS so WHERE s.id=so.saleorder_id
 		AND s.status=1 AND s.id = $id ";
 		return $db->fetchAll($sql);
+	}
+	function getSaleProductDetail($search){//6
+		$db = $this->getAdapter();
+		$sql=" SELECT
+		(SELECT name FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		it.item_name,
+		it.item_code,
+		(SELECT name FROM `tb_category` WHERE id=it.cate_id LIMIT 1) AS cate_name,
+		(SELECT name FROM `tb_brand` WHERE id=it.brand_id LIMIT 1) AS brand_name,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id limit 1) As curr_name,
+		
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
+		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
+		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
+		
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
+		so.qty_order,so.price,so.sub_total,s.currency_id,s.net_total,
+		s.id,s.sale_no,s.date_sold,s.remark,
+		s.paid,s.discount_real,s.tax,
+		s.balance
+		FROM `tb_sales_order` AS s,
+		`tb_salesorder_item` AS so,
+		tb_product AS it
+		WHERE s.id=so.saleorder_id AND it.id=so.pro_id
+		AND s.status=1 ";
+		$from_date =(empty($search['start_date']))? '1': " s.date_sold >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " s.date_sold <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['txt_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['txt_search']));
+			$s_where[] = " it.item_name LIKE '%{$s_search}%'";
+			$s_where[] = " it.item_code LIKE '%{$s_search}%'";
+			$s_where[] = " it.barcode LIKE '%{$s_search}%'";
+			$s_where[] = " s.order_number LIKE '%{$s_search}%'";
+			$s_where[] = " s.net_total LIKE '%{$s_search}%'";
+			$s_where[] = " s.paid LIKE '%{$s_search}%'";
+			$s_where[] = " s.balance LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['item']>0){
+			$where .= " AND it.id =".$search['item'];
+		}
+		if($search['category_id']>0){
+			$where .= " AND it.cate_id =".$search['category_id'];
+		}
+		if($search['brand_id']>0){
+			$where .= " AND it.brand_id =".$search['brand_id'];
+		}
+		if($search['branch_id']>0){
+			$where .= " AND s.branch_id =".$search['branch_id'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbg->getAccessPermission();
+		$order=" ORDER BY s.id DESC ";
+		return $db->fetchAll($sql.$where.$order);
 	}
 	
 	

@@ -102,7 +102,35 @@ class report_indexController extends Zend_Controller_Action
     	}
     	$query = new report_Model_DbQuery();
     	$this->view->product =  $query->getProductSaleById($id);
+    	if(empty($query->getProductSaleById($id))){
+    		$this->_redirect("/report/index/rpt-sales");
+    	}
+    }
+    function rptSaleitemAction(){
+    	if($this->getRequest()->isPost()){
+    		$search = $this->getRequest()->getPost();
+    		$search['start_date']=date("Y-m-d",strtotime($search['start_date']));
+    		$search['end_date']=date("Y-m-d",strtotime($search['end_date']));
+    	}else{
+    		$search = array(
+    				'txt_search'=>'',
+    				'start_date'=>date("Y-m-d"),
+    				'end_date'=>date("Y-m-d"),
+    				'item'=>0,
+    				'category_id'=>0,
+    				'brand_id'=>0,
+    				'branch_id'=>0,
+    		);
+    	}
+    	$this->view->rssearch=$search;
+    	$query = new report_Model_DbQuery();
+    	$this->view->product_rs =  $query->getSaleProductDetail($search);
     	 
+    	$frm = new Application_Form_FrmReport();
+    	$form_search=$frm->productDetailReport($search);
+    	Application_Model_Decorator::removeAllDecorator($form_search);
+    	$this->view->form_search = $form_search;
+    	
     }
 	public function indexAction()
 	{
