@@ -27,7 +27,8 @@ class Product_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 	function getLocation(){
 		$id = $this->GetuserInfo();
 		$db = $this->getAdapter();
-		$sql = "SELECT s.id,s.`name` FROM `tb_sublocation` AS s WHERE s.`status`=1 AND s.`id` !=".$id["location_id"];
+		$sql = "SELECT s.id,s.`name` FROM `tb_sublocation` AS s WHERE s.`status`=1 AND s.`id` !=".$id["branch_id"];
+		echo $sql;
 		return $db->fetchAll($sql);
 	}
 	function getTransfer($data){
@@ -81,6 +82,24 @@ class Product_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 				FROM
 				  `tb_transfer_item` AS t 
 				WHERE t.`tran_id` = $id";
+		return $db->fetchAll($sql);
+	}
+	
+	function getCurrentTransfer($id){
+		$user_info = new Application_Model_DbTable_DbGetUserInfo();
+		$result = $user_info->getUserInfo();
+		$db = $this->getAdapter();
+		$loc_id = $result["location_id"];
+		$sql="SELECT 
+				  t.`pro_id`,
+				  t.`qty`,
+				  p.`cur_location`,
+				  p.`tran_location`,
+				  p.`type`
+				FROM
+				  `tb_transfer_item` AS t ,
+				  `tb_product_transfer` AS p
+				WHERE t.`tran_id` = p.`id`AND p.id=$id";
 		return $db->fetchAll($sql);
 	}
 	public function add($data){
@@ -180,12 +199,12 @@ class Product_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 			
 			
 			// Update Tb_prolocation has Transfered to old qty  to old Qty
-			$rs_detail = $this->getTransferDettail($data["id"]);
+			$rs_detail = $this->getCurrentTransfer($data["id"]);
 			if(!empty($rs_detail)){
 				foreach ($rs_detail as $rs){
 					//Update Prolocation has transfer to
 					$arr_up_to = array(
-						
+						//'' 		=>		$
 					);
 					
 					//Update Prolocation has transfer to
