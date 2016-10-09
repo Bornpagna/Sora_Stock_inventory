@@ -19,52 +19,15 @@ public function init()
    	{
    		$formFilter = new Application_Form_Frmsearch();
    		$this->view->formFilter = $formFilter;
-   		
+   		$data = $this->getRequest()->getPost();
    		$list = new Application_Form_Frmlist();
-   		$db = new Application_Model_DbTable_DbGlobal();
+   		$db = new Product_Model_DbTable_DbAdjustStock();
    		
-   		$transfer_sql ="SELECT t.transfer_id, t.invoice_num, t.transfer_date,
-						(SELECT lo.Name FROM tb_sublocation AS lo WHERE lo.LocationId=t.from_location) AS `From_Location`,
-						(SELECT lo.Name FROM tb_sublocation AS lo WHERE lo.LocationId=t.to_location) AS `To_Location`,t.remark,
-						(SELECT u.`fullname` FROM rsv_acl_user AS u WHERE u.user_id = t.user_id) AS fullname  
-						FROM tb_stocktransfer AS t WHERE transfer_id ";
+   
+   		$rows=$db->getAllAdjustStock($data);
+   		$columns=array("PRO_NAME","BAR_CODE","ITEM_CODE","QTY_BEFORE","QTY_AFTER","DFFER_QTY","MEASURE","LOCATION","BY_USER","DATE");
    		
-   		$user = $this->GetuserInfoAction();
-   		$str_condition = " AND t.to_location" ;
-   		$transfer_sql .= $db->getAccessPermission($user["level"], $str_condition, $user["location_id"]);
-   		
-   		if($this->getRequest()->isPost()){
-   			$post= $this->getRequest()->getPost();
-   			if(!$post["order"]=="" AND $post['order']){
-   				$transfer_sql .= " AND t.invoice_num LIKE '%".addslashes(trim($post['order']))."%'";
-   			}
-   			if($post['LocationId'] !='' AND $post['LocationId'] !=0){
-   				$transfer_sql .= " AND t.to_location = ".trim($post['LocationId']);
-   			}
-   			$start_date = $post['search_start_date'];
-   			$end_date = $post['search_end_date'];
-   			
-   			if($start_date != "" && $end_date != "" && strtotime($end_date) >= strtotime($start_date)) {
-   				$transfer_sql .= " AND t.transfer_date BETWEEN '$start_date' AND '$end_date'";
-   			}
-   		}
-   		$transfer_sql.= " ORDER BY t.transfer_id DESC";
-   		$rows=$db->getGlobalDb($transfer_sql);
-   		$columns=array("INVOICE_NUM","DATE_TRANSFER","FROM_LOCATION","TO_LOCATION","REMARK","BY_USER");
-   		if($user["level"]!=1 AND $user["level"]!=2){
-   			$link=array(
-   					'module'=>'product','controller'=>'adjust-stock','action'=>'view-transfer',
-   			);
-   			$urlEdit = BASE_URL . "/product/adjust-stock/view-transfer";
-   		}
-   		else{
-   			$link=array(
-   				'module'=>'product','controller'=>'adjust-stock','action'=>'transfer-update',
-   			);
-   			$urlEdit = BASE_URL . "/product/adjust-stock/transfer-update";
-   		}
-   		
-   		$this->view->list=$list->getCheckList(1, $columns, $rows, array('invoice_num'=>$link), $urlEdit);
+   		$this->view->list=$list->getCheckList(0, $columns, $rows);
    		Application_Model_Decorator::removeAllDecorator($formFilter);
    		
    	}

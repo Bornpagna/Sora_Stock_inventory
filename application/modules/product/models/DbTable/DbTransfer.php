@@ -28,7 +28,7 @@ class Product_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 		$id = $this->GetuserInfo();
 		$db = $this->getAdapter();
 		$sql = "SELECT s.id,s.`name` FROM `tb_sublocation` AS s WHERE s.`status`=1 AND s.`id` !=".$id["branch_id"];
-		echo $sql;
+		//echo $sql;
 		return $db->fetchAll($sql);
 	}
 	function getTransfer($data){

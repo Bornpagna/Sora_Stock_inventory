@@ -7,6 +7,44 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 	{
 		$this->_name=$name;
 	}
+	function getAllAdjustStock($data){
+		$db = $this->getAdapter();
+		$db_globle = new Application_Model_DbTable_DbGlobal();
+		$sql ="SELECT 
+				  m.`pro_id` ,
+				  p.`item_name`,
+				  p.`barcode`,
+				  p.`item_code`,
+				  m.`before_qty`,
+				  m.`qty_after`,
+				  m.`differ_qty`,
+				  (SELECT m.name FROM `tb_measure` AS m WHERE m.id = p.`measure_id` LIMIT 1) AS measure,
+				  (SELECT s.`name` FROM `tb_sublocation` AS s WHERE s.id=m.`location_id` LIMIT 1) AS location,
+				  (SELECT u.`fullname` FROM `tb_acl_user` AS u WHERE u.`user_id`=m.`user_mod` LIMIT 1) AS `username`,
+				   m.`date`
+				FROM
+				  `tb_move_history` AS m ,
+				  `tb_product` AS p
+				WHERE m.`pro_id`=p.`id`";
+		$where = '';
+		// 		if($data["ad_search"]!=""){
+		// 			$s_where=array();
+		// 			$s_search = addslashes(trim($data['ad_search']));
+		// 			$s_where[]= " p.item_name LIKE '%{$s_search}%'";
+		// 			$s_where[]=" p.barcode LIKE '%{$s_search}%'";
+		// 			$s_where[]= " p.item_code LIKE '%{$s_search}%'";
+		// 			$s_where[]= " p.serial_number LIKE '%{$s_search}%'";
+		// 			//$s_where[]= " cate LIKE '%{$s_search}%'";
+		// 			$where.=' AND ('.implode(' OR ', $s_where).')';
+		// 		}
+// 		if($data["pro_id"]!=""){
+// 			$where.=' AND m.pro_id='.$data["pro_id"];
+// 		}
+		$location = $db_globle->getAccessPermission('m.`location_id`');
+		//echo $location;
+		return $db->fetchAll($sql.$where.$location);
+			
+	}
 	public function add($data){
 		$db = $this->getAdapter();
 		 

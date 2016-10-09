@@ -14,6 +14,10 @@
 			<div class="caption">
 					<i class="fa fa-globe"></i><?php echo $tr->translate("MENU_PRODUCT_ADVANCE_INDEX");?>
 			</div>
+			
+			<div class="caption pull-right">
+				<a href="<?php echo $url_new;?>"><button id="sample_editable_1_new" class="btn green">Add New <i class="fa fa-plus"></i></button></a>
+			</div>
 			<div class="caption" style="float:right">
 					<?php $formList = new Application_Form_Frmlist(); //echo $formList->showAddBuntton($url_new);?>
 			</div>
@@ -22,48 +26,46 @@
 			<form class="form-horizontal" method="post" action="" >
 				<div class="form-body">
 							<div class="form-group">
-								<label class="col-md-1 control-label"><?php echo $tr->translate("ADVANCE_SEARCH");?></label>
-								<div class="col-md-2">
+								<!--  <label class="col-md-1 control-label"><?php //echo $tr->translate("ADVANCE_SEARCH");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('ad_search');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("BRANCH");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("BRANCH");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('branch');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("BRAND");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("BRAND");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('brand');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("CATEGORY");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("CATEGORY");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('category');?>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-1 control-label"><?php echo $tr->translate("MODEL");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("MODEL");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('model');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("SIZE");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("SIZE");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('size');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("COLOR");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("COLOR");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('color');?>
 								</div>
-								<label class="col-md-1 control-label"><?php echo $tr->translate("STATUS");?></label>
-								<div class="col-md-2">
+								<!--<label class="col-md-1 control-label"><?php echo $tr->translate("STATUS");?></label>-->
+								<div class="col-md-3">
 									<?php echo $formFilter->getElement('status');?>
 								</div>
 							</div>		
 							
 						<div class="form-group">
-						<div class="row">
-                            <div class="col-md-offset-3 col-md-12">
-                                <button type="submit" class="btn green"><?php echo $tr->translate("SEARCH");?></button>
-                            </div>
-                        </div>
+						<label class="control-label col-md-3 pull-right">
+							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+						</label>
 					</div>
 				</div>
 			</form>
@@ -72,45 +74,12 @@
 		
 		<!-- Result List -->
 					<!-- BEGIN EXAMPLE TABLE PORTLET-->
-						
 						<div class="portlet-body">
-							<div class="table-toolbar">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="btn-group">
-											<a href="<?php echo $url_new;?>"><button id="sample_editable_1_new" class="btn green">
-											Add New <i class="fa fa-plus"></i>
-											</button></a>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="btn-group pull-right">
-											<button class="btn dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
-											</button>
-											<ul class="dropdown-menu pull-right">
-												<li>
-													<a href="javascript:;">
-													Print </a>
-												</li>
-												<li>
-													<a href="javascript:;">
-													Save as PDF </a>
-												</li>
-												<li>
-													<a href="javascript:;">
-													Export to Excel </a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-							<table class="table table-striped table-bordered table-hover" id="sample_1" style="font-size:11px">
+							<table class="table table-striped table-bordered table-hover" id="sample_2" style="font-size:11px">
 							<thead style="font-size:11px">
 								<tr>
-									<th class="table-checkbox">
-										<input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes"/>
-									</th>
+									<th><?php echo $tr->translate("NO");?></th>
+									<th><?php echo $tr->translate("BRANCH");?></th>
 									<th><?php echo $tr->translate("ITEM_CODE");?></th>
 									<th><?php echo $tr->translate("ITEM_NAME");?></th>
 									<th><?php echo $tr->translate("BARCODE");?></th>
@@ -119,7 +88,6 @@
 									<th><?php echo $tr->translate("CATEGORY");?></th>
 									<th><?php echo $tr->translate("MODEL");?></th>
 									<th><?php echo $tr->translate("MEASURE");?></th>
-									<th><?php echo $tr->translate("BRANCH");?></th>
 									<th><?php echo $tr->translate("QTY");?></th>
 									<th><?php echo $tr->translate("STATUS");?></th>
 									<th><?php echo $tr->translate("ACTION");?></th>
@@ -128,7 +96,8 @@
 							<tbody>
 								<?php if(!empty($rs)){ foreach ($rs as $key => $row){?>
 								<tr class="odd gradeX">
-									<td><input type="checkbox" class="checkboxes" value="<?php echo $row["id"]?>"/></td>
+									<td><?php echo $key+1;?></td>
+									<td class="center"><?php echo $row["branch"]?></td>
 									<td><?php echo $row["item_code"]?></td>
 									<td><?php echo $row["item_name"]?></td>
 									<td><?php echo $row["barcode"]?></td>
@@ -137,7 +106,6 @@
 									<td class="center"><?php echo $row["cat"]?></td>
 									<td class="center"><?php echo $row["model"]?></td>
 									<td class="center"><?php echo $row["measure"]?></td>
-									<td class="center"><?php echo $row["branch"]?></td>
 									<td class="center"><?php echo $row["qty"]?></td>
 									<td class="center">
 										<?php if($row["status"] == 1){?>
