@@ -42,9 +42,7 @@ General reset
 /* Set default body */
 body {
   color: #333333;
-  font-family: "Open Sans", sans-serif;
-  padding: 0px !important;
-  margin: 0px !important;
+  font-family: "Open Sans", sans-serif,'Kh Battambang','Khmer Battambang';
   font-size: 13px;
   direction: ltr;
 }
@@ -2374,7 +2372,7 @@ Forms
   font-weight: normal;
   color: #333;
   background-color: #fff;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #92b3c5;
   -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;

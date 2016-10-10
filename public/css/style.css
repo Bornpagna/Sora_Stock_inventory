@@ -36,7 +36,8 @@ th.tdheader {
     background: #f9f9f9;
     border: 1px solid #CCCCCC;
     color: #333333;
-    font-family: Arial,Helvetica,sans-serif;
+    /* font-family: Arial,Helvetica,sans-serif; */
+    font-family: "Open Sans", sans-serif,'Kh Battambang','Khmer Battambang';
     font-size: 12px;
     font-weight: bold;
     line-height: 30px;
