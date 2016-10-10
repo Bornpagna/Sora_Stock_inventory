@@ -100,8 +100,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     public function productLocationInventory($pro_id, $location_id){
     	$db=$this->getAdapter();
     	$sql="SELECT id,pro_id,location_id,qty,qty_warning,user_id,last_mod_date,last_mod_userid
-    	 FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 ";  
+    	 FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 "; 
+
+    	
     	$row = $db->fetchRow($sql);
+    	
     	if(empty($row)){
     		$session_user=new Zend_Session_Namespace('auth');
     		$userName=$session_user->user_name;
@@ -119,10 +122,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     		$this->_name="tb_prolocation";
     		$this->insert($array);
     		
-    		$sql="id,pro_id,location_id,qty,qty_warning,user_id,last_mod_date,last_mod_userid
+    		$sql="SELECT id,pro_id,location_id,qty,qty_warning,user_id,last_mod_date,last_mod_userid
     		FROM tb_prolocation WHERE pro_id =".$pro_id." AND location_id=".$location_id." LIMIT 1 ";
     		return $row = $db->fetchRow($sql);
     	}else{
+    		
     	return $row; 
     	}  	
     }
@@ -409,5 +413,61 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql = "SELECT `qty_perunit` FROM tb_product WHERE pro_id= '$item_id' LIMIT 1 ";
     }
+    public function getQuoationNumber($branch_id = 1){
+    	$this->_name='tb_quoatation';
+    	$db = $this->getAdapter();
+    	$sql=" SELECT COUNT(id)  FROM $this->_name WHERE branch_id=".$branch_id." LIMIT 1 ";
+    	$pre = $this->getPrefixCode($branch_id)."Q";
+    	$acc_no = $db->fetchOne($sql);
+    
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	for($i = $acc_no;$i<5;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
+    public function getSalesNumber($branch_id = 1){
+    	$this->_name='tb_sales_order';
+    	$db = $this->getAdapter();
+    	$sql=" SELECT COUNT(id)  FROM $this->_name WHERE branch_id=".$branch_id." LIMIT 1 ";
+    	$pre = $this->getPrefixCode($branch_id)."SO";
+    	$acc_no = $db->fetchOne($sql);
+    
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	for($i = $acc_no;$i<5;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
+    function getPrefixCode($branch_id){
+    	$db  = $this->getAdapter();
+    	$sql = " SELECT branch_code FROM `tb_sublocation` WHERE id = $branch_id  LIMIT 1";
+    	return $db->fetchOne($sql);
+    }
+    function getAllTermCondition($opt=null){
+    	$db = $this->getAdapter();
+    	$sql = " SELECT id,con_khmer,con_english FROM `tb_termcondition` WHERE con_khmer!='' AND status = 1 ";
+    	$rows =  $db->fetchAll($sql);
+    	if($opt!=null){
+    		$option='';
+    		if(!empty($rows)){foreach ($rows as $key =>$rs){ 
+    			//$options[$rs['id']]=$rs['con_khmer'];
+    			$option .= '<option value="'.$rs['id'].'" >'.($key+1)." - ".htmlspecialchars($rs['con_khmer'], ENT_QUOTES)
+    					.'</option>';
+    		}
+    		return $option;
+    	  }
+    	}else{
+    		return $rows;
+    	}
+    }
+   function getProductPriceBytype($customer_id,$product_id){//BY Customer Level and Product id
+   	$db = $this->getAdapter();
+   	$sql=" SELECT price,pro_id FROM `tb_product_price` WHERE type_id = 
+   		(SELECT customer_level FROM `tb_customer` WHERE id=$customer_id limit 1) AND pro_id=$product_id LIMIT 1 ";
+   	return $db->fetchRow($sql);
+   }
 }
 ?>

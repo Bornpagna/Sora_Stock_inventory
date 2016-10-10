@@ -657,10 +657,7 @@ class Purchase_indexController extends Zend_Controller_Action
   	if($this->getRequest()->isPost()){
   		$post=$this->getRequest()->getPost();
   		$item_id = $post['item_id'];
-  		$branch_id = $post['branch_id'];
-  		$sql="  SELECT `qty_perunit`,
-						(SELECT qty FROM `tb_prolocation` WHERE location_id=$branch_id AND pro_id=$item_id LIMIT 1 ) AS qty 
-						FROM tb_product WHERE id= $item_id LIMIT 1  ";
+  		$sql = "SELECT `qty_perunit` FROM tb_product WHERE id= $item_id LIMIT 1 ";
   		$db = new Application_Model_DbTable_DbGlobal();
   		$row=$db->getGlobalDbRow($sql);
   		echo Zend_Json::encode($row);

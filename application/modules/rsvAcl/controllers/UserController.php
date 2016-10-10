@@ -21,7 +21,9 @@ class RsvAcl_UserController extends Zend_Controller_Action
 			$user_type_id = $this->getRequest()->getParam('user_type_filter');
 			$where=" where user_type_id=".$user_type_id;
 		}
-        $userQuery = "select `user_id`,`username`,`created_date`,`modified_date`,`status` from rsv_acl_user";
+        $userQuery = "select `user_id`,`username`,
+        (SELECT name FROM `tb_sublocation` WHERE id=LocationId) AS branch_name,
+        `created_date`,`modified_date`,`status` from tb_acl_user";
         $userQuery = $userQuery.$where;
         
         $rows = $getUser->getUserInfo($userQuery);
@@ -38,20 +40,18 @@ class RsvAcl_UserController extends Zend_Controller_Action
         		}
         	}
         	
-        	$link = array("rsvAcl","user","view-user");
+        	$link = array("rsvacl","user","view");
         	$links = array('username'=>$link);
         	
         	$list=new Application_Form_Frmlist();
-        	$columns=array($tr->translate('USER_NAME_CAP'),$tr->translate('CREATED_DATE'),$tr->translate('MODIFIED_DATE'),$tr->translate('STATUS_CAP'));
+        	$columns=array($tr->translate('USER_NAME_CAP'),"BRANCH_NAME",$tr->translate('CREATED_DATE'),$tr->translate('MODIFIED_DATE'),$tr->translate('STATUS_CAP'));
         	$this->view->form=$list->getCheckList('radio', $columns, $rows, $links);
         	
         }else $this->view->form = $tr->translate('NO_RECORD_FOUND');
-        
         Application_Model_Decorator::removeAllDecorator($formfilter);
-        
     }
     
-    public function viewUserAction()
+    public function viewAction()
     {   
     	/* Initialize action controller here */
     	if($this->getRequest()->getParam('id')){
@@ -62,7 +62,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
     	}  	 
     	
     }
-	public function addUserAction()
+	public function addAction()
 	{		
 		if($this->getRequest()->isPost())
 		{
@@ -94,19 +94,19 @@ class RsvAcl_UserController extends Zend_Controller_Action
 		
 	}
 	// Edit user
-    public function editUserAction()
+    public function editAction()
     {
     	$user_id=$this->getRequest()->getParam('id');
     	if(!$user_id)$user_id=0;
    		$form = new RsvAcl_Form_FrmUser();
     	$db = new RsvAcl_Model_DbTable_DbUser();
-		$rs = $db->getUserInfo('SELECT * FROM rsv_acl_user where user_id='.$user_id);
+		$rs = $db->getUserInfo('SELECT * FROM tb_acl_user where user_id='.$user_id);
 		Application_Model_Decorator::setForm($form, $rs);
 		
     	$this->view->form = $form;
     	$this->view->user_id = $user_id;
     	
-    	$rsloc = $db->getUserInfo('SELECT * FROM rsv_acl_ubranch where user_id='.$user_id ." GROUP BY location_id ");
+    	$rsloc = $db->getUserInfo('SELECT * FROM tb_acl_ubranch where user_id='.$user_id ." GROUP BY location_id ");
     	$this->view->branchname = $rsloc;
     	
     	$items = new Application_Model_GlobalClass();
@@ -127,7 +127,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
     }
 
  
-    public function changePasswordAction()
+    public function changepasswordAction()
 	{
 		$session_user=new Zend_Session_Namespace('auth');
 		
@@ -145,7 +145,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
 				if($db->isValidCurrentPassword($user_id,$current_password)){ 
 					$db->changePassword($user_id, md5($password));	
 					Application_Form_FrmMessage::message('Password has been changed');
-					Application_Form_FrmMessage::redirector('/rsvAcl/user/view-user/id/'.$user_id);
+					Application_Form_FrmMessage::redirector('/rsvacl/user/'.$user_id);
 				}else{
 					Application_Form_FrmMessage::message('Invalid current password');
 				}

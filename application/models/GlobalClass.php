@@ -257,12 +257,12 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 	public function getLocationAssign(){
 		$db = $this->getAdapter();
 		$user = $this->GetuserInfoAction();
-		$sql = "SELECT LocationId,Name FROM tb_sublocation WHERE Name!='' AND status=1 ";
-		$sql.=" ORDER BY LocationId DESC";
+		$sql = "SELECT id,name FROM tb_sublocation WHERE name!='' AND status=1 ";
+		$sql.=" ORDER BY id DESC";
 		$rows = $db->fetchAll($sql);
 		$option ="";
 		foreach($rows as $value){
-			$option .= '<option label="'.htmlspecialchars($value['Name'], ENT_QUOTES).'" value="'.$value['LocationId'].'">'.htmlspecialchars($value['Name'], ENT_QUOTES).'</option>';
+			$option .= '<option label="'.htmlspecialchars($value['name'], ENT_QUOTES).'" value="'.$value['id'].'">'.htmlspecialchars($value['name'], ENT_QUOTES).'</option>';
 		}
 		return $option;
 	}

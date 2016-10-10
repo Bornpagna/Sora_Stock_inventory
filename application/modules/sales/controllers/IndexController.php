@@ -31,13 +31,17 @@ class Sales_IndexController extends Zend_Controller_Action
 		$db = new Sales_Model_DbTable_DbSaleOrder();
 		$rows = $db->getAllSaleOrder($search);
 		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","SALE_NO", "ORDER_DATE",
-				"CURR_TYPE","NET_TOTAL","PAID","BALANCE","BY_USER");
+				"CURRNECY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","BY_USER");
 		$link=array(
 				'module'=>'sales','controller'=>'index','action'=>'edit',
 		);
+		$link1=array(
+				'module'=>'sales','controller'=>'index','action'=>'viewapp',
+		);
 		
 		$list = new Application_Form_Frmlist();
-		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,'sale_no'=>$link));
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,
+				'sale_no'=>$link,'approval'=>$link1));
 		$formFilter = new Sales_Form_FrmSearch();
 		$this->view->formFilter = $formFilter;
 	    Application_Model_Decorator::removeAllDecorator($formFilter);
@@ -69,7 +73,28 @@ class Sales_IndexController extends Zend_Controller_Action
 		 
 		// item option in select
 		$items = new Application_Model_GlobalClass();
-		$this->view->items = $items->getProductOption();;
+		$this->view->items = $items->getProductOption();
+		$this->view->term_opt = $db->getAllTermCondition(1);
 	}	
+	function viewappAction(){
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		if(empty($id)){
+			$this->_redirect("/sales/salesapprove");
+		}
+		$query = new Sales_Model_DbTable_Dbsalesapprov();
+		$this->view->product =  $query->getProductSaleById($id);
+		if(empty($query->getProductSaleById($id))){
+			$this->_redirect("/sales/salesapprove");
+		}
+	}
+	public function getproductpriceAction(){
+		if($this->getRequest()->isPost()){
+			$post=$this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$rs = $db ->getProductPriceBytype($post['customer_id'], $post['product_id']);
+			echo Zend_Json::encode($rs);
+			exit();
+		}
+	}
 		
 }

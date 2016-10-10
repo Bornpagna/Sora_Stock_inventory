@@ -3,7 +3,7 @@
 class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'rsv_acl_user';
+    protected $_name = 'tb_acl_user';
 	//function for getting record user by user_id
 	public function getUser($user_id)
 	{

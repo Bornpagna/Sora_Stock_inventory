@@ -13,7 +13,9 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 			sale_no,date_sold,
 			(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
 			net_total,paid,balance,
-			(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = user_mod) AS user_name
+			(SELECT name_en FROM `tb_view` WHERE type=7 AND key_code=is_approved LIMIT 1) AS approval,
+			(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1) AS processing,
+			(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = user_mod) AS user_name
 			FROM `tb_sales_order` ";
 			
 			$from_date =(empty($search['start_date']))? '1': " date_sold >= '".$search['start_date']." 00:00:00'";
@@ -48,24 +50,27 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 			$session_user=new Zend_Session_Namespace('auth');
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
+			$dbc=new Application_Model_DbTable_DbGlobal();
+			$so = $dbc->getSalesNumber($data["branch_id"]);
 
 			$info_purchase_order=array(
 					"customer_id"   => 	$data['customer_id'],
 					"branch_id"     => 	$data["branch_id"],
-					"sale_no"       => 	$data['txt_order'],
+					"sale_no"       => 	$so,//$data['txt_order'],
 					"date_sold"     => 	date("Y-m-d",strtotime($data['order_date'])),
 					"saleagent_id"  => 	$data['saleagent_id'],
-					"payment_method" => $data['payment_name'],
+					//"payment_method" => $data['payment_name'],
 					"currency_id"    => $data['currency'],
 					"remark"         => 	$data['remark'],
 					"all_total"      => 	$data['totalAmoun'],
 					"discount_value" => 	$data['dis_value'],
 					"discount_real"  => 	$data['global_disc'],
 					"net_total"      => 	$data['all_total'],
-					"paid"           => 	$data['paid'],
-					"balance"        => 	$data['remain'],
-					"tax"			 =>     $data["total_tax"],
+					//"paid"         => 	$data['paid'],
+					//"balance"      => 	$data['remain'],
+					//"tax"			 =>     $data["total_tax"],
 					"user_mod"       => 	$GetUserId,
+					'pending_status' =>2,
 					"date"      => 	date("Y-m-d"),
 			);
 			$this->_name="tb_sales_order";
@@ -82,17 +87,17 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 						'qty_order'	  => 	$data['qty'.$i],
 						'qty_detail'  => 	$data['qty_per_unit_'.$i],
 						'price'		  => 	$data['price'.$i],
-						'disc_value'	  => $data['real-value'.$i],
+						'old_price'   =>    $data['current_qty'.$i],
+						'disc_value'  => $data['real-value'.$i],
 						'sub_total'	  => $data['total'.$i],
 				);
 				$this->_name='tb_salesorder_item';
 				$this->insert($data_item);
 				
-				$rows=$db_global ->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
+				/*$rows=$db_global ->productLocationInventory($data['item_id_'.$i], $locationid);//check stock product location
 				
 				if($rows)
 				{
-					
 						$datatostock   = array(
 								'qty'   		=> 		$rows["qty"]-$data['qty'.$i],
 								'last_mod_date'		=>	date("Y-m-d"),
@@ -103,8 +108,26 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 						$this->update($datatostock, $where);
 					
 				}else{
-				}
+				}*/
 			 }
+			 
+			 $ids=explode(',',$data['identity_term']);
+			 if(!empty($data['identity_term'])){
+				 foreach ($ids as $i)
+				 {
+				 	$data_item= array(
+				 			'quoation_id'=> $sale_id,
+				 			'condition_id'=> $data['termid_'.$i],
+				 			"user_id"   => 	$GetUserId,
+				 			"date"      => 	date("Y-m-d"),
+							'term_type'=>2
+				 			
+				 	);
+				 	$this->_name='tb_quoatation_termcondition';
+				 	$this->insert($data_item);
+				 }
+			 }
+			 
 			$db->commit();
 		}catch(Exception $e){
 			$db->rollBack();

@@ -28,8 +28,11 @@ class Sales_Form_FrmSale extends Zend_Form
     	$this->addElement($vendor_id);
     	
     	$roder_element= new Zend_Form_Element_Text("txt_order");
-    	$roder_element->setAttribs(array('placeholder' => 'Optional','class'=>'form-control',
+    	$roder_element->setAttribs(array('placeholder' => 'Optional','class'=>'form-control',"readonly"=>true,
     			"onblur"=>"CheckPOInvoice();"));
+    	$this->addElement($roder_element);
+    	$qo = $db->getSalesNumber(1);
+    	$roder_element->setValue($qo);
     	$this->addElement($roder_element);
     	
     	$user= $this->GetuserInfo();

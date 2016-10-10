@@ -1,9 +1,9 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$form=$this->form_sale;
-	$url_submit = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'edit'));
+	$url_submit = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'));
 	$url_cancel = $this->url(array('module'=>'sales','controller'=>'index','action'=>'index'));
-	$url_new = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'edit'));
+	$url_new = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'));
 ?>
 <title><?php echo $tr->translate("QUOTATION_ORDER");?></title>
 <div class="row">
@@ -198,7 +198,7 @@
 								</div>
 							</div>
 							<div class="col-md-4">
-								<button type="submit" name="btnsavenew" class="btn blue btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+								<button type="submit" name="btnsavenew" class="btn yellow btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKESALEORDER")?> </button>
 							</div>
 						</div>
 						
@@ -210,6 +210,9 @@
 </div>
 <!-- end new product -->
 <script>
+
+        
+		
 var index5 = 0;num=0;
 var option5 = '<?php echo $this->items; ?>';
 var baseUrl = '<?php echo BASE_URL; ?>';
@@ -248,13 +251,14 @@ function addRow(item_id) {
 	} else {$('#identity').val(index5);}
 	$("#item_id_"+index5).val(item_id);
 	getQtyById(index5);
-		//$("#dis-value"+index5).val(0);
-		//$('#dis_value').val(0);
-		$('#global_disc').val(0);
-		//getCurrentPrice(index5);
-		$("#paid").val(0);
+	$('#global_disc').val(0);
+	$("#paid").val(0);
 	$("#row_order_0").remove();
 }
+function initList() {
+	
+}
+
 term_option = '<?php echo $this->term_opt; ?>';
 index1 = 0;
 function addtermcondition(t_id){
@@ -326,12 +330,6 @@ function getProductPrice(product_id){
 	});
   }
 }
-$( document ).ready(function() {
-	alert("ready loaded");
-});
-$( window ).load(function() {
-    alert("load loaded");
-}); 
 function getItemOrder(){
 	item_ids=$("#add_item").val();
 	$('#add_item').val('').trigger("liszt:updated");
@@ -410,6 +408,7 @@ function totalQty(index){
 	getQtyById(index);
 }
 function calculatePrice(index) {
+	
 	var qty = $('#qty'+index).val();
 	var price = $('#price'+index).val();
 	var total = price * qty;
@@ -517,5 +516,6 @@ function CheckPOInvoice(){
 						}
 					});
 				}	
-}
+} 
+  
 </script>	

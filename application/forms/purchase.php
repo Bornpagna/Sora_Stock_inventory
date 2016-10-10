@@ -40,7 +40,7 @@ class Application_Form_purchase extends Zend_Form
     	
     	$roder_element= new Zend_Form_Element_Text("txt_order");
     	$roder_element->setAttribs(array('placeholder' => 'Optional','class'=>'validate[required] form-control',
-    			"onblur"=>"CheckPOInvoice();"));
+    			"onblur"=>"CheckPOInvoice();","required"=>true));
     	$this->addElement($roder_element);
     	
     	$contactElement = new Zend_Form_Element_Text('contact');

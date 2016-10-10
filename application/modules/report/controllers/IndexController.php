@@ -132,6 +132,57 @@ class report_indexController extends Zend_Controller_Action
     	$this->view->form_search = $form_search;
     	
     }
+    public function rptCustomerAction()//purchase report
+    {
+    	if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+			$search['start_date']=date("Y-m-d",strtotime($search['start_date']));
+			$search['end_date']=date("Y-m-d",strtotime($search['end_date']));
+		}else{
+			$search =array(
+					'text_search'=>'',
+					'branch_id'=>0,
+					'customer_id'=>0,
+					'level'=>0,
+					'start_date'=>date("Y-m-d"),
+					'end_date'=>date("Y-m-d"),
+			);
+		}
+		
+		$query = new report_Model_DbQuery();
+		$this->view->repurchase =  $query->getAllCustomer($search);
+		
+    	$this->view->rssearch = $search;
+    	$frm = new Application_Form_FrmReport();
+    
+    	$formFilter = new Sales_Form_FrmSearch();
+		$this->view->formFilter = $formFilter;
+		Application_Model_Decorator::removeAllDecorator($formFilter);
+    }
+    public function rptSalepersonAction()//
+    {
+    	if($this->getRequest()->isPost()){
+    		$search = $this->getRequest()->getPost();
+    		$search['start_date']=date("Y-m-d",strtotime($search['start_date']));
+    		$search['end_date']=date("Y-m-d",strtotime($search['end_date']));
+    	}else{
+    		$search =array(
+    				'text_search'=>'',
+    				'start_date'=>date("Y-m-d"),
+    				'end_date'=>date("Y-m-d"),
+    				'branch_id'=>-1);
+    	}
+    
+    	$query = new report_Model_DbQuery();
+    	$this->view->repurchase =  $query->getAllSaleAgent($search);
+    
+    	$this->view->rssearch = $search;
+    	$frm = new Application_Form_FrmReport();
+    
+    	$formFilter = new Sales_Form_FrmSearchStaff();
+    	$this->view->formFilter = $formFilter;
+    	Application_Model_Decorator::removeAllDecorator($formFilter);
+    }
 	public function indexAction()
 	{
 		$data = null;

@@ -3,18 +3,43 @@
 class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 {
 	//use for add purchase order 29-13
+	protected $_name="tb_quoatation"; 
 	
 	function getAllQuoatation($search){
 			$db= $this->getAdapter();
 			$sql=" SELECT id,
-			quoat_number,date_order,date_in,branch_id,
+			(SELECT name FROM `tb_sublocation` WHERE id=tb_quoatation.branch_id LIMIT 1) AS branch_name,
 			(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=tb_quoatation.customer_id LIMIT 1 ) AS customer_name,
+			(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =tb_quoatation.saleagent_id  LIMIT 1 ) AS staff_name,
+			quoat_number,date_order,
 			(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
-			net_total,paid,balance,
+			all_total,discount_value,net_total,
 			(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = user_mod) AS user_name
 			FROM `tb_quoatation` ";
 			$order=" ORDER BY id DESC";
-			return $db->fetchAll($sql.$order);
+			
+			$from_date =(empty($search['start_date']))? '1': " date_order >= '".$search['start_date']." 00:00:00'";
+			$to_date = (empty($search['end_date']))? '1': " date_order <= '".$search['end_date']." 23:59:59'";
+			$where = " WHERE ".$from_date." AND ".$to_date;
+			if(!empty($search['text_search'])){
+				$s_where = array();
+				$s_search = trim(addslashes($search['text_search']));
+				$s_where[] = " quoat_number LIKE '%{$s_search}%'";
+				$s_where[] = " all_total LIKE '%{$s_search}%'";
+				$s_where[] = " discount_value LIKE '%{$s_search}%'";
+				$s_where[] = " net_total LIKE '%{$s_search}%'";
+				$where .=' AND ('.implode(' OR ',$s_where).')';
+			}
+			if($search['branch_id']>0){
+				$where .= " AND branch_id = ".$search['branch_id'];
+			}
+			if($search['customer_id']>0){
+				$where .= " AND customer_id =".$search['customer_id'];
+			}
+			$dbg = new Application_Model_DbTable_DbGlobal();
+			$where.=$dbg->getAccessPermission();
+			$order=" ORDER BY id DESC ";
+			return $db->fetchAll($sql.$where.$order);
 	}
 	public function addQuoatationOrder($data)
 	{
@@ -25,34 +50,26 @@ class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 			$session_user=new Zend_Session_Namespace('auth');
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
-// 			if($data['txt_order']==""){
-// 				$date= new Zend_Date();
-// 				$sql = "SELECT * FROM tb_setting WHERE `code`=3";
-// 				$po = $db->fetchOne($sql);
-// 				$order_add=$po.$date->get('hh-mm-ss');
-// 			}
-// 			else{
-// 				$order_add=$data['txt_order'];
-// 			}
+			$qoatationid = $db_global->getQuoationNumber($data["branch_id"]);
 			$info_purchase_order=array(
-					"customer_id"      => 	$data['customer_id'],
-					'sale_agent_id'=>$data[''],
-					"branch_id"      => 	$data["branch_id"],
-					"quoat_number"   => 	$data['txt_order'],
-					"date_order"     => 	$data['order_date'],
-					"saleagent_id"     	 => 	$data['saleagent_id'],
-					"payment_method" => $data['payment_name'],
+					"customer_id"    => $data['customer_id'],
+					'saleagent_id'   =>	$data['saleagent_id'],
+					"branch_id"      => $data["branch_id"],
+					"quoat_number"   => $qoatationid,
+					"date_order"     => date("Y-m-d",strtotime($data['order_date'])),
+					"saleagent_id"   => $data['saleagent_id'],
+					///"payment_method" => $data['payment_name'],
 					"currency_id"    => $data['currency'],
-					"remark"         => 	$data['remark'],
-					"all_total"      => 	$data['totalAmoun'],
-					"discount_value" => 	$data['dis_value'],
-					"discount_real"  => 	$data['global_disc'],
-					"net_total"      => 	$data['all_total'],
-					"paid"           => 	$data['paid'],
-					"balance"        => 	$data['remain'],
-					"tax"			 =>     $data["total_tax"],
-					"user_mod"       => 	$GetUserId,
-					"date"      => 	date("Y-m-d"),
+					"remark"         => $data['remark'],
+					"all_total"      => $data['totalAmoun'],
+					"discount_value" => $data['dis_value'],
+					//"discount_real"  => $data['global_disc'],
+					"net_total"      => $data['all_total'],
+					//"paid"           => $data['paid'],
+					//"balance"        => $data['remain'],
+					//"tax"			 => $data["total_tax"],
+					"user_mod"       => $GetUserId,
+					"date"      	 => date("Y-m-d"),
 			);
 			 $this->_name="tb_quoatation";
 			$qoid = $this->insert($info_purchase_order); 
@@ -74,13 +91,41 @@ class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 				$this->_name='tb_quoatation_item';
 				$this->insert($data_item);
 			 }
+			 
+			 
+			 $ids=explode(',',$data['identity_term']);
+			 if(!empty($data['identity_term'])){
+				 foreach ($ids as $i)
+				 {
+				 	$data_item= array(
+				 			'quoation_id'=> $qoid,
+				 			'condition_id'=> $data['termid_'.$i],
+				 			"user_id"   => 	$GetUserId,
+				 			"date"      => 	date("Y-m-d"),
+							'term_type'=>1
+				 			
+				 	);
+				 	$this->_name='tb_quoatation_termcondition';
+				 	$this->insert($data_item);
+				 }
+			 }
 			$db->commit();
 		}catch(Exception $e){
 			$db->rollBack();
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
-			echo $err;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	} 
+	function getQuotationItemById($id){
+		$db = $this->getAdapter();
+		$sql=" SELECT * FROM $this->_name WHERE id = $id LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
+	function getQuotationItemDetailid($id){
+		$db = $this->getAdapter();
+		$sql=" SELECT * FROM `tb_quoatation_item` WHERE quoat_id=$id ";
+		return $db->fetchAll($sql);
+	}
+	
 }

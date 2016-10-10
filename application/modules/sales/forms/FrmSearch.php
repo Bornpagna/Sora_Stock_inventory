@@ -76,6 +76,5 @@ public function init()
 		$locationID->setattribs(array(
 				'Onchange'=>'AddLocation()',));
 		$this->addElement($locationID);
-		
 	}
 }

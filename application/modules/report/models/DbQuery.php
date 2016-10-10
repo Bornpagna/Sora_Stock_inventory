@@ -45,7 +45,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 	function getProductPruchaseById($id){//2
 		$db = $this->getAdapter();
 		$sql=" SELECT 
-				 (SELECT name FROM `tb_sublocation` WHERE id=po.branch_id) AS branch_name,
+				 (SELECT name FROM `tb_sublocation` WHERE id=p.branch_id) AS branch_name,
 				 p.order_number,p.date_order,p.date_in,p.remark,
 				 (SELECT item_name FROM `tb_product` WHERE id= po.pro_id LIMIT 1) AS item_name,
 				 (SELECT item_code FROM `tb_product` WHERE id=po.pro_id LIMIT 1 ) AS item_code,
@@ -160,6 +160,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		$sql=" SELECT
 		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
 		s.sale_no,s.date_sold,s.remark,
+		(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
 		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
@@ -169,7 +170,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
 		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
 		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
-		so.qty_order,so.price,so.sub_total,s.net_total,
+		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total,
 		s.paid,s.discount_real,s.tax,
 		s.balance
 		FROM `tb_sales_order` AS s,
@@ -234,7 +235,79 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		$order=" ORDER BY s.id DESC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
+	function getAllCustomer($search){//7
+		$db = $this->getAdapter();
 	
+		$sql=" SELECT id,
+		(SELECT name FROM `tb_sublocation` WHERE id=branch_id LIMIT 1) AS branch_name,
+		cust_name,phone,
+		(SELECT NAME FROM `tb_price_type` WHERE id=customer_level LIMIT 1) As level,
+		contact_name,contact_phone,address,email,fax,website,remark,
+		( SELECT name_en FROM `tb_view` WHERE type=5 AND key_code=status LIMIT 1) status,
+		( SELECT fullname FROM `tb_acl_user` WHERE tb_acl_user.user_id=user_id LIMIT 1) AS user_name
+		FROM `tb_customer` WHERE cust_name!=''  ";
+	
+		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " cust_name LIKE '%{$s_search}%'";
+			$s_where[] = " phone LIKE '%{$s_search}%'";
+			
+			$s_where[] = " contact_name LIKE '%{$s_search}%'";
+			$s_where[] = " contact_phone LIKE '%{$s_search}%'";
+			$s_where[] = " address LIKE '%{$s_search}%'";
+				
+			$s_where[] = " email LIKE '%{$s_search}%'";
+			$s_where[] = " fax LIKE '%{$s_search}%'";
+			$s_where[] = " website LIKE '%{$s_search}%'";
+			$s_where[] = " remark LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+	
+		if($search['branch_id']>0){
+			$where .= " AND branch_id = ".$search['branch_id'];
+		}
+		if($search['customer_id']>0){
+			$where .= " AND id = ".$search['customer_id'];
+		}
+		if($search['level']>0){
+			$where .= " AND customer_level = ".$search['level'];
+		}
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+	function getAllSaleAgent($search){
+		$sql = "SELECT sg.id,l.name AS branch_name,
+			   sg.name, sg.phone, sg.email, sg.address, sg.job_title, sg.description
+		FROM tb_sale_agent AS sg
+		INNER JOIN tb_sublocation As l ON sg.branch_id = l.id WHERE 1 ";
+		$order=" ORDER BY sg.id DESC ";
+	
+		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " l.name LIKE '%{$s_search}%'";
+			$s_where[] = " sg.name LIKE '%{$s_search}%'";
+			$s_where[] = " sg.phone LIKE '%{$s_search}%'";
+			$s_where[] = " sg.email LIKE '%{$s_search}%'";
+			$s_where[] = " sg.address LIKE '%{$s_search}%'";
+			$s_where[] = " sg.job_title LIKE '%{$s_search}%'";
+			$s_where[] = " sg.description LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['branch_id']>0){
+			$where .= " AND branch_id = ".$search['branch_id'];
+		}
+		$order=" ORDER BY id DESC ";
+		$db =$this->getAdapter();
+		return $db->fetchAll($sql.$where.$order);
+	}
 	
 	function getProductPurchaseDetail($search){
 		$start_date = trim($data["start_date"]);

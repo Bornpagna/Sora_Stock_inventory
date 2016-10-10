@@ -19,18 +19,21 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$rs=$db->getGlobalDb('SELECT id, cust_name FROM tb_customer WHERE cust_name!="" AND status=1 ORDER BY id DESC');
     	$options=array(''=>$tr->translate('Please_Select'),'-1'=>$tr->translate('Add_New_Vendor'));
     	if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['cust_name'];
-    	$vendor_id=new Zend_Form_Element_Select('customer_id');
-    	$vendor_id ->setAttribs(array(
+    	$customerid=new Zend_Form_Element_Select('customer_id');
+    	$customerid ->setAttribs(array(
     			'class' => 'validate[required] form-control select2me',
     			'Onchange'=>'getCustomerInfo()'
     			));
-    	$vendor_id->setMultiOptions($options);
-    	$this->addElement($vendor_id);
+    	$customerid->setMultiOptions($options);
+    	$this->addElement($customerid);
     	
     	$roder_element= new Zend_Form_Element_Text("txt_order");
     	$roder_element->setAttribs(array('placeholder' => 'Optional','class'=>'form-control',
-    			"onblur"=>"CheckPOInvoice();"));
+    			"onblur"=>"CheckPOInvoice();","readOnly"=>true));
+    	$qo = $db->getQuoationNumber(1);
+    	$roder_element->setValue($qo);
     	$this->addElement($roder_element);
+    	
     	
     	$user= $this->GetuserInfo();
     	$options="";
@@ -51,14 +54,14 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     			'Onchange'=>'AddLocation()',));
     	$this->addElement($locationID);
     	    	
-    	$rowspayment= $db->getGlobalDb('SELECT * FROM tb_paymentmethod');
-    	if($rowspayment) {
-    		foreach($rowspayment as $readCategory) $options_cg[$readCategory['payment_typeId']]=$readCategory['payment_name'];
-    	}
-    	$paymentmethodElement = new Zend_Form_Element_Select('payment_name');
-    	$paymentmethodElement->setMultiOptions($options_cg);
-    	$this->addElement($paymentmethodElement);
-    	$paymentmethodElement->setAttribs(array("class"=>"form-control select2me"));
+//     	$rowspayment= $db->getGlobalDb('SELECT * FROM tb_paymentmethod');
+//     	if($rowspayment) {
+//     		foreach($rowspayment as $readCategory) $options_cg[$readCategory['payment_typeId']]=$readCategory['payment_name'];
+//     	}
+//     	$paymentmethodElement = new Zend_Form_Element_Select('payment_name');
+//     	$paymentmethodElement->setMultiOptions($options_cg);
+//     	$this->addElement($paymentmethodElement);
+//     	$paymentmethodElement->setAttribs(array("class"=>"form-control select2me"));
     	
     	$rowsPayment = $db->getGlobalDb('SELECT id, description,symbal FROM tb_currency WHERE status = 1 ');
     	if($rowsPayment) {
@@ -101,7 +104,7 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$discountRealElement->setAttribs(array('readonly'=>'readonly','class'=>'input100px form-control',));
     	$this->addElement($discountRealElement);
     	
-    	$globalRealElement = new Zend_Form_Element_Hidden('global_disc');
+    	$globalRealElement = new Zend_Form_Element_Text('global_disc');
     	$globalRealElement->setAttribs(array("class"=>"form-control"));
     	$this->addElement($globalRealElement);
     	
@@ -121,73 +124,82 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	));
     	$this->addElement($totalAmountElement);
     	
-    	$remainlElement = new Zend_Form_Element_Text('remain');
-    	$remainlElement->setAttribs(array('readonly'=>'readonly','style'=>'text-align:right',"class"=>"red form-control"));
-    	$this->addElement($remainlElement);
+//     	$remainlElement = new Zend_Form_Element_Text('remain');
+//     	$remainlElement->setAttribs(array('readonly'=>'readonly','style'=>'text-align:right',"class"=>"red form-control"));
+//     	$this->addElement($remainlElement);
     	
-    	$balancelElement = new Zend_Form_Element_Text('balance');
-    	$balancelElement->setAttribs(array('readonly'=>'readonly','style'=>'text-align:right',"class"=>"form-control"));
-    	$this->addElement($balancelElement);
+//     	$balancelElement = new Zend_Form_Element_Text('balance');
+//     	$balancelElement->setAttribs(array('readonly'=>'readonly','style'=>'text-align:right',"class"=>"form-control"));
+//     	$this->addElement($balancelElement);
     	
-    	$date_inElement = new Zend_Form_Element_Text('date_in');
+//     	$date_inElement = new Zend_Form_Element_Text('date_in');
     	$date =new Zend_Date();
-    	$date_inElement ->setAttribs(array('class'=>'validate[required] form-control form-control-inline date-picker'));
-    	$date_inElement ->setValue($date->get('MM/d/Y'));
-    	$this->addElement($date_inElement);
+//     	$date_inElement ->setAttribs(array('class'=>'validate[required] form-control form-control-inline date-picker'));
+//     	$date_inElement ->setValue($date->get('MM/d/Y'));
+//     	$this->addElement($date_inElement);
     	
     	$dateOrderElement = new Zend_Form_Element_Text('order_date');
     	$dateOrderElement ->setAttribs(array('class'=>'col-md-3 validate[required] form-control form-control-inline date-picker','placeholder' => 'Click to Choose Date'));
     	$dateOrderElement ->setValue($date->get('MM/d/Y'));
     	$this->addElement($dateOrderElement);
     	
-    	$dateElement = new Zend_Form_Element_Text('date');
-    	$this->addElement($dateElement);
+//     	$dateElement = new Zend_Form_Element_Text('date');
+//     	$this->addElement($dateElement);
     	 
     	$totalElement = new Zend_Form_Element_Text('total');
     	$this->addElement($totalElement);
     	
-    	$totaTaxElement = new Zend_Form_Element_Text('total_tax');
-    	$totaTaxElement->setAttribs(array('class'=>'custom[number] form-control','style'=>'text-align:right'));
-    	$this->addElement($totaTaxElement);
+//     	$totaTaxElement = new Zend_Form_Element_Text('total_tax');
+//     	$totaTaxElement->setAttribs(array('class'=>'custom[number] form-control','style'=>'text-align:right'));
+//     	$this->addElement($totaTaxElement);
     	
-    	$paidElement = new Zend_Form_Element_Text('paid');
-    	$paidElement->setAttribs(array('class'=>'custom[number] form-control','onkeyup'=>'doRemain();','style'=>'text-align:right'));
-    	$this->addElement($paidElement);
+//     	$paidElement = new Zend_Form_Element_Text('paid');
+//     	$paidElement->setAttribs(array('class'=>'custom[number] form-control','onkeyup'=>'doRemain();','style'=>'text-align:right'));
+//     	$this->addElement($paidElement);
     	
     	Application_Form_DateTimePicker::addDateField(array('order_date','date_in'));
     		if($data != null) {
     			$idElement = new Zend_Form_Element_Text('id');
     			$this->addElement($idElement);
     			
-    			$recieve_id = new Zend_Form_Element_Hidden("recieve_id");
-    			$this->addElement($recieve_id);
-    			$recieve_id->setValue($data["recieve_id"]);
+    			$customerid->setValue($data["customer_id"]);
+    			$locationID->setValue($data['branch_id']);
     			
-    			$oldlocationIdElement = new Zend_Form_Element_Text('old_location');
-    			$this->addElement($oldlocationIdElement);
-    			
-    			$idElement ->setValue($data["order_id"]);
-    			$date_inElement->setValue($data["date_in"]);
-    			$oldStatusElement = new Zend_Form_Element_Hidden('oldStatus');
-    			$this->addElement($oldStatusElement);
-    			$vendor_id->setValue($data["vendor_id"]);
-
-    			$oldStatusElement->setValue($data['status']);
-    			$locationID->setvalue($data['LocationId']);
-    			$oldlocationIdElement->setvalue($data['LocationId']);
-    			$dateOrderElement->setValue($data["date_order"]);
-    			$roder_element->setValue($data['order']);
-    			$roder_element->setAttribs(array('readonly'=>'readonly'));
-    			$paymentmethodElement->setValue($data['payment_method']);
     			$currencyElement->setValue($data['currency_id']);
-    			$paidElement->setValue($data['paid']);
-    			$totalAmountElement->setValue($data["all_total"]);
-    			//$remainlElement->setvalue($data['balance']);
-    			$allTotalElement->setValue($data['all_total']);
-    			$discountValueElement->setValue($data['discount_value']);
-    			$netTotalElement->setValue($data['net_total']);   
-    			$balancelElement->setValue($data["balance"]);
-    			$globalRealElement->setValue($data["discount_real"]);
+    			$saleagent_id->setValue($data['saleagent_id']);
+    			$descriptionElement->setValue($data['remark']);
+    			$dateOrderElement->setValue($data['date_order']);
+    			$roder_element->setValue($data['quoat_number']);
+    			$totalAmountElement->setValue($data['all_total']);
+    			$dis_valueElement->setValue($data['discount_value']);
+    			$allTotalElement->setValue($data['net_total']);
+//     			$recieve_id = new Zend_Form_Element_Hidden("recieve_id");
+//     			$this->addElement($recieve_id);
+//     			$recieve_id->setValue($data["recieve_id"]);
+    			
+//     			$oldlocationIdElement = new Zend_Form_Element_Text('old_location');
+//     			$this->addElement($oldlocationIdElement);
+    			
+//     			$idElement ->setValue($data["order_id"]);
+//     			$date_inElement->setValue($data["date_in"]);
+//     			$oldStatusElement = new Zend_Form_Element_Hidden('oldStatus');
+//     			$this->addElement($oldStatusElement);
+//     			$vendor_id->setValue($data["vendor_id"]);
+
+//     			$oldStatusElement->setValue($data['status']);
+//     			$locationID->setvalue($data['LocationId']);
+//     			$oldlocationIdElement->setvalue($data['LocationId']);
+//     			$dateOrderElement->setValue($data["date_order"]);
+//     			$roder_element->setValue($data['order']);
+//     			$roder_element->setAttribs(array('readonly'=>'readonly'));
+//     			$paymentmethodElement->setValue($data['payment_method']);
+//     			$currencyElement->setValue($data['currency_id']);
+//     			$paidElement->setValue($data['paid']);
+//     			$totalAmountElement->setValue($data["all_total"]);
+//     			$allTotalElement->setValue($data['all_total']);
+//     			$discountValueElement->setValue($data['discount_value']);
+//     			$netTotalElement->setValue($data['net_total']);   
+//     			$globalRealElement->setValue($data["discount_real"]);
     		
     		} else {
     	}
