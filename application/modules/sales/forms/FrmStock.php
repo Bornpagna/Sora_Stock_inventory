@@ -8,7 +8,7 @@ class Sales_Form_FrmStock extends Zend_Form
 	public function showSaleAgentForm($data=null, $stockID=null) {
 
 		$db=new Application_Model_DbTable_DbGlobal();
-	
+		$date =new Zend_Date();
 		$nameElement = new Zend_Form_Element_Text('name');
 		$nameElement->setAttribs(array('class'=>'validate[required] form-control','placeholder'=>'Enter Agent Name'));
     	$this->addElement($nameElement);
@@ -44,20 +44,85 @@ class Sales_Form_FrmStock extends Zend_Form
     	$this->addElement($mainStockElement);
     	
     	$user_name = new Zend_Form_Element_Text('user_name');
-    	$user_name->setAttribs(array('placeholder'=>'Enter Position',"class"=>"form-control"));
+    	$user_name->setAttribs(array('placeholder'=>'Enter User Name',"class"=>"form-control"));
     	$this->addElement($user_name);
     	
     	$password = new Zend_Form_Element_Password('password');
-    	$password->setAttribs(array('placeholder'=>'Enter Position',"class"=>"form-control"));
+    	$password->setAttribs(array('placeholder'=>'Enter Password',"class"=>"form-control"));
     	$this->addElement($password);
     	
     	$pob= new Zend_Form_Element_Text('pob');
-    	$pob->setAttribs(array('placeholder'=>'Enter Position',"class"=>"form-control"));
+    	$pob->setAttribs(array('placeholder'=>'Enter Place of Birdth',"class"=>"form-control"));
     	$this->addElement($pob);
     	
     	$dob= new Zend_Form_Element_Text('dob');
-    	$dob->setAttribs(array('placeholder'=>'Enter Position',"class"=>"form-control"));
+    	$dob->setAttribs(array('placeholder'=>'Enter Position',"class"=>"form-control date-picker"));
+    	$dob->setValue($date->get('MM/dd/YYYY'));
     	$this->addElement($dob);
+    	
+    	$photo = new Zend_Form_Element_File("photo");
+    	$this->addElement($photo);
+    	
+    	$document = new Zend_Form_Element_File("document");
+    	$this->addElement($document);
+    	
+    	$signature = new Zend_Form_Element_File("signature");
+    	$this->addElement($signature);
+    	
+    	$bank_acc = new Zend_Form_Element_Text("bank_acc");
+    	$bank_acc->setAttribs(array('placeholder'=>'Enter Bank Account',"class"=>"form-control"));
+    	$this->addElement($bank_acc);
+    	
+    	$refer_name = new Zend_Form_Element_Text("refer_name");
+    	$refer_name->setAttribs(array('placeholder'=>'Enter Reference Name',"class"=>"form-control"));
+    	$this->addElement($refer_name);
+    	
+    	$refer_phone = new Zend_Form_Element_Text("refer_phone");
+    	$refer_phone->setAttribs(array('placeholder'=>'Enter Reference Phone',"class"=>"form-control"));
+    	$this->addElement($refer_phone);
+    	
+    	$refer_addres = new Zend_Form_Element_Textarea("refer_address");
+    	$refer_addres->setAttribs(array('placeholder'=>'Enter Reference Address',"class"=>"form-control","style"=>"height:40px"));
+    	$this->addElement($refer_addres);
+    	
+    	$satrt_working_date = new Zend_Form_Element_Text("start_working_date");
+    	$satrt_working_date->setAttribs(array('placeholder'=>'Enter Bank Account',"class"=>"form-control date-picker"));
+    	$satrt_working_date->setValue($date->get('MM/dd/YYYY'));
+    	$this->addElement($satrt_working_date);
+    	
+    	$row_user_type = $db->getGlobalDb('SELECT u.`user_type_id`,u.`user_type`,u.`parent_id` FROM `tb_acl_user_type` AS u WHERE u.`status`=1');
+    	$option_user = array('-1'=>'Select User Type');
+    	if(count($row_user_type) > 0) {
+    		foreach($row_user_type as $rs) $option_user[$rs['user_type_id']]=$rs['user_type'];
+    	}
+    	$user_type = new Zend_Form_Element_Select('user_type');
+    	$user_type->setAttribs(array('class'=>'form-control select2me'));
+    	$user_type->setMultiOptions($option_user);
+    	$this->addElement($user_type);
+    	
+    	$row_manger = $db->getGlobalDb('SELECT u.`user_id`,u.`fullname` FROM `tb_acl_user` AS u,`tb_acl_user_type` AS ut WHERE u.`status`=1 AND u.`user_type_id`=ut.`user_type_id` AND u.`user_type_id`=5');
+    	$option_user = array('-1'=>'Select User Type');
+    	if(count($row_manger) > 0) {
+    		foreach($row_manger as $rs) $option_user[$rs['user_id']]=$rs['fullname'];
+    	}
+    	$manage_by = new Zend_Form_Element_Select('manage_by');
+    	$manage_by->setAttribs(array('class'=>'form-control select2me'));
+    	$manage_by->setMultiOptions($option_user);
+    	$this->addElement($manage_by);
+    	
+    	$code = new Zend_Form_Element_Text("code");
+    	$code->setAttribs(array("class"=>"form-control"));
+    	$this->addElement($code);
+    	
+//     	$sex = $db->getGlobalDb('SELECT u.`user_id`,u.`fullname` FROM `tb_acl_user` AS u,`tb_acl_user_type` AS ut WHERE u.`status`=1 AND u.`user_type_id`=ut.`user_type_id` AND u.`user_type_id`=5');
+//     	$option_user = array('-1'=>'Select User Type');
+//     	if(count($row_manger) > 0) {
+//     		foreach($row_manger as $rs) $option_user[$rs['user_id']]=$rs['fullname'];
+//     	}
+//     	$manage_by = new Zend_Form_Element_Select('manage_by');
+//     	$manage_by->setAttribs(array('class'=>'form-control select2me'));
+//     	$manage_by->setMultiOptions($option_user);
+//     	$this->addElement($manage_by);
     	
     	//set value when edit
     	if($data != null) {
