@@ -1,8 +1,6 @@
 <?php
 class Sales_CustomerController extends Zend_Controller_Action
 {
-	
-
     public function init()
     {
         /* Initialize action controller here */
@@ -66,32 +64,29 @@ class Sales_CustomerController extends Zend_Controller_Action
 		$this->view->form = $formcustomer;
 	
 	}	
-	public function updateCustomerAction() {
-		
+	public function editAction() {
+		$id = $this->getRequest()->getParam('id');
 		if($this->getRequest()->isPost())
 		{
 			try{
 				$post = $this->getRequest()->getPost();
-				$customer= new sales_Model_DbTable_DbCustomer();
+				$post["id"]=$id;
+				$customer= new Sales_Model_DbTable_DbCustomer();
 				$customer->updateCustomer($post);
-				$this->_redirect('/sales/customer/index');
+				//$this->_redirect('/sales/customer/index');
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Update customer failed !");
 			}
 		}
-		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
-			$sql = "SELECT c.customer_id,c.type_price,c.cust_name, c.add_remark, c.contact_name,c.add_name, c.phone, 
-					c.fax,c.email, c.website,c.customer_remark,c.is_active
-					FROM tb_customer AS c,tb_price_type as tp
-					WHERE tp.type_id=c.type_price
-					AND c.customer_id = ".$id." LIMIT 1";
+		
+			$sql = "SELECT c.* FROM `tb_customer`AS c WHERE c.id=".$id." LIMIT 1";
 		$db = new Application_Model_DbTable_DbGlobal();
 		$row = $db->getGlobalDbRow($sql);
 		// lost item info
-		$formStock=new sales_Form_FrmVendor($row);
-		$formStockEdit = $formStock->AddCustomerForm($row);
+		$formStock=new Sales_Form_FrmCustomer($row);
+		$formStockEdit = $formStock->Formcustomer($row);
 		Application_Model_Decorator::removeAllDecorator($formStockEdit);// omit default zend html tag
-		$this->view->customer_frm = $formStockEdit;
+		$this->view->form = $formStockEdit;
 	
 		//control action
 		$formControl = new Application_Form_FrmAction(null);
@@ -121,5 +116,14 @@ class Sales_CustomerController extends Zend_Controller_Action
 		$deleteObj = new Application_Model_DbTable_DbGlobal();
 		$deleteObj->deleteRecords($sql);
 		$this->_redirect('/sales/customer/index');
+	}
+	
+	public function getCuCodeAction(){//dynamic by customer
+	
+		$post=$this->getRequest()->getPost();
+		$get_code = new Sales_Model_DbTable_DbCustomer();
+		$result = $get_code->getCustomerCode($post["id"]);
+		echo Zend_Json::encode($result);
+		exit();
 	}
 }
