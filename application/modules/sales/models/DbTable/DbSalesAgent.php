@@ -34,28 +34,106 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 	public function addSalesAgent($data)
 	{
 		$session_user=new Zend_Session_Namespace('auth');
+		$db =$this->getAdapter();
+		$db->beginTransaction();
 		$userName=$session_user->user_name;
 		$GetUserId= $session_user->user_id;
-		$datainfo=array(
-				"name"		 =>$data['name'],
-				"user_name"  =>$data['user_name'],
-				"password"   => md5($data['password']),
-				"phone"      =>$data['phone'],
-				"email"      =>$data['email'],
-				"address"    =>$data['address'],
-				"pob"		 =>$data['pob'],
-				"dob"		 =>$data['dob'],
-				"job_title"  =>$data['job_title'],
-				"branch_id"   =>$data['branch_id'],
-				"description"=>$data['description'],	
-				'user_id'=>$GetUserId,
-				"date"=>date("Y-m-d")
-		);
-		if(!empty($data['id'])){
-			$where=$this->getAdapter()->quoteInto('agent_id=?',$data['id']);
-			$this->update($datainfo,$where);
-		}else{
-			$this->insert($datainfo);
+		
+		try{
+		// photo image
+			$adapter = new Zend_File_Transfer_Adapter_Http();
+			$part= PUBLIC_PATH.'/images/stuffdocument/';
+			
+			$adapter->setDestination($part);
+			$photo = $adapter->getFileInfo();
+			$adapter->addFilter(new Zend_Filter_File_Rename( array('target' => $part."photo".$data["code"].".jpg", 'overwrite' => true)));
+			$adapter->receive();
+			if(!empty($photo['photo']['name'])){
+				$data['photo']="photo".$data["code"].".jpg";
+			}else{
+				$data['photo']='';
+			}
+			
+			// document image
+			
+			$document = $adapter->getFileInfo();
+			$adapter->addFilter('Rename', array('target' => $part."document".$data["code"].".jpg", 'overwrite' => true));
+			//$adapter->addFilter('Rename', "document".$data["code"].".jpg",$document);
+			$adapter->receive();
+			if(!empty($document['document']['name'])){
+				$data['document']="document".$data["code"].".jpg";
+			}else{
+				$data['document']='';
+			}
+			
+			//signature image
+			
+			
+			$signature = $adapter->getFileInfo();
+			$adapter->addFilter('Rename', array('target' => $part."signature".$data["code"].".jpg", 'overwrite' => true));
+			//$adapter->addFilter('Rename', "signature".$data["code"].".jpg",$signature);
+			$adapter->receive();
+			if(!empty($signature['signature']['name'])){
+				$data['signature']="signature".$data["code"].".jpg";
+			}else{
+				$data['signature']='';
+			}
+			$datainfo=array(
+					"code"					=>	$data["code"],
+					"name"		 			=>	$data['name'],
+					"user_name"  			=>	$data['user_name'],
+					"password"   			=> 	md5($data['password']),
+					"phone"      			=>	$data['phone'],
+					"email"      			=>	$data['email'],
+					"address"    			=>	$data['address'],
+					"pob"		 			=>	$data['pob'],
+					"dob"		 			=>	$data['dob'],
+					"job_title"  			=>	$data['job_title'],
+					"branch_id"   			=>	$data['branch_id'],
+					"user_type"				=>	$data["user_type"],
+					"manage_by"				=>	$data["manage_by"],
+					"bank_acc"				=>	$data["bank_acc"],
+					"start_working_date"	=>	$data["start_working_date"],
+					"refer_name"			=>	$data["refer_name"],
+					"refer_phone"			=>	$data["refer_phone"],
+					"refer_add"				=>	$data["refer_address"],
+					"photo"					=>	$data["photo"],
+					"document"				=>	$data['document'],
+					"signature"				=>	$data['signature'],
+					"description"			=>	$data['description'],	
+					'user_id'				=>	$GetUserId,
+					"date"					=>	date("Y-m-d")
+			);
+			if(!empty($data['id'])){
+				$where=$this->getAdapter()->quoteInto('agent_id=?',$data['id']);
+				$this->update($datainfo,$where);
+			}else{
+				$this->insert($datainfo);
+			}
+			
+			$arr=array(
+					"username"  		=>	$data['user_name'],
+					"password"   		=> 	md5($data['password']),
+					"email"      		=>	$data['email'],
+					"LocationId"   		=>	$data['branch_id'],
+					"user_type"			=>	$data["user_type"],
+					"fullname"			=>	$data['name'],
+					'created_date'		=>	date("Y-m-d"),
+					"modified_date"		=>	date("Y-m-d"),
+					"status"			=>	1
+			);
+			$this->_name = "tb_acl_user";
+			if(!empty($data['id'])){
+				$where=$this->getAdapter()->quoteInto('user_id=?',$data['id']);
+				$this->update($arr,$where);
+			}else{
+				$this->insert($arr);
+			}
+		$db->commit();
+		}catch (Exception $e){
+			$db->rollBack();
+			$err = $e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
 	
