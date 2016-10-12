@@ -31,6 +31,7 @@ class Purchase_Model_DbTable_DbVendor extends Zend_Db_Table_Abstract
 			$where .= " AND vendor_id = ".$search['suppliyer_id'];
 		}
 		$order=" ORDER BY v.vendor_id DESC";
+		//echo $sql.$where.$order;
 		return $db->fetchAll($sql.$where.$order);
 	}
 	function getvendorById($id){
@@ -45,19 +46,39 @@ class Purchase_Model_DbTable_DbVendor extends Zend_Db_Table_Abstract
 		$db=$this->getAdapter();
 		$db->beginTransaction();
 		try{
-			$data=array(
-					'v_name'		=> $post['txt_name'],
-					'v_phone'		=> $post['txt_phone'],
-					'contact_name'	=> $post['txt_contact_name'],
-					'phone_person'	=> $post['contact_phone'],
-					'add_name'		=> $post['txt_address'],
-					'email'			=> $post['txt_mail'],
-					'website'		=> $post['txt_website'],
-					'fax'			=> $post['txt_fax'],
-					'note'	=> $post['remark'],
-					'last_usermod'	=> $GetUserId,
-					'last_mod_date' => new Zend_Date(),
-			);
+			if($post["is_over_sea"]==1){
+				$data=array(
+						'v_name'		=> $post['txt_name'],
+// 						'v_phone'		=> $post['txt_phone'],
+// 						'contact_name'	=> $post['txt_contact_name'],
+// 						'phone_person'	=> $post['contact_phone'],
+// 						'add_name'		=> $post['txt_address'],
+// 						'email'			=> $post['txt_mail'],
+// 						'website'		=> $post['txt_website'],
+// 						'fax'			=> $post['txt_fax'],
+// 						'note'	=> $post['remark'],
+						'is_over_sea'	=>	$post["is_over_sea"],
+						'last_usermod'	=> $GetUserId,
+						'last_mod_date' => new Zend_Date(),
+						'date'			=>	date("Y-m-d"),
+				);
+			}else {
+				$data=array(
+						'v_name'		=> $post['txt_name'],
+						'v_phone'		=> $post['txt_phone'],
+						'contact_name'	=> $post['txt_contact_name'],
+						'phone_person'	=> $post['contact_phone'],
+						'add_name'		=> $post['txt_address'],
+						'email'			=> $post['txt_mail'],
+						'website'		=> $post['txt_website'],
+						'fax'			=> $post['txt_fax'],
+						'note'			=> $post['remark'],
+						'is_over_sea'	=>	0,
+						'last_usermod'	=> $GetUserId,
+						'last_mod_date' => new Zend_Date(),
+						'date'			=>	date("Y-m-d"),
+				);
+			}
 			if(!empty($post['id'])){
 				$where = "vendor_id = ".$post["id"];
 				$this->update($data, $where);
