@@ -1,6 +1,7 @@
 
 <?php 
 $baseurl = Zend_Controller_Front::getInstance()->getBaseUrl();//new
+$url_new =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'index'));
 $url_submit =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'add'));
 $url_edit =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'index'));
 $form=$this->form;
@@ -14,10 +15,36 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 				<div class="caption">
 					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
 				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" class="btn btn-sm green  ">
+						<i class="fa fa-undo"></i>&nbsp;<?php echo $tr->translate("GO_BACK");?>
+					</a>
+				</div>
 			</div>
 			<div class="portlet-body form">
 				<form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
 				<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("Branch Name");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("branch_id");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('cu_code'); ?>
+								</div>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="control-label col-md-2"><?php echo $tr->translate("COMPANY_NAME");?> <span class="required">
 								</span>
@@ -59,14 +86,14 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 							</div>
 					</div>
 					<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("Branch Name");?><span class="required">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CUSTOMER_TYPE");?> <span class="required">
 								</span>
 							</label>
 							<div class="col-md-4">
-								<div class="input-icon right">
-									<i class="fa"></i>
-									<?php echo $form->getElement("branch_id");?>
-								</div>
+									<div class="input-icon right">
+										<i class="fa"></i>
+										<?php echo $form->getElement('customer_type'); ?>
+									</div>
 							</div>
 							<label class="control-label col-md-2">
 							<?php echo $tr->translate("Customer Level");?><span class="required">
@@ -121,15 +148,36 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 							</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-md-2"><?php echo $tr->translate("BALANCE");?> <span class="required">
+						<label class="control-label col-md-2"><?php echo $tr->translate("CREDIT_LIMIT");?> <span class="required">
 								</span>
 						</label>
 						<div class="col-md-4">
 								<div class="input-icon right">
 									<i class="fa"></i>
-									<?php echo $form->getElement('txt_balance'); ?>
+									<?php echo $form->getElement('credit_limit'); ?>
 								</div>
 						</div>
+						<label class="control-label col-md-2">
+							<?php echo $tr->translate("CREDIT_TEARM");?><span class="required">
+								</span>
+						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("credit_tearm");?>
+								</div>
+						</div>
+						
+					</div>
+					<div class="form-group">
+						
+						<div class="col-md-6">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php //echo $form->getElement("credit_tearm");?>
+								</div>
+						</div>
+						
 						<label class="control-label col-md-2">
 							<?php echo $tr->translate("REMARK");?><span class="required">
 								</span>
@@ -156,3 +204,21 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 </div>
 </body>
 </html>
+<script>
+<?php $url_code =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'get-cu-code')); ?>
+function getCustomerCode(){
+				id=$("#branch_id").val();
+				$.ajax({
+						url:"<?php echo $url_code;?>",
+						type:"post",
+						data:{'id':id},
+						success: function(data){
+							value = $.parseJSON(data);
+								$("#cu_code").val(value);
+						},
+						error:function(e){
+							alert(e);
+						}
+					});
+}
+</script>

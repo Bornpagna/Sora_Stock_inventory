@@ -1,156 +1,224 @@
+
 <?php 
 $baseurl = Zend_Controller_Front::getInstance()->getBaseUrl();//new
-$url_submit =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'update-customer'));
+$url_new =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'index'));
+$url_submit =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'edit'));
 $url_edit =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'index'));
-//for view control
-$form=$this->customer_frm;
+$form=$this->form;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-
 ?>
-<title><?php echo $tr->translate("MENU_SALES_CUSTOMER_UPDATE_CUSTOMER");?></title>
-<link href="../../images/new-vendor.jpg" rel="icon" />
-<body>
-<div class="wrapper">
-    <div class="clear"></div>
-    <div class="contance">
-    </div><!--end of contance-->
-    <div class="left">
-
-    </div><!--end of left-->
-    <div class="right">
-    <form id="frm" action="<?php echo $url_submit;?>" method="post" enctype="multipart/form-data">
-    	<div class="contorl-cus">
-    	
-        	<?php  $frmctrol=$this->control ;?>
-        	<?php echo $frmctrol->getElement('New');?>
-        	<?php echo $frmctrol->getElement('Update');?>
-        	<?php //echo $frmctrol->getElement('Copy');?>
-        	<a href="<?php echo $url_edit; ?>" class="cancel">Cancel</a>
-        	<input type="button" class='close' name="CloseMe" value="Close Me" onclick="closeMe()" />
-<!--         	<a href="javascript:hide_popup('my_popup')" class="closetab"></a> -->
-            <!-- tab -->
-        </div>
-        <!-- blog tabs -->
-        <div id="tabs" class="tabs-bottom">
-			<ul style="border-top:1px solid #999;">
-				<li><a href="#tabs-1"><?php echo $tr->translate("CUSTOMER_INFO");?></a></li>
-				<li><a href="#tabs-2"><?php echo $tr->translate("Extra Info");?></a></li>
-				<li><a href="#tabs-3"><?php echo $tr->translate("ORDER_HISTORY");?></a></li>
-			</ul>
-			<div class="tabs-spacer"></div>
-			<div id="tabs-1">
-				<div class="view-table shadow">
-					<div class="head_form">
-						<?php echo $tr->translate("Customer info");?>
-					</div>
-					<div class="contain_form">
-					
-		        	<table style="width:90%; margin:0 auto;">
-		                <tr class="main_info">
-		                	<td colspan="2"><?php echo $tr->translate("BASIC");?></td>
-		                    <td colspan="2"><?php echo $tr->translate("CUS_ADDRESS");?></td> 
-		                </tr>
-		                <tr class="height">
-		                    <td><?php echo $tr->translate("CUSTOMER_NAME");echo $form->getElement('id');?></td>
-		                     <td width="30%"><?php echo $form->getElement('txt_name'); ?></td>
-		                    <td><?php echo $tr->translate("CUS_ADDRESS");?></td>
-		                    <td rowspan="2" width="30%"><?php echo $form->getElement('txt_address'); ?></td>
-		                </tr>
-		                <tr class="height">
-		                    <td><?php echo $tr->translate("BALANCE");?></td>
-		                    <td><?php echo $form->getElement('txt_balance'); ?></td>
-		                    <td></td>
-		                </tr>
-		                <tr class="main_info">
-		                	<td colspan="2"><?php echo $tr->translate("CON_NAME");?></td>
-		                    <td colspan="2"><?php echo $tr->translate("PURCHASE_INFO");?></td>
-		                    
-		                </tr>
-		               <tr class="height">
-		                    <td><?php echo $tr->translate("CON_NAME");?></td>
-		                    <td><?php echo $form->getElement('txt_contact_name'); ?></td>
-		                    <td><?php //echo $tr->translate("TYPE_PRICE_SM");?></td>
-		                    <td><?php //echo $form->getElement('type_price');?></td>
-		                </tr>
-		                <tr class="height">
-		                    <td><?php echo $tr->translate("PHONE_NUM");?></td>
-		                    <td><?php echo $form->getElement('txt_phone'); ?> </td>
-		                    <td><?php //echo $tr->translate("CURRENTCY_TYPE");?></td>
-		                    <td><div class="select_d">
-		                        <?php //echo $form->getElement('currency');?>
-		                        </div>
-		                    </td>
-		                </tr>
-		                  <tr class="height">
-		                    <td><?php echo $tr->translate("FAX");?></td>
-		                    <td><?php echo $form->getElement('txt_fax'); ?></td>
-		                    <td><?php //echo $tr->translate("DISCOUNT-VALUE");?></td>
-		                    <td><?php //echo $form->getElement('txt_discount'); ?></td>
-		                   
-		                </tr>
-		                <tr class="height">
-		                    <td><?php echo $tr->translate("EMAIL");?></td>
-		                    <td><?php echo $form->getElement('txt_mail'); ?></td>
-		                    <td></td>
-		                </tr>
-		                <tr class="height">
-		                    <td><?php echo $tr->translate("WEBSITE");?></td>
-		                    <td><?php echo $form->getElement('txt_website'); ?></td>
-		                    <td></td>
-		                    <td></td>
-		                </tr>
-		                <tr class="main_info">
-		                	<td colspan="2"><?php echo $tr->translate("REMARK");?></td>
-		                    <td colspan="2"></td>
-		                </tr>
-		                <tr>
-		                    <td></td>
-		                    <td width="15%"><?php echo $form->getElement('remark');?></td>
-		                    <td></td>
-		                    <td></td>
-		                </tr>
-		            </table>
-					</div><!-- end of .contain_form -->
-		       </div>
-			</div>
-			<div id="tabs-2">		
-			</div>
-			<div id="tabs-3">
-				<div class='view-table'>
-					<table border='1px' width='100%' style="border:1px solid #ccc;">
-						<tr class="head-table">
-							<td><?php echo $tr->translate("ORDER");?></td>
-							<td><?php echo $tr->translate("ORDER_DATE");?></td>
-							<td><?php echo $tr->translate("STATUS");?></td>
-							<td><?php echo $tr->translate("TOTAL");?></td>
-							<td><?php echo $tr->translate("TOTAL_PAID");?></td>
-							<td><?php echo $tr->translate("BALANCE_DUE");?></td>
-						</tr>
-						<?php 
-						$num=0;
-						 	for($i=1; $i<=12 ; $i++)
-						 	{
-						 		$num=1-$num; 
-						 		echo"<tr class='row-table{$num}'>";
-						 			echo"<td>$i</td>"; 
-						 			echo"<td></td>";
-						 			echo"<td></td>";
-						 			echo"<td></td>";
-						 			echo"<td></td>";
-						 			echo"<td></td>";
-						 		echo"</tr>";
-						 	}
-						?>
-						
-					</table>
+<title><?php echo $tr->translate("ADD_NEW_CUSTOMER");?></title>
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" class="btn btn-sm green  ">
+						<i class="fa fa-undo"></i>&nbsp;<?php echo $tr->translate("GO_BACK");?>
+					</a>
 				</div>
 			</div>
+			<div class="portlet-body form">
+				<form id="form_sample_2"  class="form-horizontal" enctype="multipart/form-data" method="post">
+				<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("Branch Name");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("branch_id");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('cu_code'); ?>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("COMPANY_NAME");?> <span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_name'); ?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_phone'); ?>
+								</div>
+							</div>
+						</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CON_NAME");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_contact_name'); ?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("CON_NUMBER");?><span class="required"></span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i><?php echo $form->getElement('contact_phone'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CUSTOMER_TYPE");?> <span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+									<div class="input-icon right">
+										<i class="fa"></i>
+										<?php echo $form->getElement('customer_type'); ?>
+									</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("Customer Level");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('customer_level'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("VENDOR_ADD");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("txt_address");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("EMAIL");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_mail'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("FAX");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_fax'); ?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("WEBSITE");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_website'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-2"><?php echo $tr->translate("CREDIT_LIMIT");?> <span class="required">
+								</span>
+						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('credit_limit'); ?>
+								</div>
+						</div>
+						<label class="control-label col-md-2">
+							<?php echo $tr->translate("CREDIT_TEARM");?><span class="required">
+								</span>
+						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("credit_tearm");?>
+								</div>
+						</div>
+						
+					</div>
+					<div class="form-group">
+						
+						<div class="col-md-6">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php //echo $form->getElement("credit_tearm");?>
+								</div>
+						</div>
+						
+						<label class="control-label col-md-2">
+							<?php echo $tr->translate("REMARK");?><span class="required">
+								</span>
+						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("remark");?>
+								</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<button type="submit" name="saveclose" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
+							<button type="submit" name="btnsavenew" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+							<a href="<?php echo $this->baseUrl();?>/sales/customer"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+						</label>
+					</div>
+				</div>
+				</form>
+			</div>
 		</div>
-        <!-- end blog tabs -->
-        
-        <div class="clear"></div>
-    </div><!--end right-->
-   </form>
-</div><!--end wrapper-->
+	</div>
+</div>
 </body>
 </html>
+<script>
+<?php $url_code =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'get-cu-code')); ?>
+function getCustomerCode(){
+				id=$("#branch_id").val();
+				$.ajax({
+						url:"<?php echo $url_code;?>",
+						type:"post",
+						data:{'id':id},
+						success: function(data){
+							value = $.parseJSON(data);
+								$("#cu_code").val(value);
+						},
+						error:function(e){
+							alert(e);
+						}
+					});
+}
+</script>
