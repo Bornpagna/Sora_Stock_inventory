@@ -8,6 +8,21 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$this->_name=$name;
 	}
 	
+	public function getCustomerCode($id){
+		$db = $this->getAdapter();
+		$sql = "SELECT s.`prefix` FROM `tb_sublocation` AS s WHERE s.id=$id";
+		$prefix = $db->fetchOne($sql);
+		
+		$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+		$acc_no= strlen((int)$acc_no+1);
+		$pre = $prefix."-";
+		for($i = $acc_no;$i<3;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	function getAllCustomer($search){
 		$db = $this->getAdapter();
 		
@@ -58,49 +73,54 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$GetUserId= $session_user->user_id;
 		$db=$this->getAdapter();
 		$data=array(
-// 				'type_price'	=> $post['type_price'],
+ 				'cu_code'		=> $post['cu_code'],
 				'cust_name'		=> $post['txt_name'],
 				'phone'			=> $post['txt_phone'],
 				'contact_name'	=> $post['txt_contact_name'],//test
+				'contact_phone'	=> $post['contact_phone'],//test
 				'address'		=> $post['txt_address'],
 				'fax'			=> $post['txt_fax'],
 				'email'			=> $post['txt_mail'],
 				'website'		=> $post['txt_website'],//test
-				'add_remark'=>$post['remark'],
-				'user_id'	=> $GetUserId,
-				'date'	=> new Zend_Date(),
+				'add_remark'	=>	$post['remark'],
+				'user_id'		=> $GetUserId,
+				'date'			=> date("Y-m-d"),
 				'branch_id'		=> $post['branch_id'],
 				'customer_level'=> $post['customer_level'],
+				'cu_type'		=>	$post["customer_type"],
+				'credit_limit'	=>	$post["credit_limit"],
+				'credit_team'	=>	$post["credit_tearm"],
 		);
 		
 		$this->insert($data);
 	}
-	final public function updateCustomer($post){
+	public function updateCustomer($post){
 		$session_user=new Zend_Session_Namespace('auth');
 		$userName=$session_user->user_name;
 		$GetUserId= $session_user->user_id;
-		$id=$post["id"];
+		$db = $this->getAdapter();
 		$data=array(
-				'type_price'	=> $post['type_price'],
+				//'cu_code'		=> $post['cu_code'],
 				'cust_name'		=> $post['txt_name'],
-				'add_name'		=> $post['txt_address'],
-				'contact_name'	=> $post['txt_contact_name'],//test
 				'phone'			=> $post['txt_phone'],
+				'contact_name'	=> $post['txt_contact_name'],//test
+				'contact_phone'	=> $post['contact_phone'],//test
+				'address'		=> $post['txt_address'],
 				'fax'			=> $post['txt_fax'],
 				'email'			=> $post['txt_mail'],
 				'website'		=> $post['txt_website'],//test
-				'customer_remark'=>$post['remark'],
-				'last_usermod'	=> $GetUserId,
-				'last_mod_date'	=> new Zend_Date(),
-				'is_active'		=> $post["status"],
-// 				'PaymentTermsId'=> $post['pay_term'],
-// 				'discount'		=> $post['txt_discount'],
-// 				'CurrencyId'	=> $post['currency'],
-				'version'		=> 1
+				'add_remark'	=>	$post['remark'],
+				'user_id'		=> $GetUserId,
+				'date'			=> date("Y-m-d"),
+				'branch_id'		=> $post['branch_id'],
+				'customer_level'=> $post['customer_level'],
+				'cu_type'		=>	$post["customer_type"],
+				'credit_limit'	=>	$post["credit_limit"],
+				'credit_team'	=>	$post["credit_tearm"],
 		);
-		$where=$this->getAdapter()->quoteInto('customer_id=?',$id);
+		$where=$this->getAdapter()->quoteInto('id=?',$post["id"]);
+		$this->_name="tb_customer";
 		$this->update($data,$where);
-		
 	}
 	//for add new customer from sales
 	final function addNewCustomer($post){
