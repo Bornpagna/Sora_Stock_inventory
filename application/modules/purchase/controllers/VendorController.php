@@ -76,7 +76,8 @@ class Purchase_vendorController extends Zend_Controller_Action
 		}
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
 		$row= $db->getvendorById($id);
-		$formStock = new purchase_Form_FrmVendor();
+		$this->view->is_over_sea = $row["is_over_sea"];
+		$formStock = new Purchase_Form_FrmVendor();
 		$formStockAdd = $formStock->AddVendorForm($row);
 		Application_Model_Decorator::removeAllDecorator($formStockAdd);
 		$this->view->form = $formStockAdd;
