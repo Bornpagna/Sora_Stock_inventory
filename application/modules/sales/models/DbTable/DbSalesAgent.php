@@ -31,6 +31,21 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 		$db =$this->getAdapter();
 		return $db->fetchAll($sql.$where.$order);
 	}
+	public function getSaleAgentCode($id){
+		$db = $this->getAdapter();
+		$sql = "SELECT s.`prefix` FROM `tb_sublocation` AS s WHERE s.id=$id";
+		$prefix = $db->fetchOne($sql);
+	
+		$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+		$acc_no= strlen((int)$acc_no+1);
+		$pre = $prefix."-SA-";
+		for($i = $acc_no;$i<3;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	public function addSalesAgent($data)
 	{
 		$session_user=new Zend_Session_Namespace('auth');
@@ -78,6 +93,26 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 			}else{
 				$data['signature']='';
 			}
+			
+			$arr=array(
+					"username"  		=>	$data['user_name'],
+					"password"   		=> 	md5($data['password']),
+					"email"      		=>	$data['email'],
+					"LocationId"   		=>	$data['branch_id'],
+					"user_type_id"		=>	$data["user_type"],
+					"fullname"			=>	$data['name'],
+					'created_date'		=>	date("Y-m-d"),
+					"modified_date"		=>	date("Y-m-d"),
+					"status"			=>	1
+			);
+			$this->_name = "tb_acl_user";
+			if(!empty($data['id'])){
+				$where=$this->getAdapter()->quoteInto('user_id=?',$data['id']);
+				$this->update($arr,$where);
+			}else{
+				$id = $this->insert($arr);
+			}
+			
 			$datainfo=array(
 					"code"					=>	$data["code"],
 					"name"		 			=>	$data['name'],
@@ -102,8 +137,10 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					"signature"				=>	$data['signature'],
 					"description"			=>	$data['description'],	
 					'user_id'				=>	$GetUserId,
-					"date"					=>	date("Y-m-d")
+					"date"					=>	date("Y-m-d"),
+					"acl_user"				=>	$id,
 			);
+			$this->_name="tb_sale_agent";
 			if(!empty($data['id'])){
 				$where=$this->getAdapter()->quoteInto('agent_id=?',$data['id']);
 				$this->update($datainfo,$where);
@@ -111,29 +148,13 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 				$this->insert($datainfo);
 			}
 			
-			$arr=array(
-					"username"  		=>	$data['user_name'],
-					"password"   		=> 	md5($data['password']),
-					"email"      		=>	$data['email'],
-					"LocationId"   		=>	$data['branch_id'],
-					"user_type"			=>	$data["user_type"],
-					"fullname"			=>	$data['name'],
-					'created_date'		=>	date("Y-m-d"),
-					"modified_date"		=>	date("Y-m-d"),
-					"status"			=>	1
-			);
-			$this->_name = "tb_acl_user";
-			if(!empty($data['id'])){
-				$where=$this->getAdapter()->quoteInto('user_id=?',$data['id']);
-				$this->update($arr,$where);
-			}else{
-				$this->insert($arr);
-			}
+			
 		$db->commit();
 		}catch (Exception $e){
 			$db->rollBack();
 			$err = $e->getMessage();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			echo $err; exit();
 		}
 	}
 	
