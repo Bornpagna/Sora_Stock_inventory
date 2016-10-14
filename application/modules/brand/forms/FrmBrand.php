@@ -54,24 +54,25 @@ class Brand_Form_FrmBrand extends Zend_Form
 	
 	public function BrandFilter(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Brand_Model_DbTable_DbBrand();
 		$name = new Zend_Form_Element_Text('name');
 		$name->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
 		));
+		$name->setValue($request->getParam("name"));
 		
-		$parent = new Zend_Form_Element_Select("parent");
-		$parent->setAttribs(array(
-				'class'=>'form-control',
-		));
-		$opt = array(''=>$tr->translate("SEELECT_Brand"));
-		if(!empty($db->getAllBrand())){
-			foreach ($db->getAllBrand() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
-			}
-		}
-		$parent->setMultiOptions($opt);
+// 		$parent = new Zend_Form_Element_Select("parent");
+// 		$parent->setAttribs(array(
+// 				'class'=>'form-control',
+// 		));
+// // 		$opt = array(''=>$tr->translate("SEELECT_Brand"));
+// // 		if(!empty($db->getAllBrand(null))){
+// // 			foreach ($db->getAllBrand() as $rs){
+// // 				$opt[$rs["id"]] = $rs["name"];
+// // 			}
+// // 		}
+// 		$parent->setMultiOptions($opt);
 		$status = new Zend_Form_Element_Select("status");
 		$status->setAttribs(array(
 				'class'=>'form-control',
@@ -79,8 +80,9 @@ class Brand_Form_FrmBrand extends Zend_Form
 		));
 		$opt = array('1'=>$tr->translate("ACTIVE"),'0'=>$tr->translate("DEACTIVE"));
 		$status->setMultiOptions($opt);
+		$status->setValue($request->getParam("status"));
 		
-		$this->addElements(array($parent,$name,$status));
+		$this->addElements(array($name,$status));
 		return $this;
 	}
 }

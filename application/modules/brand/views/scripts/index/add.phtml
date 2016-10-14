@@ -1,5 +1,6 @@
 <?php 
 	$url_new = $this->url(array('module'=>'brand','controller'=>'index','action'=>'add',));
+	$url_cencel = $this->url(array('module'=>'brand','controller'=>'index','action'=>'index',));
 	$url_delete = $this->url(array('module'=>'brand','controller'=>'index','action'=>'delete',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->frmAdd;
@@ -11,7 +12,9 @@
 			<div class="caption">
 					<i class="fa fa-globe"></i><?php echo $tr->translate("ADD_BRAND");?>
 			</div>
-			
+			<div class="tools">
+				<a href="<?php echo $url_cencel;?>"></a><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
+			</div>
 		</div>
 		<div class="portlet-body form">
 			<form class="form-horizontal" method="post" action="<?php echo $url_new;?>" >
@@ -23,8 +26,6 @@
 									<?php echo $formFilter->getElement('parent');?>
 								</div>
 												
-							</div>
-							<div class="form-group">
 								<label class="col-md-2 control-label"><?php echo $tr->translate("BRAND_NAME");?></label>
 								<div class="col-md-4">
 									<?php echo $formFilter->getElement('cat_name');?>
@@ -37,8 +38,6 @@
 								<div class="col-md-4">
 									<?php echo $formFilter->getElement('status');?>
 								</div>
-							</div>
-							<div class="form-group">
 												
 								<label class="col-md-2 control-label"><?php echo $tr->translate("REMARK");?></label>
 								<div class="col-md-4">
@@ -46,11 +45,12 @@
 								</div>
 							</div>
 						<div class="form-group">
-                            <div class="col-md-12 ">
-                                <button type="submit" name="save_new" class="btn green"><?php echo $tr->translate("SAVE_NEW");?></button>
-                                <button type="submit" name="save_close" class="btn default"><?php echo $tr->translate("SAVE_CLOSE");?></button>
-                            </div>
-						</div>
+								<label  class="col-md-12 col-md-offset-4 col-md-8">
+									<button type="submit" name="saveclose" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
+									<button type="submit" name="btnsavenew" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+									<a href="<?php echo $this->baseUrl();?>/brand/index"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+								</label>
+							</div>
 					</div>
 				</div>
 			</form>

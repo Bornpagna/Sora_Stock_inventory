@@ -17,8 +17,16 @@ public function init()
 		$formFilter = new Brand_Form_FrmBrand();
 		$frmsearch = $formFilter->BrandFilter();
 		$this->view->formFilter = $frmsearch;
-		$list = new Application_Form_Frmlist();
-		$result = $db->getAllBrand();
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+		}else{
+			$data = array(
+					'name'	=>	'',
+					'brand'		=>	'',
+					'status'	=>	1
+			);
+		}
+		$result = $db->getAllBrands($data);
 		$this->view->resulr = $result;
 		Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
@@ -29,11 +37,13 @@ public function init()
 			$data = $this->getRequest()->getPost();
 			$db = new Brand_Model_DbTable_DbBrand();
 			$db->add($data);
-			if($data['save_close']){
-				$this->_redirect('/brand/index');
+			if($data['saveclose']){
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/brand/index');
 			}
 			else{
-				$this->_redirect('/brand/index/add');
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/brand/index/add');
 			}
 		}
 		$formFilter = new Brand_Form_FrmBrand();
@@ -54,11 +64,13 @@ public function init()
 			$data["id"] = $id;
 			$db = new Brand_Model_DbTable_DbBrand();
 			$db->edit($data);
-			if($data['save_close']){
-				$this->_redirect('/brand/index');
+			if($data['saveclose']){
+				Application_Form_FrmMessage::message("EDIT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/brand/index');
 			}
 			else{
-				$this->_redirect('/brand/index/add');
+				Application_Form_FrmMessage::message("EDIT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/brand/index/add');
 			}
 		}
 		$rs = $db->getBrand($id);

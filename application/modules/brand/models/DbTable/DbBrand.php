@@ -33,6 +33,20 @@ class Brand_Model_DbTable_DbBrand extends Zend_Db_Table_Abstract
 		$this->update($arr, $where);
 	}
 	
+	public function getAllBrands($data){
+		$db = $this->getAdapter();
+		$sql = "SELECT c.id,c.`name`,c.`parent_id`,c.`remark`,c.`status` FROM `tb_brand` AS c WHERE c.`status` =1";
+		$where = '';
+		if($data["name"]!=""){
+			$s_where=array();
+			$s_search = addslashes(trim($data['name']));
+			$s_where[]= " c.`name` LIKE '%{$s_search}%'";
+			$s_where[]=" c.`remark` LIKE '%{$s_search}%'";
+			//$s_where[]= " cate LIKE '%{$s_search}%'";
+			$where.=' AND ('.implode(' OR ', $s_where).')';
+		}
+		return $db->fetchAll($sql.$where);
+	}
 	public function getAllBrand(){
 		$db = $this->getAdapter();
 		$sql = "SELECT c.id,c.`name`,c.`parent_id`,c.`remark`,c.`status` FROM `tb_brand` AS c WHERE c.`status` =1";
