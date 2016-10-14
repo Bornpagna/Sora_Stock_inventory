@@ -8,6 +8,8 @@ class Sales_Form_FrmStock extends Zend_Form
 	public function showSaleAgentForm($data=null, $stockID=null) {
 
 		$db=new Application_Model_DbTable_DbGlobal();
+		$db_sale = new Sales_Model_DbTable_DbSalesAgent();
+		$codes = $db_sale->getSaleAgentCode(1);
 		$date =new Zend_Date();
 		$nameElement = new Zend_Form_Element_Text('name');
 		$nameElement->setAttribs(array('class'=>'validate[required] form-control','placeholder'=>'Enter Agent Name'));
@@ -112,6 +114,7 @@ class Sales_Form_FrmStock extends Zend_Form
     	
     	$code = new Zend_Form_Element_Text("code");
     	$code->setAttribs(array("class"=>"form-control"));
+    	$code->setValue($codes);
     	$this->addElement($code);
     	
 //     	$sex = $db->getGlobalDb('SELECT u.`user_id`,u.`fullname` FROM `tb_acl_user` AS u,`tb_acl_user_type` AS ut WHERE u.`status`=1 AND u.`user_type_id`=ut.`user_type_id` AND u.`user_type_id`=5');
