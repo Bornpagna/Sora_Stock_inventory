@@ -58,7 +58,6 @@ class Category_Form_FrmCategory extends Zend_Form
 		$name = new Zend_Form_Element_Text('name');
 		$name->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
 		));
 		
 		$parent = new Zend_Form_Element_Select("parent");

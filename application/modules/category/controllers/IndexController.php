@@ -29,11 +29,13 @@ public function init()
 			$data = $this->getRequest()->getPost();
 			$db = new Category_Model_DbTable_DbCategory();
 			$db->add($data);
-			if($data['save_close']){
-				$this->_redirect('/category/index');
+			if($data['saveclose']){
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/category/index');
 			}
 			else{
-				$this->_redirect('/category/index/add');
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/category/index/add');
 			}
 		}
 		$formFilter = new Category_Form_FrmCategory();
@@ -54,11 +56,13 @@ public function init()
 			$data["id"] = $id;
 			$db = new Category_Model_DbTable_DbCategory();
 			$db->edit($data);
-			if($data['save_close']){
-				$this->_redirect('/category/index');
+			if($data['saveclose']){
+				Application_Form_FrmMessage::message("EDIT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/category/index');
 			}
 			else{
-				$this->_redirect('/category/index/add');
+				Application_Form_FrmMessage::message("EDIT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/category/index/add');
 			}
 		}
 		$rs = $db->getCategory($id);
