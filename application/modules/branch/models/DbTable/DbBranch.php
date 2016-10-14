@@ -50,7 +50,7 @@ class Branch_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 	
 	}
 	
-	public function getAllBranch(){
+	public function getAllBranch($data){
 		$db = $this->getAdapter();
 		$sql = "SELECT 
 				  s.`id`,
@@ -62,8 +62,24 @@ class Branch_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 				  s.`address`,
 				  s.`status` 
 				FROM
-				  `tb_sublocation` AS s ";
-		return $db->fetchAll($sql);
+				  `tb_sublocation` AS s where 1 ";
+		$where='';
+		if($data["branch_name"]!=""){
+			$s_where=array();
+			$s_search = addslashes(trim($data['branch_name']));
+			$s_where[]= " s.`name` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`contact` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`phone` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`email` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`office_tel` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`address` LIKE '%{$s_search}%'";
+			//$s_where[]= " cate LIKE '%{$s_search}%'";
+			$where.=' AND ('.implode(' OR ', $s_where).')';
+		}
+		if($data["status"]!=""){
+			$where.=' AND s.status='.$data["status"];
+		}
+		return $db->fetchAll($sql.$where);
 	}
 	
 	public function getBranchById($id){

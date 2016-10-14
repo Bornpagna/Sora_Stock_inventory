@@ -16,9 +16,17 @@ public function init()
 		$db = new Branch_Model_DbTable_DbBranch();
 		$formFilter = new Branch_Form_FrmBranchFilter();
 		$frmsearch = $formFilter->branchFilter();
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+		}else{
+			$data = array(
+					'branch_name'	=>	'',
+					'status'	=>	1
+			);
+		}
 		$this->view->formFilter = $frmsearch;
 		$list = new Application_Form_Frmlist();
-		$result = $db->getAllBranch();
+		$result = $db->getAllBranch($data);
 		$this->view->resulr = $result;
 		Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
