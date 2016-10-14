@@ -21,7 +21,9 @@ public function init()
     		else{
     			$search = array(
     					'adv_search' => '',
-    					'status_search' => -1);
+    					'status_search' => '',
+    					'type' => ''
+    			);
     		}
     		$rs_rows= $db->getAllView($search);//call frome model
     		$this->view->rs = $rs_rows;
@@ -30,7 +32,7 @@ public function init()
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     	$fm = new Product_Form_FrmOther();
-    	$frm = $fm->add();
+    	$frm = $fm->search();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->Form = $frm;
     }

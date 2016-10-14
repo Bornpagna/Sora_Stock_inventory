@@ -4,6 +4,7 @@ $frm = $this->Form;
 ?>
 <?php 
 	$url_new = $this->url(array('module'=>'product','controller'=>'other','action'=>'edit',));
+	$url_cencel = $this->url(array('module'=>'product','controller'=>'other','action'=>'index',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->frmAdd;
 ?>
@@ -14,7 +15,9 @@ $frm = $this->Form;
 				<div class="caption">
 						<i class="fa fa-globe"></i><?php echo $tr->translate("ADD_LOCATION");?>
 				</div>
-				
+				<div class="tools">
+					<a href="<?php echo $url_cencel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
+				</div>
 			</div>
 			<div class="portlet-body form">
 				<form class="form-horizontal" method="post" action="<?php echo $url_new;?>" >

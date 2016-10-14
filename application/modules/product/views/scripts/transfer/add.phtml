@@ -1,12 +1,12 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $url_submit =  $this->url(array('module'=>'product','controller'=>'adjust','action'=>'add'));
-$url_cancel =  $this->url(array('module'=>'product','controller'=>'AdjustStock','action'=>'index'));
+$url_cancel =  $this->url(array('module'=>'product','controller'=>'transfer','action'=>'index'));
 $url_getcurrentitem =  $this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'get-current-quantity'));
 $url_getProduct =  $this->url(array('module'=>'product','controller'=>'adjust','action'=>'get-product'));
 $formFilter = $this->formFilter;
 ?>
-<title><?php echo $tr->translate("ADJUST_STOCK");?></title>
+<title><?php echo $tr->translate("TRANSFER_STOCK");?></title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <br/>
 <div class="portlet box blue">
@@ -16,6 +16,9 @@ $formFilter = $this->formFilter;
 			</div>
 			<div class="caption" style="float:right">
 					<?php $formList = new Application_Form_Frmlist(); //echo $formList->showAddBuntton($url_new);?>
+			</div>
+			<div class="tools">
+				<a href="<?php echo $url_cancel;?>"></a><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
 			</div>
 		</div>
 		<div class="portlet-body form">
@@ -88,17 +91,13 @@ $formFilter = $this->formFilter;
 							</div>
 					</div>
 					<div class="form-group" style="padding-top: 6px;">
-								<label class="control-label col-md-3">
-									<button type="submit" name="save_new" class="btn green col-md-12"><?php echo $tr->translate("SAVE_NEW");?></button>
-								</label>
-								<label class="control-label col-md-3">
-									<button type="submit" name="save_close" class="btn default col-md-12"><?php echo $tr->translate("SAVE_CLOSE");?></button>
-								</label>
-								<label class="control-label col-md-3">
-									<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+									<button type="submit" name="saveclose" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
+									<button type="submit" name="btnsavenew" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+									<a href="<?php echo $this->baseUrl();?>/product/transfer"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
 								</label>
 					</div>
-					</div>
+				</div>
 			</form>
 		</div>
 </div>

@@ -13,7 +13,6 @@ class Product_Form_FrmOther extends Zend_Form
 		$_title = new Zend_Form_Element_Text('adv_search');
 		$_title->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
 		));
 		$status_search=  new Zend_Form_Element_Select('status_search');
 		$status_search->setAttribs(array(
@@ -76,6 +75,36 @@ class Product_Form_FrmOther extends Zend_Form
 			
 		}
 		$this->addElements(array($status_search,$_title,$name_en,$name_kh,$key_code,$_display,$_status,$type));
+		return $this;
+	}
+	
+	function search(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$_title = new Zend_Form_Element_Text('adv_search');
+		$_title->setAttribs(array(
+				'class'=>'form-control',
+		));
+		$_title->setValue($request->getParam("adv_search"));
+		
+		$status_search=  new Zend_Form_Element_Select('status_search');
+		$status_search->setAttribs(array(
+				'class'=>'form-control',));
+		$_status_opt = array(
+				-1=>$tr->translate("ALL"),
+				1=>$tr->translate("ACTIVE"),
+				0=>$tr->translate("DACTIVE"));
+		$status_search->setMultiOptions($_status_opt);
+		$status_search->setValue($request->getParam("status_search"));
+		
+		$opt = array(''=>$tr->translate("SELECT_TYPE"),2=>$tr->translate("MODEL"),3=>$tr->translate("SIZE"),4=>$tr->translate("COLOR"));
+		$type = new Zend_Form_Element_Select("type");
+		$type->setAttribs(array(
+				'class'=>'form-control',));
+		$type->setMultiOptions($opt);
+		$type->setValue($request->getParam("type"));
+		
+		$this->addElements(array($_title,$status_search,$type));
 		return $this;
 	}
 	

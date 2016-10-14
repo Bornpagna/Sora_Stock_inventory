@@ -58,7 +58,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		));
 		if(!empty($db->getModel())){
 			foreach ($db->getModel() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
+				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
 		$model->setMultiOptions($opt);
@@ -84,7 +84,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		));
 		if(!empty($db->getColor())){
 			foreach ($db->getColor() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
+				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
 		$color->setMultiOptions($opt);
@@ -97,7 +97,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		));
 		if(!empty($db->getSize())){
 			foreach ($db->getSize() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
+				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
 		$size->setMultiOptions($opt);
@@ -165,7 +165,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$branch->setMultiOptions($opt);
 		
 		$price_type = new Zend_Form_Element_Select("price_type");
-		$opt = array(''=>$tr->translate("SELECT_PRICE_TYPE"));
+		$opt = array();
 		if(!empty($db->getPriceType())){
 			foreach ($db->getPriceType() as $rs){
 				$opt[$rs["id"]] = $rs["name"];
@@ -249,7 +249,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		));
 		if(!empty($db->getModel())){
 			foreach ($db->getModel() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
+				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
 		$model->setMultiOptions($opt);
@@ -275,7 +275,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		));
 		if(!empty($db->getColor())){
 			foreach ($db->getColor() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
+				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
 		$color->setMultiOptions($opt);
@@ -288,7 +288,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		));
 		if(!empty($db->getSize())){
 			foreach ($db->getSize() as $rs){
-				$opt[$rs["id"]] = $rs["name"];
+				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
 		$size->setMultiOptions($opt);

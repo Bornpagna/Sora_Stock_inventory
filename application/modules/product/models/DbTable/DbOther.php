@@ -11,10 +11,25 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
     }
     
     
-    function getAllView(){
+    function getAllView($data){
     	$db = $this->getAdapter();
     	$sql = "SELECT v.`id`,v.`name_en`,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` IN(2,3,4)";
-    	return $db->fetchAll($sql);
+    	$where = '';
+    	if($data["adv_search"]!=""){
+    		$s_where=array();
+    		$s_search = addslashes(trim($data['adv_search']));
+    		$s_where[]= " v.`name_en` LIKE '%{$s_search}%'";
+    		$s_where[]=" v.`key_code` LIKE '%{$s_search}%'";
+    		//$s_where[]= " cate LIKE '%{$s_search}%'";
+    		$where.=' AND ('.implode(' OR ', $s_where).')';
+    	}
+    	if($data["status_search"]!=""){
+    		$where.=' AND v.status='.$data["status_search"];
+    	}
+    	if($data["type"]!=""){
+    		$where.=' AND v.type='.$data["type"];
+    	}
+    	return $db->fetchAll($sql.$where);
     }
     function getViewById($id){
     	$db = $this->getAdapter();
