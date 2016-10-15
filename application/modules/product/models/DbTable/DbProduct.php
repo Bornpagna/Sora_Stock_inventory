@@ -126,7 +126,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   	}
   	$location = $db_globle->getAccessPermission('pl.`location_id`');
   	$group_by = " GROUP BY p.id";
-  	echo $sql.$where.$location;
+  	//echo $sql.$where.$location;
   	return $db->fetchAll($sql.$where.$location.$group_by);
   	
   }
