@@ -79,12 +79,12 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   			  p.`status`,
 			  (SELECT b.`name` FROM `tb_brand` AS b WHERE b.`id`=p.`brand_id` LIMIT 1) AS brand,
 			  (SELECT c.name FROM `tb_category` AS  c WHERE c.id=p.`cate_id` LIMIT 1) AS cat,
-			  (SELECT m.name FROM `tb_model` AS m WHERE m.id=p.`model_id` LIMIT 1) AS model,
-			  (SELECT s.name FROM `tb_size` AS s WHERE s.id=p.`size_id` LIMIT 1) AS size,
-			  (SELECT c.name FROM `tb_color` AS c WHERE c.id=p.`color_id` LIMIT 1) AS color,
+			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=2  AND p.`model_id`=v.`key_code` LIMIT 1) AS model,
+			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=3  AND p.`model_id`=v.`key_code` LIMIT 1) AS size,
+			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=4  AND p.`model_id`=v.`key_code` LIMIT 1) AS color,
 			  (SELECT m.name FROM `tb_measure` AS m WHERE m.id = p.`measure_id` LIMIT 1) AS measure,
 			  (SELECT b.name FROM `tb_sublocation` AS b WHERE b.id=pl.`location_id` LIMIT 1) AS branch,
-			  pl.`qty`
+			  SUM(pl.`qty`) AS qty
 			FROM
 			  `tb_product` AS p ,
 			  `tb_prolocation` AS pl
@@ -125,8 +125,9 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   		$where.=' AND p.status='.$data["status"];
   	}
   	$location = $db_globle->getAccessPermission('pl.`location_id`');
-  	//echo $location;
-  	return $db->fetchAll($sql.$where.$location);
+  	$group_by = " GROUP BY p.id";
+  	echo $sql.$where.$location;
+  	return $db->fetchAll($sql.$where.$location.$group_by);
   	
   }
   
