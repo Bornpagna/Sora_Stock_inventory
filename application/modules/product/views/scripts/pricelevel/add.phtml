@@ -3,19 +3,18 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $url_save=$this->url(array("module"=>"sales","controller"=>"saleagent","action"=>"add"));
 $frm_agent = $this->form_agent;
 ?>
-<title><?php echo $tr->translate("MENU_SALES_SALE_AGENT_ADD_SALE_AGENT");?></title>
+<title><?php echo $tr->translate("PRICE_LEVEL");?></title>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-home"></i><?php echo $tr->translate("MENU_SALES_SALE_AGENT_ADD_SALE_AGENT");?>
+					<i class="icon-home"></i><?php echo $tr->translate("PRICE_LEVEL");?>
 				</div>
 			</div>
 			<div class="portlet-body form">
 				<form id="form_sample_2" class="form-horizontal" enctype="multipart/form-data" method="post">
 				<div class="form-body">
-					<h3 class="form-section"><?php echo $tr->translate("MENU_SALES_SALE_AGENT_ADD_SALE_AGENT_INFO");?></h3>
 						<div class="form-group">
 						<label class="control-label col-md-2">
 							<?php echo $tr->translate("LEVEL_NAME");?><span class="required">
