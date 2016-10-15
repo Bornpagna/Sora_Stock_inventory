@@ -9,13 +9,22 @@ class Product_Model_DbTable_DbPrice extends Zend_Db_Table_Abstract
 	}
 	
 	public function addPriceType($data){
+		$db  = $this->getAdapter();
+		
 		try {
 			$_arr = array(
-					"price_type_name" => $data["price_name"],
+					"name" => $data["price_name"],
 					"desc" 			  => $data["price_decs"],
-					"public" 		  => $data["status"]
+					"status" 		  => $data["status"]
 					);
-		   return($this->insert($_arr));
+		   
+			if(@$data["id"]!=""){
+				//print_r($data);exit();
+				$where = $db->quoteInto("id=?", $data["id"]);
+				$this->update($_arr, $where);
+			}else{
+				$this->insert($_arr);
+			}
 		}catch(Exception $e){
 			
 		}
@@ -104,7 +113,7 @@ class Product_Model_DbTable_DbPrice extends Zend_Db_Table_Abstract
 	
 	public function getTypePrice($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT * FROM tb_price_type WHERE type_id = ".$id." LIMIT 1";
+		$sql = "SELECT * FROM tb_price_type WHERE id = ".$id." LIMIT 1";
 		return ($db->fetchRow($sql));
 	}
 	public function updatePricetype($post){
