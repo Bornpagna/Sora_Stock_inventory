@@ -79,7 +79,7 @@
 							<thead style="font-size:11px">
 								<tr>
 									<th><?php echo $tr->translate("NO");?></th>
-									<th><?php echo $tr->translate("BRANCH");?></th>
+									<!-- <th><?php echo $tr->translate("BRANCH");?></th> -->
 									<th><?php echo $tr->translate("ITEM_CODE");?></th>
 									<th><?php echo $tr->translate("ITEM_NAME");?></th>
 									<th><?php echo $tr->translate("BARCODE");?></th>
@@ -97,7 +97,7 @@
 								<?php if(!empty($rs)){ foreach ($rs as $key => $row){?>
 								<tr class="odd gradeX">
 									<td><?php echo $key+1;?></td>
-									<td class="center"><?php echo $row["branch"]?></td>
+									<!-- <td class="center"><?php echo $row["branch"]?></td> -->
 									<td><?php echo $row["item_code"]?></td>
 									<td><?php echo $row["item_name"]?></td>
 									<td><?php echo $row["barcode"]?></td>

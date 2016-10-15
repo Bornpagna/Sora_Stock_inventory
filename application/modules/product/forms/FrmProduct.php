@@ -21,14 +21,14 @@ class Product_Form_FrmProduct extends Zend_Form
 		$pro_code = new Zend_Form_Element_Text("pro_code");
 		$pro_code->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		$pro_code->setValue($p_code);
 		 
 		$serial = new Zend_Form_Element_Text("serial");
 		$serial->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		 
 		$barcode = new Zend_Form_Element_Text("barcode");

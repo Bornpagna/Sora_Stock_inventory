@@ -112,13 +112,13 @@ public function init()
 		$request = $this->getRequest();
 		$id = $request->getParam("id", NULL);
 	
-		$sql = "SELECT type_id,price_type_name,pt.desc,public
+		$sql = "SELECT id,name,pt.desc,status
 		FROM tb_price_type AS pt
-		WHERE price_type_name !='' ";
+		WHERE name !='' ";
 		if($this->getRequest()->isPost()){
 			$post = $this->getRequest()->getPost();
 			if($post['price_type'] !=''){
-				$sql .= " AND price_type_name LIKE '%".trim($post['price_type'])."%'";
+				$sql .= " AND name LIKE '%".trim($post['price_type'])."%'";
 			}
 			if($post['status'] !=''){
 				$sql .= " AND public =".trim($post['status']);

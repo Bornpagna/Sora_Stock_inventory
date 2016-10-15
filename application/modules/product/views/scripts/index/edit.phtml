@@ -13,19 +13,13 @@ $form=$this->form;
 <body>
 
 		<form class="form-horizontal" method="post" action="<?php echo $url_submit;?>" >				
-		
 					<div class="portlet box blue">
 						<div class="portlet-title">
 							<div class="caption">
 								<i class="fa fa-gift"></i><?php echo $tr->translate("ADD_NEW_PRODUCT");?>
 							</div>
 							<div class="tools">
-									<button type="submit" name="save_new" class="btn green"><?php echo $tr->translate("SAVE_NEW");?></button>
-									<button type="submit" name="save_close" class="btn default"><?php echo $tr->translate("SAVE_CLOSE");?></button>
-								<!--<a href="javascript:;" class="collapse">
-								</a>
-								<a href="#portlet-config" data-toggle="modal" class="config">
-								</a>-->
+									<label><a href="<?php echo $url_cencel;?>"><button type="button" name="calcel" class="btn red"><i class="fa fa-times"></i><?php echo $tr->translate("GO_BACK");?></button></a></label>
 							</div>
 						</div>
 						<div class="portlet-body">
@@ -34,10 +28,6 @@ $form=$this->form;
 									<li class="active">
 										<a href="#tab_5_1" data-toggle="tab">
 										<?php echo $tr->translate("PRODUCT_INFO");?> </a>
-									</li>
-									<li>
-										<a href="#tab_5_2" data-toggle="tab">
-										<?php echo $tr->translate("PRICE_INFO");?> </a> </a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -145,7 +135,7 @@ $form=$this->form;
 															<?php echo $form->getElement('status');?>
 														</div>
 													</div>
-													
+													<h3 class="form-section"><?php echo $tr->translate("PRODUCT_QTY_LOCATION_INFO");?></h3>
 													<div class="portlet box blue">
 														<div class="portlet-title">
 															<div class="caption" style="width:100%">
@@ -158,7 +148,6 @@ $form=$this->form;
 														<div class="portlet-title">
 															<div class="caption">
 																<i class="fa fa-cogs"></i><?php echo $tr->translate("PRODUCT_LOCATION");?>
-																
 															</div>
 														</div>
 														<div class="portlet-body">
@@ -184,10 +173,7 @@ $form=$this->form;
 												
 											</div>
 										</div>
-								
-							<!--</div>-->
-									</div>
-									<div class="tab-pane" id="tab_5_2">
+										<h3 class="form-section"><?php echo $tr->translate("PRODUCT_PRICE_INFO");?></h3>
 										<div class="portlet box blue">
 											<div class="portlet-title">
 												<div class="caption" style="width:100%">
@@ -213,6 +199,14 @@ $form=$this->form;
 											</div>
 												<input type="hidden" name="identity_price" id="identity_price" value="<?php //echo $identity;?>" >
 										</div>
+										<div class="form-group">
+											<label  class="col-md-12 col-md-offset-4 col-md-8">
+												<a href="<?php echo $this->baseUrl();?>/sales/saleagent"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
+												<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("GO_EDIT")?></button>
+												
+											</label>
+										</div>
+							<!--</div>-->
 									</div>
 									
 								</div>
@@ -221,7 +215,7 @@ $form=$this->form;
 						</div>
 					</div>
 							
-			</form>
+			</form>		
 			      
 <script>
 $( document ).ready(function() {

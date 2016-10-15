@@ -43,8 +43,7 @@ public function init()
 					$db->add($post);
 					if(isset($post["save_close"]))
 					{
-						Application_Form_FrmMessage::message("INSERT_SUCCESS");
-						Application_Form_FrmMessage::redirectUrl('/product/index');
+						Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", '/product/index');
 					}
 				  }catch (Exception $e){
 				  	Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
@@ -73,8 +72,7 @@ public function init()
 					$db->edit($post);
 					if(isset($post["save_close"]))
 					{
-						Application_Form_FrmMessage::message("INSERT_SUCCESS");
-						Application_Form_FrmMessage::redirectUrl('/product/index');
+						Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS", '/product/index');
 					}
 				  }catch (Exception $e){
 				  	Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
