@@ -37,7 +37,7 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$this->addElement($roder_element);
     	
     	$roder_element= new Zend_Form_Element_Text("so_number");
-    	$roder_element->setAttribs(array('class'=>'form-control',
+    	$roder_element->setAttribs(array('class'=>'form-control','style'=>'background:yellow !important;',
     			"readOnly"=>true));
     	$qo = $db->getQuoationNumber(1);
     	$roder_element->setValue($qo);
@@ -152,35 +152,6 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     			$totalAmountElement->setValue($data['all_total']);
     			$dis_valueElement->setValue($data['discount_value']);
     			$allTotalElement->setValue($data['net_total']);
-    			
-//     			$recieve_id = new Zend_Form_Element_Hidden("recieve_id");
-//     			$this->addElement($recieve_id);
-//     			$recieve_id->setValue($data["recieve_id"]);
-    			
-//     			$oldlocationIdElement = new Zend_Form_Element_Text('old_location');
-//     			$this->addElement($oldlocationIdElement);
-    			
-//     			$idElement ->setValue($data["order_id"]);
-//     			$date_inElement->setValue($data["date_in"]);
-//     			$oldStatusElement = new Zend_Form_Element_Hidden('oldStatus');
-//     			$this->addElement($oldStatusElement);
-//     			$vendor_id->setValue($data["vendor_id"]);
-
-//     			$oldStatusElement->setValue($data['status']);
-//     			$locationID->setvalue($data['LocationId']);
-//     			$oldlocationIdElement->setvalue($data['LocationId']);
-//     			$dateOrderElement->setValue($data["date_order"]);
-//     			$roder_element->setValue($data['order']);
-//     			$roder_element->setAttribs(array('readonly'=>'readonly'));
-//     			$paymentmethodElement->setValue($data['payment_method']);
-//     			$currencyElement->setValue($data['currency_id']);
-//     			$paidElement->setValue($data['paid']);
-//     			$totalAmountElement->setValue($data["all_total"]);
-//     			$allTotalElement->setValue($data['all_total']);
-//     			$discountValueElement->setValue($data['discount_value']);
-//     			$netTotalElement->setValue($data['net_total']);   
-//     			$globalRealElement->setValue($data["discount_real"]);
-    		
     		} else {
     	}
      	return $this;

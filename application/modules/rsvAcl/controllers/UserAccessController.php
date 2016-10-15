@@ -17,7 +17,7 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
     	//$this->_helper->layout()->disableLayout();
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
         $db = new RsvAcl_Model_DbTable_DbUserType();        
-        $userAccessQuery = "SELECT user_type_id, user_type, status from rsv_acl_user_type";
+        $userAccessQuery = "SELECT user_type_id, user_type, status from tb_acl_user_type";
         $rows = $db->getUserTypeInfo($userAccessQuery);
         //print_r($rows); exit;
         if($rows){
@@ -33,7 +33,7 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
         		}
         	}
         	
-        	$link = array("rsvAcl","user-access","view-user-access");
+        	$link = array("rsvacl","user-access","view-user-access");
         	$links = array('user_type'=>$link);
         	
         	$list=new Application_Form_Frmlist();        	
@@ -51,20 +51,20 @@ public function viewUserAccessAction()
     		
     		$id = $this->getRequest()->getParam('id');
     		$db = new RsvAcl_Model_DbTable_DbUserType();        
-        	$userAccessQuery = "SELECT user_type_id, user_type, status from rsv_acl_user_type where user_type_id=".$id;
+        	$userAccessQuery = "SELECT user_type_id, user_type, status from tb_acl_user_type where user_type_id=".$id;
     		$rows = $db->getUserTypeInfo($userAccessQuery);	
 	    	$this->view->rs=$rows;   		
 	    	 	
 	    	//Add filter search
 	    	$gc = new Application_Model_GlobalClass();
 	    	// For list all module
-	    	$sql = "SELECT DISTINCT acl.`module` FROM `rsv_acl_acl` AS acl";
+	    	$sql = "SELECT DISTINCT acl.`module` FROM `tb_acl_acl` AS acl";
 	    	$this->view->optoin_mod =  $gc->getOptonsHtml($sql, "module", "module");
 	    	// For list all controller
-	    	$sql = "SELECT DISTINCT acl.`controller` FROM `rsv_acl_acl` AS acl WHERE acl.`status` = 1";
+	    	$sql = "SELECT DISTINCT acl.`controller` FROM `th_acl_acl` AS acl WHERE acl.`status` = 1";
 	    	$this->view->optoin_con =  $gc->getOptonsHtml($sql, "controller", "controller");
 	    	// For List all action
-	    	$sql = "SELECT DISTINCT acl.`action` FROM `rsv_acl_acl` AS acl WHERE acl.`status` = 1";
+	    	$sql = "SELECT DISTINCT acl.`action` FROM `tb_acl_acl` AS acl WHERE acl.`status` = 1";
 	    	$this->view->optoin_act =  $gc->getOptonsHtml($sql, "action", "action");
 	    	//For Status enable or disable
 	    	$this->view->optoin_status =  $gc->getYesNoOption();
@@ -98,7 +98,7 @@ public function viewUserAccessAction()
 			//to assign project list in view
 			$db_acl=new Application_Model_DbTable_DbGlobal();
 			
-			$sqlNotParentId = "SELECT user_type_id FROM `rsv_acl_user_type` WHERE `parent_id` =".$id;
+			$sqlNotParentId = "SELECT user_type_id FROM `tb_acl_user_type` WHERE `parent_id` =".$id;
 			$notParentId = $db_acl->getGlobalDb($sqlNotParentId);
 			$usernotparentid = $notParentId[0]['user_type_id'];
 			    	
@@ -108,16 +108,16 @@ public function viewUserAccessAction()
 				//Do not change admin id = 1 in database 
 				//Otherwise, it error
 				$sql = "select acl.acl_id,CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access 
-						from rsv_acl_acl as acl 
+						from tb_acl_acl as acl 
 						WHERE 1 " . $where;
 			}
     		    			
 			else {
 				//Display all of his/her parent access	
 				$sql="SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status 
-						FROM rsv_acl_user_access AS ua 
-						INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
-						INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ut.user_type_id =".$id . $where;	
+						FROM tb_acl_user_access AS ua 
+						INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
+						INNER JOIN tb_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ut.user_type_id =".$id . $where;	
 			}
 			//echo $sql; exit;			
 			$acl=$db_acl->getGlobalDb($sql);
@@ -132,15 +132,15 @@ public function viewUserAccessAction()
 				///Display only of his/her parent access	and not have user_type_id of user access in user type parent id
 				//ua.user_type_id != ut.parent_id
 				$sql_acl = "SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status 
-							FROM rsv_acl_user_access AS ua 
-							INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
-							INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id . $where;
+							FROM tb_acl_user_access AS ua 
+							INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
+							INNER JOIN tb_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id . $where;
 			}else{
 				//Display only he / she access in rsv_acl_user_access
 				$sql_acl = "SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status 
-							FROM rsv_acl_user_access AS ua 
-							INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
-							INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id . $where;
+							FROM tb_acl_user_access AS ua 
+							INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
+							INNER JOIN tb_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id . $where;
 			}			
 						
 			$acl_name=$db_acl->getGlobalDb($sql_acl);
@@ -215,7 +215,7 @@ public function editUserAccessAction()
    		//echo "it works"; exit;
    		
     	$db = new RsvAcl_Model_DbTable_DbUserAccess();
-    	$sql = "select user_type_id, user_type  from rsv_acl_user_type where user_type_id=".$id;
+    	$sql = "select user_type_id, user_type  from tb_acl_user_type where user_type_id=".$id;
         $rs = $db->getUserAccessInfo($sql);
         //print_r($rs); exit;
                
@@ -224,21 +224,21 @@ public function editUserAccessAction()
 			//to assign project list in view
 			$db_acl=new Application_Model_DbTable_DbGlobal();
 			
-			$sqlNotParentId = "SELECT user_type_id FROM `rsv_acl_user_type` WHERE `parent_id` =".$id;
+			$sqlNotParentId = "SELECT user_type_id FROM `tb_acl_user_type` WHERE `parent_id` =".$id;
 			$notParentId = $db_acl->getGlobalDb($sqlNotParentId);
 			$usernotparentid = $notParentId[0]['user_type_id'];			    	
 	    	//print $usernotparentid; exit;
 	    	
 		if($id == 1){
-				$sql_acl = "select acl.acl_id,CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access from rsv_acl_acl as acl";
+				$sql_acl = "select acl.acl_id,CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access from tb_acl_acl as acl";
 		}if(!$usernotparentid){
-				$sql_acl = "SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status FROM rsv_acl_user_access AS ua 
-					INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
-					INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id;
+				$sql_acl = "SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status FROM tb_acl_user_access AS ua 
+					INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
+					INNER JOIN tb_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id;
 		}else {
-    			$sql_acl = "SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status FROM rsv_acl_user_access AS ua 
-					INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
-					INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id;
+    			$sql_acl = "SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status FROM tb_acl_user_access AS ua 
+					INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
+					INNER JOIN tb_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.user_type_id =".$id;
 		}
 	    //print $sql_acl; exit;
 		$acl_name=$db_acl->getGlobalDb($sql_acl);
@@ -279,7 +279,7 @@ public function editUserAccessAction()
 				    		 $userLog->writeUserLog($id);
 				     	  //End write log file
 					//Application_Form_FrmMessage::message('One row affected!');
-					Application_Form_FrmMessage::redirector('/rsvAcl/user-access/index');																																				
+					Application_Form_FrmMessage::redirector('/rsvacl/user-access/index');																																				
 				
 			/*}else{
 				if(!$db->isUserExist($post['username'])){

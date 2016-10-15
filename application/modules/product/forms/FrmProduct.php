@@ -41,7 +41,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$brand = new Zend_Form_Element_Select("brand");
 		$brand->setAttribs(array(
 				'class'=>'form-control select2me',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		if(!empty($db->getBrand())){
 			foreach ($db->getBrand() as $rs){
@@ -54,7 +54,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$model = new Zend_Form_Element_Select("model");
 		$model->setAttribs(array(
 				'class'=>'form-control select2me',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		if(!empty($db->getModel())){
 			foreach ($db->getModel() as $rs){
@@ -67,7 +67,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$category = new Zend_Form_Element_Select("category");
 		$category->setAttribs(array(
 				'class'=>'form-control select2me',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		if(!empty($db->getCategory())){
 			foreach ($db->getCategory() as $rs){
@@ -80,7 +80,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$color = new Zend_Form_Element_Select("color");
 		$color->setAttribs(array(
 				'class'=>'form-control select2me',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		if(!empty($db->getColor())){
 			foreach ($db->getColor() as $rs){
@@ -93,7 +93,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$size = new Zend_Form_Element_Select("size");
 		$size->setAttribs(array(
 				'class'=>'form-control select2me',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		if(!empty($db->getSize())){
 			foreach ($db->getSize() as $rs){
@@ -105,21 +105,21 @@ class Product_Form_FrmProduct extends Zend_Form
 		$unit = new Zend_Form_Element_Text("unit");
 		$unit->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		$unit->setValue(1);
 		 
 		$qty_per_unit = new Zend_Form_Element_Text("qty_unit");
 		$qty_per_unit->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		 
 		$opt = array(''=>$tr->translate("SELECT_MEASURE"));
 		$measure = new Zend_Form_Element_Select("measure");
 		$measure->setAttribs(array(
 				'class'=>'form-control select2me',
-				'required'=>'required',
+				//'required'=>'required',
 				'Onchange'	=>	'getMeasureLabel()'
 		));
 		if(!empty($db->getMeasure())){
@@ -132,13 +132,13 @@ class Product_Form_FrmProduct extends Zend_Form
 		$label = new Zend_Form_Element_Text("label");
 		$label->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		 
 		$description = new Zend_Form_Element_Text("description");
 		$description->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		
 		$status = new Zend_Form_Element_Select("status");

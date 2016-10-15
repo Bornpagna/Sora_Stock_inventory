@@ -341,7 +341,8 @@ function getQtyById(index){//use
 							$("#current_qty"+index).val(item_qty.qty);
 							total_qty = parseFloat(main_qty) + parseFloat(detail_qty/(item_qty.qty_perunit));
 							$("#qty"+index).val(total_qty.toFixed(3));
-							calculatePrice(index);
+							//calculatePrice(index);
+							getProductPrice(item_id,index);
 						},
 						error:function(e){
 							//alert(e);
@@ -350,10 +351,11 @@ function getQtyById(index){//use
 			}
 }
 <?php $url_price =  $this->url(array('module'=>'sales','controller'=>'index','action'=>'getproductprice')); ?>
-function getProductPrice(product_id){
+function getProductPrice(product_id,recordid){
 	customer_id=$("#customer_id").val();
 	if(customer_id==null || customer_id=="" || customer_id==-1){
 		alert("Please Select Customer First !");
+		return fale;
 		$("#customer_id").focus();
 	}else{
 		$.ajax({
@@ -362,8 +364,10 @@ function getProductPrice(product_id){
 			data:{'customer_id':customer_id,'product_id':product_id},
 			success: function(data){
 				data = $.parseJSON(data);			
-				$("#price"+product_id).val(data.price);
-				//if(data.price==''){}
+				$("#price"+recordid).val(data.price);
+				$("#oldprice_"+recordid).val(data.price);
+				
+				calculatePrice(recordid);
 			},
 			error:function(e){
 				alert(e);

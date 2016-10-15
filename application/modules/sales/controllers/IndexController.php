@@ -76,6 +76,41 @@ class Sales_IndexController extends Zend_Controller_Action
 		$items = new Application_Model_GlobalClass();
 		$this->view->items = $items->getProductOption();
 		$this->view->term_opt = $db->getAllTermCondition(1);
+	}
+	function editAction(){
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		$dbq = new Sales_Model_DbTable_DbSaleOrder();
+		$db = new Application_Model_DbTable_DbGlobal();
+		if($this->getRequest()->isPost()) {
+			$data = $this->getRequest()->getPost();
+			try {
+				if(!empty($data['identity'])){
+					$dbq->updateSaleOrder($data);
+				}
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/index");
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message('UPDATE_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		$row = $dbq->getSaleorderItemById($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/index");
+		}
+		$this->view->rs = $dbq->getSaleorderItemDetailid($id);
+		$this->view->rsterm = $dbq->getTermconditionByid($id);
+		
+		///link left not yet get from DbpurchaseOrder
+		$frm_purchase = new Sales_Form_FrmSale(null);
+		$form_sale = $frm_purchase->SaleOrder($row);
+		Application_Model_Decorator::removeAllDecorator($form_sale);
+		$this->view->form_sale = $form_sale;
+		 
+		// item option in select
+		$items = new Application_Model_GlobalClass();
+		$this->view->items = $items->getProductOption();
+		$this->view->term_opt = $db->getAllTermCondition(1);
 	}	
 	function viewappAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
@@ -96,6 +131,15 @@ class Sales_IndexController extends Zend_Controller_Action
 			$db = new Application_Model_DbTable_DbGlobal();
 			$rs = $db ->getProductPriceBytype($post['customer_id'], $post['product_id']);
 			echo Zend_Json::encode($rs);
+			exit();
+		}
+	}
+	function getsonumberAction(){
+		if($this->getRequest()->isPost()){
+			$post=$this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$qo = $db->getSalesNumber($post['branch_id']);
+			echo Zend_Json::encode($qo);
 			exit();
 		}
 	}

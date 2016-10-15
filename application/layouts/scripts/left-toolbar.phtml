@@ -61,6 +61,7 @@
 	$url_chart_so =  array($this->url(array('module'=>'report','controller'=>'index','action'=>'sochart'),null, true), "MENU_REPORT_INDEX_SOCHART");
 	$url_measure  = array($this->url(array('module'=>'measure','controller'=>'index','action'=>'index'),null, true), "Measure");
 	$url_other  = array($this->url(array('module'=>'product','controller'=>'other','action'=>'index'),null, true), "Other");
+	$url_pricelevel = array($this->url(array('module'=>'product','controller'=>'pricelevel','action'=>'index'),null, true), "Price Level");
 	?>
 <!-- BEGIN SIDEBAR -->
 	<div class="page-sidebar-wrapper">
@@ -120,25 +121,25 @@
 	            		</li> -->
 	            		<li>
 	            			<a href="<?php echo $url_category[0]; ?>">
-							      <i class="icon-bulb"></i><?php echo $tr->translate($url_category[1])?>
+							      <i class="icon-bulb"></i><?php echo $tr->translate($url_category[1]);?>
 		            		</a>
 	            		</li>
 	            		<li>
 	            			<a href="<?php echo $url_brand[0]; ?>">
-							   <i class="icon-bulb"></i> <?php echo $tr->translate($url_brand[1])?>
+							   <i class="icon-bulb"></i> <?php echo $tr->translate($url_brand[1]);?>
 		            		</a>
 	            		</li>
-	            		<!-- <li>
-	            			<a href="<?php //echo $url_adj_price[0]; ?>">
-							    <i class="icon-bulb"></i><?php //echo $tr->translate($url_adj_price[1])?>
-	            		<li> -->
+	            		 <li>
+	            			<a href="<?php echo $url_pricelevel[0]; ?>">
+							    <i class="icon-bulb"></i><?php echo $tr->translate($url_pricelevel[1]);?></a>
+	            		<li> 
 	            		<li>
 	            			<a href="<?php echo $url_location[0]; ?>">
-							    <i class="icon-bulb"></i> <?php echo $tr->translate($url_location[1])?>
+							    <i class="icon-bulb"></i> <?php echo $tr->translate($url_location[1]);?>
 		            		</a>
 	            		</li><li>
 	            			<a href="<?php echo $url_other[0]; ?>">
-							    <i class="icon-bulb"></i> <?php echo $tr->translate($url_other[1])?>
+							    <i class="icon-bulb"></i> <?php echo $tr->translate($url_other[1]);?>
 		            		</a>
 	            		</li>
 	            		<!--<li>
@@ -155,7 +156,7 @@
 	            		
 	            			
             		<?php //}?>   
-            		<?php //}?>
+            		<?php //}?>-->
 					</ul>
 				</li>
 				<li>

@@ -304,6 +304,9 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 		$user_info = new Application_Model_DbTable_DbGetUserInfo();
 		$result = $user_info->getUserInfo();
 		$option="";		
+		if($result["level"]==1 OR $result["level"]==2){
+			$option .= '<option value="-1">Please Select Product</option>';
+		}
 		foreach($row_cate as $cate){
 			$option .= '<optgroup  label="'.htmlspecialchars($cate['name'], ENT_QUOTES).'">';
 			if($result["level"]==1 OR $result["level"]==2){
@@ -325,9 +328,7 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 				}
 			$option.="</optgroup>";
 		}
-		if($result["level"]==1 OR $result["level"]==2){
-			$option .= '<option value="-1" label="Add New Product">Add New Product</option>';
-		}
+		
 		return $option;
 	}
 	public function selectProductOption(){//not add item to this select box
@@ -374,6 +375,15 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 		}
 		if($result["level"]==1 OR $result["level"]==2){
 			$option .= '<option value="-1" label="Add Price Type">Add Price Type</option>';
+		}
+		return $option;
+	}
+	public function getOptonsHtml($sql, $display, $value){
+		$db = $this->getAdapter();
+		$option = '<option value="" label="--- Select ---">--- Select ---</option>';
+		foreach($db->fetchAll($sql) as $r){
+				
+			$option .= '<option value="'.$r[$value].'" label="'.htmlspecialchars($r[$display], ENT_QUOTES).'">'.htmlspecialchars($r[$display], ENT_QUOTES).'</option>';
 		}
 		return $option;
 	}

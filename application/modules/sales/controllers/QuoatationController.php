@@ -74,14 +74,15 @@ class Sales_quoatationController extends Zend_Controller_Action
 		$this->view->term_opt = $db->getAllTermCondition(1);
 	}
 	function editAction(){
-		$dbq = new Sales_Model_DbTable_Dbquoatation();
-		$db = new Application_Model_DbTable_DbGlobal();
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		$dbq = new Sales_Model_DbTable_Dbquoatation();
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			try {
 				if(!empty($data['identity'])){
 					$dbq->updateQoutation($data);
+				}else{
+					Application_Form_FrmMessage::message('No Data to Submit');
 				}
 				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/quoatation");
 			}catch (Exception $e){
@@ -96,15 +97,18 @@ class Sales_quoatationController extends Zend_Controller_Action
 		}		
 		$this->view->rs = $dbq->getQuotationItemDetailid($id);
 		$this->view->rsterm = $dbq->getTermconditionByid($id);
-		
+// 		$this->view->rsq = $row;
 		$frm_purchase = new Sales_Form_FrmQuoatation();
 		$form_sale = $frm_purchase->SaleOrder($row);
 		Application_Model_Decorator::removeAllDecorator($form_sale);
 		$this->view->form_sale = $form_sale;
-		$this->view->rsq = $row;
-		$items = new Application_Model_GlobalClass();
-		$this->view->items = $items->getProductOption();
+		
+		$db = new Application_Model_GlobalClass();
+		$this->view->items = $db->getProductOption();
+		
+		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->term_opt = $db->getAllTermCondition(1);
+		//print_r($row);
 	}	
 	function getquotenoAction(){
 		if($this->getRequest()->isPost()){

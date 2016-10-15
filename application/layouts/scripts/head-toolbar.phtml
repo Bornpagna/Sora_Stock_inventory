@@ -3,7 +3,6 @@ $user_info = new Application_Model_DbTable_DbGetUserInfo();
 $result = $user_info->getUserInfo();
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $session_user=new Zend_Session_Namespace('auth');
-
 $request=Zend_Controller_Front::getInstance()->getRequest();
 ?>
 	<div class="page-header-inner">
@@ -230,84 +229,37 @@ $request=Zend_Controller_Front::getInstance()->getRequest();
 					<ul class="dropdown-menu extended tasks">
 						<li class="external">
 							<h3>You have <span class="bold">12 pending</span> tasks</h3>
-							<a href="page_todo.html">view all</a>
+							<a href="#">view all</a>
 						</li>
 						<li>
 							<ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
+								
+								<?php 
+									$dbtable = new Product_Model_DbTable_DbGetBranch();
+									$branchs = $dbtable->getBranchbyUser($session_user->user_id);
+						?>
+								
+									<?php if(!empty($branchs)) foreach ($branchs as $key =>$value){?>
+								  <li>
+										<a href="<?php echo $this->url(array('module'=>'product','controller'=>'changeuser','action'=>'index', 'id'=>$value["location_id"]));?>">
+											<span class="task">
+												<span class="desc">Location : <?php echo $value["name"]?></span>
+											</span>
+										</a>
+									</li>
+										<?php };?>
+								
 								<li>
-									<a href="javascript:;">
+									<a onclick="changeLange(1);" href="#">
 									<span class="task">
-									<span class="desc">New release v1.2 </span>
-									<span class="percent">30%</span>
-									</span>
-									<span class="progress">
-									<span style="width: 40%;" class="progress-bar progress-bar-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">40% Complete</span></span>
+									<span class="desc">Khmer</span>
 									</span>
 									</a>
 								</li>
 								<li>
-									<a href="javascript:;">
+									<a onclick="changeLange(2);" href="#">
 									<span class="task">
-									<span class="desc">Application deployment</span>
-									<span class="percent">65%</span>
-									</span>
-									<span class="progress">
-									<span style="width: 65%;" class="progress-bar progress-bar-danger" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">65% Complete</span></span>
-									</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="task">
-									<span class="desc">Mobile app release</span>
-									<span class="percent">98%</span>
-									</span>
-									<span class="progress">
-									<span style="width: 98%;" class="progress-bar progress-bar-success" aria-valuenow="98" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">98% Complete</span></span>
-									</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="task">
-									<span class="desc">Database migration</span>
-									<span class="percent">10%</span>
-									</span>
-									<span class="progress">
-									<span style="width: 10%;" class="progress-bar progress-bar-warning" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">10% Complete</span></span>
-									</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="task">
-									<span class="desc">Web server upgrade</span>
-									<span class="percent">58%</span>
-									</span>
-									<span class="progress">
-									<span style="width: 58%;" class="progress-bar progress-bar-info" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">58% Complete</span></span>
-									</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="task">
-									<span class="desc">Mobile development</span>
-									<span class="percent">85%</span>
-									</span>
-									<span class="progress">
-									<span style="width: 85%;" class="progress-bar progress-bar-success" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">85% Complete</span></span>
-									</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:;">
-									<span class="task">
-									<span class="desc">New UI release</span>
-									<span class="percent">38%</span>
-									</span>
-									<span class="progress progress-striped">
-									<span style="width: 38%;" class="progress-bar progress-bar-important" aria-valuenow="18" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">38% Complete</span></span>
+									<span class="desc">English</span>
 									</span>
 									</a>
 								</li>
@@ -372,3 +324,20 @@ $request=Zend_Controller_Front::getInstance()->getRequest();
 		<!-- END TOP NAVIGATION MENU -->
 	</div>
 	<!-- END HEADER INNER -->
+	<script>	
+var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
+function changeLange(lang){
+	$.ajax({
+		url:url_changelang,
+		type:"post",
+		data:{'lange':lang,},
+		success: function(data){
+			location.reload();
+		},
+		error:function(e){
+			alert(e);
+		}
+	});
+}
+		
+	</script>

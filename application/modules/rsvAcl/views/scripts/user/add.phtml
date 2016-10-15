@@ -17,7 +17,8 @@
 	}
 </script>
 <script type="text/javascript">
-	jQuery(Document).ready(function(){
+	$( document ).ready(function() {
+		addRow();
 		jQuery('#frm').validationEngine('attach', {promptPosition : "centerRight"});
 		
 	});
@@ -38,7 +39,7 @@
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-home"></i><?php echo $tr->translate("ADD_PURCAHSE_ORDER")?>
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_USER")?>
 				</div>
 				<div class="tools" >
 					<a href="<?php echo $url_cancel;?>" class="btn btn-sm pull-right" style="color:white;">
@@ -185,9 +186,7 @@ function addRow() {
 }
 
 //$('#new_item').click(addRow);
-jQuery(document).ready(function(){
-	addRow();
-});
+
 function deleteRecord(index) {
 	var identity = $('#identity').val();
 	var arrays = identity.split(',');

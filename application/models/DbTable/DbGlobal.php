@@ -469,5 +469,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		(SELECT customer_level FROM `tb_customer` WHERE id=$customer_id limit 1) AND pro_id=$product_id LIMIT 1 ";
    	return $db->fetchRow($sql);
    }
+   function getTermConditionById($term_type,$record_id){
+   	$db = $this->getAdapter();
+   	$sql="SELECT t.con_khmer,t.con_english FROM `tb_termcondition` AS t,`tb_quoatation_termcondition` AS tc 
+   		WHERE t.id=tc.condition_id AND tc.term_type=$term_type AND quoation_id=$record_id ";
+   	return $db->fetchAll($sql); 
+   }
 }
 ?>

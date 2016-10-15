@@ -87,7 +87,7 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
 	public function ifUserExist($username)
 	{
 		$db=$this->getAdapter();
-		$sql = "SELECT user_id FROM rsv_acl_user WHERE username = '".$username."' LIMIT 1";
+		$sql = "SELECT user_id FROM tb_acl_user WHERE username = '".$username."' LIMIT 1";
 		$row = $db->fetchRow($sql);
 		if(!$row) return false;
 		return true;

@@ -128,13 +128,15 @@ class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
 // 			$qoatationid = $db_global->getQuoationNumber($data["branch_id"]);
-				if(!empty($data['makeso'])){
+				if(!empty($data['makeso'])){//if edit quote=>sale order
+					$so = $db_global->getSalesNumber($data["branch_id"]);
 					$qdata=array(
+							'quote_id'=>$id,
 							"customer_id"    => $data['customer_id'],
-							'saleagent_id'   =>	$data['saleagent_id'],
 							"branch_id"      => $data["branch_id"],
-							"date_order"     => date("Y-m-d",strtotime($data['order_date'])),
-							"saleagent_id"   => $data['saleagent_id'],
+							"sale_no"       => 	$so,//$data['txt_order'],
+							"date_sold"     => date("Y-m-d",strtotime($data['order_date'])),
+							"saleagent_id"  => 	$data['saleagent_id'],
 							"currency_id"    => $data['currency'],
 							"remark"         => $data['remark'],
 							"all_total"      => $data['totalAmoun'],
@@ -142,74 +144,112 @@ class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 							"net_total"      => $data['all_total'],
 							"user_mod"       => $GetUserId,
 							"date"      	 => date("Y-m-d"),
-							'is_approved'=>0,
-							'pending_status'=>2,
-					);
-				}else{
-				$qdata=array(
-						"customer_id"    => $data['customer_id'],
-						'saleagent_id'   =>	$data['saleagent_id'],
-						"branch_id"      => $data["branch_id"],
-	// 					"quoat_number"   => $qoatationid,
-						"date_order"     => date("Y-m-d",strtotime($data['order_date'])),
-						"saleagent_id"   => $data['saleagent_id'],
-						"currency_id"    => $data['currency'],
-						"remark"         => $data['remark'],
-						"all_total"      => $data['totalAmoun'],
-						"discount_value" => $data['dis_value'],
-						"net_total"      => $data['all_total'],
-						"user_mod"       => $GetUserId,
-						"date"      	 => date("Y-m-d"),
-						'is_approved'=>0,
-						'pending_status'=>2,
-				);
-			}
-			$this->_name="tb_quoatation";
-			$where="id = ".$id;
-			$this->update($qdata, $where);
-			unset($info_purchase_order);
-	        
-			//delete detail
-			$this->_name='tb_quoatation_item';
-			$where = " quoat_id =".$id;
-			$this->delete($where);
-			
-			$ids=explode(',',$data['identity']);
-			$locationid=$data['branch_id'];
-			foreach ($ids as $i)
-			{
-				$data_item= array(
-						'quoat_id'	  => 	$id,
-						'pro_id'	  => 	$data['item_id_'.$i],
-						'qty_unit'  =>$data['qty_unit_'.$i],
-						'qty_order'	  => 	$data['qty'.$i],
-						'qty_detail'  => 	$data['qty_per_unit_'.$i],
-						'price'		  => 	$data['price'.$i],
-						'old_price' => 	$data['oldprice_'.$i],
-						'disc_value'	  => $data['real-value'.$i],
-						'sub_total'	  => $data['total'.$i],
-				);
-				$this->insert($data_item);
-			}	
-
-			$this->_name='tb_quoatation_termcondition';
-			$where = " term_type=1 AND quoation_id = ".$id;		
-			$this->delete($where);	
-			
-			$ids=explode(',',$data['identity_term']);
-			if(!empty($data['identity_term'])){
-				foreach ($ids as $i)
-				{
-					$data_item= array(
-							'quoation_id'=> $id,
-							'condition_id'=> $data['termid_'.$i],
-							"user_id"   => 	$GetUserId,
+// 							'is_approved'=>0,
+							'pending_status' =>2,
 							"date"      => 	date("Y-m-d"),
-							'term_type'=>1
 					);
-					$this->insert($data_item);
-				}
-			}
+					$this->_name="tb_sales_order";
+					$sale_id = $this->insert($qdata);
+					
+					$this->_name='tb_salesorder_item';
+					$ids=explode(',',$data['identity']);
+					foreach ($ids as $i)
+					{
+						$data_item= array(
+								'saleorder_id'=> $sale_id,
+								'pro_id'	  => 	$data['item_id_'.$i],
+								'qty_order'	  => 	$data['qty'.$i],
+								'qty_detail'  => 	$data['qty_per_unit_'.$i],
+								'price'		  => 	$data['price'.$i],
+								'old_price'   =>    $data['oldprice_'.$i],
+								'disc_value'  => $data['dis_value'.$i],
+								'sub_total'	  => $data['total'.$i],
+						);
+						
+						$this->insert($data_item);
+					}
+					///add term condtion of so
+					$ids=explode(',',$data['identity_term']);
+					if(!empty($data['identity_term'])){
+						foreach ($ids as $i)
+						{
+							$data_item= array(
+									'quoation_id'=> $sale_id,
+									'condition_id'=> $data['termid_'.$i],
+									"user_id"   => 	$GetUserId,
+									"date"      => 	date("Y-m-d"),
+									'term_type'=>2
+							);
+							$this->_name='tb_quoatation_termcondition';
+							$this->insert($data_item);
+						}
+					}
+				}else{
+						$qdata=array(
+								"customer_id"    => $data['customer_id'],
+								'saleagent_id'   =>	$data['saleagent_id'],
+								"branch_id"      => $data["branch_id"],
+			// 					"quoat_number"   => $qoatationid,
+								"date_order"     => date("Y-m-d",strtotime($data['order_date'])),
+								"saleagent_id"   => $data['saleagent_id'],
+								"currency_id"    => $data['currency'],
+								"remark"         => $data['remark'],
+								"all_total"      => $data['totalAmoun'],
+								"discount_value" => $data['dis_value'],
+								"net_total"      => $data['all_total'],
+								"user_mod"       => $GetUserId,
+								"date"      	 => date("Y-m-d"),
+								'is_approved'=>0,
+								'pending_status'=>2,
+						);
+					
+					$this->_name="tb_quoatation";
+					$where="id = ".$id;
+					$this->update($qdata, $where);
+// 					unset($info_purchase_order);
+			        
+					//delete detail
+					$this->_name='tb_quoatation_item';
+					$where = " quoat_id =".$id;
+					$this->delete($where);
+					
+					$ids=explode(',',$data['identity']);
+					$locationid=$data['branch_id'];
+					foreach ($ids as $i)
+					{
+						$data_item= array(
+								'quoat_id'	  => 	$id,
+								'pro_id'	  => 	$data['item_id_'.$i],
+								'qty_unit'  =>$data['qty_unit_'.$i],
+								'qty_order'	  => 	$data['qty'.$i],
+								'qty_detail'  => 	$data['qty_per_unit_'.$i],
+								'price'		  => 	$data['price'.$i],
+								'old_price' => 	$data['oldprice_'.$i],
+								'disc_value'	  => $data['real-value'.$i],
+								'sub_total'	  => $data['total'.$i],
+						);
+						$this->insert($data_item);
+					}	
+		
+					$this->_name='tb_quoatation_termcondition';
+					$where = " term_type=1 AND quoation_id = ".$id;		
+					$this->delete($where);	
+					
+					$ids=explode(',',$data['identity_term']);
+					if(!empty($data['identity_term'])){
+						foreach ($ids as $i)
+						{
+							$data_item= array(
+									'quoation_id'=> $id,
+									'condition_id'=> $data['termid_'.$i],
+									"user_id"   => 	$GetUserId,
+									"date"      => 	date("Y-m-d"),
+									'term_type'=>1
+							);
+							$this->insert($data_item);
+						}
+					}
+		    }
 			$db->commit();
 		}catch(Exception $e){
 			$db->rollBack();
@@ -220,7 +260,7 @@ class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 	}
 	function getQuotationItemById($id){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM $this->_name WHERE id = $id LIMIT 1 ";
+		$sql=" SELECT * FROM tb_quoatation WHERE id = $id LIMIT 1 ";
 		return $db->fetchRow($sql);
 	}
 	function getQuotationItemDetailid($id){

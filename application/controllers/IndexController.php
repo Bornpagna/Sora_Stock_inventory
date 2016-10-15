@@ -94,6 +94,16 @@ class IndexController extends Zend_Controller_Action
     public function dashboadAction(){
 
     }
+    function changelangeAction(){
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$session_lang=new Zend_Session_Namespace('lang');
+    		$session_lang->lang_id=$data['lange'];
+    		Application_Form_FrmLanguages::getCurrentlanguage($data['lange']);
+    		print_r(Zend_Json::encode(2));
+    		exit();
+    	}
+    }
    
   
 }
