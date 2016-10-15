@@ -17,7 +17,7 @@ class Branch_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 			'email'			=>	$data["email"],
 			'office_tel'	=>	$data["office_num"],
 			'fax'			=>	$data["fax"],
-			'address'		=>	$data["branch_name"],
+			'address'		=>	$data["address"],
 			'user_id'		=>	$this->getUserId(),
 			'last_mod_date'	=>	new Zend_Date(),
 			'status'		=>	$data["status"],
@@ -38,7 +38,7 @@ class Branch_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 				'email'			=>	$data["email"],
 				'office_tel'	=>	$data["office_num"],
 				'fax'			=>	$data["fax"],
-				'address'		=>	$data["branch_name"],
+				'address'		=>	$data["address"],
 				'user_id'		=>	$this->getUserId(),
 				'last_mod_date'	=>	new Zend_Date(),
 				'status'		=>	$data["status"],
@@ -84,9 +84,10 @@ class Branch_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 	
 	public function getBranchById($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT
+		$sql = "SELECT 
 				  s.`id`,
-				  s.name`,
+				  s.`code`,
+				  s.`name`,
 				  s.`contact`,
 				  s.`phone`,
 				  s.`fax`,
@@ -94,9 +95,10 @@ class Branch_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 				  s.`email`,
 				  s.`office_tel`,
 				  s.`address`,
-				  s.`status`
+				  s.`status` 
 				FROM
-				  `tb_sublocation` AS s WHERE s.id = $id";
+				  `tb_sublocation` AS s 
+				WHERE s.id = $id";
 		return $db->fetchRow($sql);
 	}
 }

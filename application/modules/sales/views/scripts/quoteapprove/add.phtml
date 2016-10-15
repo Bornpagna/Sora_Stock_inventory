@@ -1,13 +1,14 @@
 <?php 
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-<title><?php echo $tr->translate("SALEDETAIL_REPORT");?></title>
+<title><?php echo $tr->translate("QUOTATION_APPROVED");?></title>
+<marquee style="margin-top:-20px;" behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">យើងត្រូវការ ការយល់ព្រមពី ប្រធានផ្នែកលក់ ឫអ្នកដែលមានសិទ្ធ ដើម្បី <span style="color:red;">បង្កើតជាតារាងតម្លៃលក់(Sale Quotation)</span> / We need approval from sale manager or person who have permission to <span style="color:red;">issue Sale Quotation</span> ! </marquee>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("SALEORDER_APPROVED");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("QUOTATION_APPROVED");?>
 				</div>
 						<div class="btn-group pull-right">
 							 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">
@@ -53,7 +54,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		                	<td width="60%" valign="top">
 		                		<ul>
 		                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'">សូរ៉ា ហាងលក់សម្ភារៈអគ្គិសនី</li>
-		                			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("INVOICE_TITLE");?></li>
+		                			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'"><?php echo $tr->translate("QUOTATION_APPROVED");?></li>
 		                		</ul>
 		                	</td>
 		                    <td width="20%"></td>
@@ -86,8 +87,8 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		                					<div style="padding-left: 10px;width:100%; background: #244456;display: block;color:#fff;margin-top: 10px;">&nbsp;&nbsp;Official Invoice</div>
 		                					<ul class='pur_info'>
 			                					<li style="text-align: left;"><strong>Branch Name : </strong><?php echo $this->product[0]['branch_name'];?></li>
-			                					<li style="text-align: left;"><strong>No.: </strong><?php echo $this->product[0]['sale_no'];?></li>
-			                					<li style="text-align: left;"><strong>Order Date : </strong><?php echo date("d/m/Y",strtotime($this->product[0]['date_sold']));?></li>
+			                					<li style="text-align: left;"><strong>No.: </strong><?php echo $this->product[0]['quoat_number'];?></li>
+			                					<li style="text-align: left;"><strong><?php echo $tr->translate("QUOATATION_DATE");?> : </strong><?php echo date("d/m/Y",strtotime($this->product[0]['date_order']));?></li>
 		                						<li style="text-align: left;"><strong>Sale Person : </strong><?php echo $this->product[0]['staff_name'];?></li>
 		                					</ul>
 		                				</td>
@@ -100,8 +101,6 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		    </tr>
 		    <tr>
 		    	<td id="exportExcel"><br />
-		    	 <?php $url_submit = $this->url(array('module'=>'sales','controller'=>'invoiceapprove','action'=>'approved'));?>
-		              <form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
 		            <table border="1" style="border-collapse:collapse;border:1px solid #000; font-size:10px;" width="100%" cellspacing="0">
 		                 <tbody>
 		                 <tr align="center" style="font-weight:bold; line-height: 20px;  padding:1px 0px; white-space: nowrap;border:1px solid #fff;border-bottom: 1px solid #000 !important; ">
@@ -136,25 +135,20 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
                     <tr>
 						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
 						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL");?></td>
-						<td >&nbsp;&nbsp;<input type="text" name="net_total" id="net_total" value="<?php echo number_format($this->product[0]['net_total'],2);?>"   ><?php echo number_format($this->product[0]['net_total'],2);?></td>
+						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['all_total'],2);?></td>
 					</tr>
 					<tr>
 						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
 						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("DISCOUNT");?></td>
-						<td >&nbsp;&nbsp;<input type="text" name="discount" id="discount" value="<?php echo number_format($this->product[0]['discount_real'],2);?>"   ><?php echo number_format($this->product[0]['discount_real'],2);?></td>
+						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['discount_real'],2);?></td>
 					</tr>
 					<tr>
 						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("DEPOSIT");?>​</td>
-						<td ><input type="text" name="deposit" id="deposit" value="0" required="1"  style="text-align:right;border:1px solid red;" onkeyup="calculateBalance();" class="form-control"></td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL_AMOUNT");?>​</td>
+						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['net_total'],2);?></td>
 					</tr>
 					<tr>
-						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("BALANCE");?>​</td>
-						<td ><input type="text" name="balance" id="balance" value="0" required="1"  style="text-align:right;border:1px solid red;" onkeyup="calculateBalance();" class="form-control"></td>
-					</tr>
-					<tr>
-						<td colspan="7" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;">
+						<td colspan="7" style="border:1px solid #fff;border-top:1px solid #000;">
 						<strong  style="font-size: 13px;"><u>ខសន្យា និងលក្ខណ៏ទូទៅ / General Term & Conditions</u></strong>
 							<style>
 								ul.termcodition li{ line-height: 20px;list-style-type: none; font-size: 12px;}
@@ -170,34 +164,42 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		            </tbody>
 		           </table>
 		              <br>
-		             <table align="center" width="100%" >
+		              <?php $url_submit = $this->url(array('module'=>'sales','controller'=>'quoteapprove','action'=>'approved'));?>
+		              <form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
+			              <table align="center" width="100%">
 							   <tbody>
 							   <tr style="font-size: 11px;">
-							        <td style="text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap; width:40%;">
-							        	<strong style="text-align: center;"><?php echo $tr->translate("APPROVED_STATUS");?> : <?php echo $this->product[0]['approval_status'];?> / <?php echo $tr->translate("APPROVED_BY");?> : <?php echo $this->product[0]['approved_by'];?></strong>
-							        </td>
+							        <td style="text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;"></td>
 							        <td></td>
-							        <td style="width:40%;font-family:'Khmer MEF2';white-space: nowrap;">
+							        <td style="width:20%;font-family:'Khmer MEF2';white-space: nowrap;">
 							        <select name="approved_name" id="approved_name" class="form-control select2me">
-							        	<option value="1">Approved</option>
-							        	<option value="2">Not Approved</option>
-							        </select><input type="hidden" name="id" id="id" value="<?php echo $this->product[0]['id'];?>" />
+							        	<option value="1" <?php if($this->product[0]['is_approved']==1)echo"selected"; ?>>Approved</option>
+							        	<option value="2" <?php if($this->product[0]['is_approved']==2)echo"selected"; ?>>Not Approved</option>
+							        </select>
 							        </td>
+							        <td><input type="hidden" name="id" id="id" value="<?php echo $this->product[0]['id'];?>" /></td>
+							        <td style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;"></td>
 							   </tr>
 							   <tr style="font-size: 11px; height: 75px;">
-							        <td valign="bottom" style="text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;"><span  class="form-control" style="border: 2px dotted #ddd; height: 100px;"><?php echo $this->product[0]['approved_note'];?></span></td>
+							        <td valign="bottom" style="width:30%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;"></td>
 							        <td></td>
-							        <td valign="bottom" style="text-align:center; font-family:'Khmer MEF2';white-space: nowrap;"><textarea name="app_remark" id="app_remark" class="form-control" rows="3" cols="80" placeHolder="Approval Comment Here"></textarea></td>
+							        <td valign="bottom" style="width:40%;text-align:center; font-family:'Khmer MEF2';white-space: nowrap;"><textarea name="app_remark" id="app_remark" class="form-control" rows="3" cols="80" placeHolder="Approval Comment Here"><?php echo $this->product[0]['approval_note'];?></textarea></td>
+							        <td></td>
+							        <td valign="bottom" style="text-align:center;font-family:'Khmer MEF2';white-space: nowrap;"></td>
 							   </tr>
 							   <tr style="font-size: 11px;">
-							        <td style="text-align:center;white-space: nowrap;"><strong>ថ្ងៃខែយល់ព្រម /Approved Date</strong><span name="app_date" id="app_date" class="form-control form-control-inline" ><?php echo empty($this->product[0]['approved_date'])?"":date("d/m/Y",strtotime($this->product[0]['approved_date']));?></span></td>
+							        <td style="text-align:center;white-space: nowrap;"></td>
 							        <td></td>
 							        <td style="text-align:center;white-space: nowrap;"><strong>ថ្ងៃខែយល់ព្រម /Approved Date</strong><input name="app_date" id="app_date" value="<?php echo date("m/d/Y");?>" class="form-control form-control-inline date-picker" /></td>
+							        <td></td>
+							        <td style="text-align:center;white-space: nowrap;"></td>
 							   </tr>
 							   <tr style="font-size: 11px; height: 60px">
-							        <td style="text-align:center;white-space: nowrap;"><a href="<?php echo $this->baseUrl();?>/sales/invoiceapprove/"><button type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></td>
+							        <td style="text-align:center;white-space: nowrap;"><a href="<?php echo $this->baseUrl();?>/sales/quoteapprove/"><button type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></td>
 							        <td></td>
-							        <td style="text-align:center;white-space: nowrap;"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKEINVOICE")?></button></td>
+							        <td style="text-align:center;white-space: nowrap;"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-close"></i> <?php echo $tr->translate("SAVE_APPROVED")?></button></td>
+							        <td></td>
+							        <td style="text-align:center;white-space: nowrap;"></td>
 							   </tr>
 							</tbody>
 						</table>

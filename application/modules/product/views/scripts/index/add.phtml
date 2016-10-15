@@ -2,14 +2,12 @@
 defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $form=$this->form;
-
-
 	$url_submit =  $this->url(array('module'=>'product','controller'=>'index','action'=>'add'));
     $url_cencel =  $this->url(array('module'=>'product','controller'=>'index','action'=>'index'));
     $url_check =  $this->url(array('module'=>'product','controller'=>'index','action'=>'check'));
     $url_new = $this->url(array('module'=>'product','controller'=>'index','action'=>'add'));
 ?>						 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  -->
 <title><?php echo $tr->translate("ADD_NEW_ITEM");?></title>
 <body>
 	<form class="form-horizontal" method="post" action="<?php echo $url_submit;?>" >				
@@ -22,7 +20,7 @@ $form=$this->form;
 							<div class="tools">
 									<button type="submit" name="save_new" class="btn green"><?php echo $tr->translate("SAVE_NEW");?></button>
 									<button type="submit" name="save_close" class="btn default"><?php echo $tr->translate("SAVE_CLOSE");?></button>
-									<a href="<?php echo $url_cencel;?>"></a><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
+									<a href="<?php echo $url_cencel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
 								<!--<a href="javascript:;" class="collapse">
 								</a>
 								<a href="#portlet-config" data-toggle="modal" class="config">

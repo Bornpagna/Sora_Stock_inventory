@@ -3,24 +3,24 @@
 class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 {
 	//use for add purchase order 29-13
-	protected $_name="tb_sales_order";
+	protected $_name="tb_invoice";
 	function getAllSaleOrder($search){
 			$db= $this->getAdapter();
 			$sql=" SELECT id,
 			(SELECT name FROM `tb_sublocation` WHERE tb_sublocation.id = branch_id AND status=1 AND name!='' LIMIT 1) AS branch_name,
 			(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=tb_sales_order.customer_id LIMIT 1 ) AS customer_name,
 			(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =tb_sales_order.saleagent_id  LIMIT 1 ) AS staff_name,
-			sale_no,date_sold,
+			sale_no,date_sold,approved_date,
 			(SELECT symbal FROM `tb_currency` WHERE id= currency_id limit 1) As curr_name,
 			all_total,discount_value,net_total,
 			(SELECT name_en FROM `tb_view` WHERE type=7 AND key_code=is_approved LIMIT 1),
 			(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1),
 			(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = user_mod) AS user_name
-			FROM `tb_sales_order` ";
+			FROM `tb_sales_order` WHERE is_toinvocie=1 ";
 			
 			$from_date =(empty($search['start_date']))? '1': " date_sold >= '".$search['start_date']." 00:00:00'";
 			$to_date = (empty($search['end_date']))? '1': " date_sold <= '".$search['end_date']." 23:59:59'";
-			$where = " WHERE ".$from_date." AND ".$to_date;
+			$where = " AND ".$from_date." AND ".$to_date;
 			if(!empty($search['text_search'])){
 				$s_where = array();
 				$s_search = trim(addslashes($search['text_search']));
@@ -41,7 +41,7 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$order=" ORDER BY id DESC ";
 			return $db->fetchAll($sql.$where.$order);
 	}
-	public function addSaleOrderApproved($data)
+	public function addInvoiceApproved($data)
 	{
 		$db = $this->getAdapter();
 		$db->beginTransaction();
@@ -51,20 +51,34 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
 			$dbc=new Application_Model_DbTable_DbGlobal();
-			$pending=3;
-			if($data['approved_name']==2){$pending=1;}
-			$arr=array(				
-					'is_approved'	=> $data['approved_name'],
-					'approved_userid'=> $GetUserId,
-					'approved_note'	=> $data['app_remark'],
-					'approved_date'	=> date("Y-m-d",strtotime($data['app_date'])),
-					'pending_status'=>$pending,					
-			);
-			$this->_name="tb_sales_order";
-			$where = " id = ".$data["id"];
-			$sale_id = $this->update($arr, $where);
+// 			$pending=3;
+// 			if($data['approved_name']==2){$pending=1;}
+// 			$arr=array(				
+// 					'is_approved'	=> $data['approved_name'],
+// 					'approved_userid'=> $GetUserId,
+// 					'approved_note'	=> $data['app_remark'],
+// 					'approved_date'	=> date("Y-m-d",strtotime($data['app_date'])),
+// 					'pending_status'=>$pending,					
+// 			);
+// 			$this->_name="tb_sales_order";
+// 			$where = " id = ".$data["id"];
+// 			$sale_id = $this->update($arr, $where);
 			
 			unset($info_purchase_order);
+				$arr = array(
+						'approved_note'=>$data['app_remark'],
+						'sale_id'=>$data['id'],
+						'invoice_no'=>$data['invoice_no'],
+						'invoice_date'=>date("Y-m-d",strtotime($data['app_date'])),
+						'approved_date'=>date("Y-m-d",strtotime($data['app_date'])),
+						'user_id'=>$GetUserId,
+						'sub_total'=>$data['net_total'],
+						'discount'=>$data['discount'],
+						'paid_amount'=>$data['deposit'],
+						'balance'=>$data['balance'],
+						'is_approved'=>$data['approved_name'],
+						);		
+				$this->insert($arr);		
 // 			 $ids=explode(',',$data['identity_term']);
 // 			 if(!empty($data['identity_term'])){
 // 				 foreach ($ids as $i)
@@ -87,6 +101,7 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$db->rollBack();
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
+			echo $err;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}

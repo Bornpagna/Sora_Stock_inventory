@@ -1,21 +1,21 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $url_submit =  $this->url(array('module'=>'product','controller'=>'adjust','action'=>'add'));
-$url_cancel =  $this->url(array('module'=>'product','controller'=>'AdjustStock','action'=>'index'));
+$url_cancel =  $this->url(array('module'=>'product','controller'=>'adjust','action'=>'index'));
 $url_getcurrentitem =  $this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'get-current-quantity'));
 $url_getProduct =  $this->url(array('module'=>'product','controller'=>'adjust','action'=>'get-product'));
 $formFilter = $this->formFilter;
 ?>
 <title><?php echo $tr->translate("ADJUST_STOCK");?></title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
 <br/>
 <div class="portlet box blue">
 		<div class="portlet-title">
 			<div class="caption">
 					<i class="fa fa-globe"></i><?php echo $tr->translate("MENU_PRODUCT_ADVANCE_INDEX");?>
 			</div>
-			<div class="caption" style="float:right">
-					<?php $formList = new Application_Form_Frmlist(); //echo $formList->showAddBuntton($url_new);?>
+			<div class="tools">
+				<a href="<?php echo $url_cancel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
 			</div>
 		</div>
 		<div class="portlet-body form">
@@ -45,6 +45,7 @@ $formFilter = $this->formFilter;
 												<th><?php echo $tr->translate("CURRENT_QTY");?></th>
 												<th><?php echo $tr->translate("NEW_QTY");?></th>
 												<th><?php echo $tr->translate("DIFFERENCE_QTY");?></th>
+												<th><?php echo $tr->translate("REMARK");?></th>
 												<th><?php echo $tr->translate("ACTION");?></th>
 											</tr>
 										</thead>

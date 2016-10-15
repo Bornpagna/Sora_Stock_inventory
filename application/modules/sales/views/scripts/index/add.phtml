@@ -372,11 +372,9 @@ function getProductPrice(product_id){
   }
 }
 $( document ).ready(function() {
-	alert("ready loaded");
+	//alert("ready loaded");
 });
-$( window ).load(function() {
-    alert("load loaded");
-}); 
+
 function getItemOrder(){
 	item_ids=$("#add_item").val();
 	$('#add_item').val('').trigger("liszt:updated");
@@ -551,26 +549,20 @@ function AddLocation(){
 		     AddNewLocation(true);
 	  }	
 }
-<?php $url_code =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'check-purchaseno')); ?>
-function CheckPOInvoice(){
-				pur_no=$("#txt_order").val();
-				if(pur_no=="" || pur_no ==null){
+<?php $url_code =  $this->url(array('module'=>'sales','controller'=>'index','action'=>'getsonumber')); ?>
+function getsaleOrderNumber(){
+	branch_id=$("#branch_id").val();
+				if(branch_id=="" || branch_id ==null || branch_id==-1){
 					return false;
 				}
 				else{
 				$.ajax({
 						url:"<?php echo $url_code;?>",
 						type:"post",
-						data:{'pur_no':pur_no},
+						data:{'branch_id':branch_id},
 						success: function(data){
-							value = $.parseJSON(data);
-							if(value=="" || value==null){
-							}
-							else{
-								alert("Invoice number is exist !");
-								$("#txt_order").css("border-color","red");
-								$("#txt_order").val("");
-							}
+							so = $.parseJSON(data);
+							$("#txt_order").val(so);
 						},
 						error:function(){
 						}

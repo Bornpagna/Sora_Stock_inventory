@@ -2,6 +2,7 @@
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
 <title><?php echo $tr->translate("SALEDETAIL_REPORT");?></title>
+<marquee style="margin-top:-20px;" behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">យើងត្រូវការ ការយល់ព្រមពី ប្រធានផ្នែកលក់ ឫអ្នកដែលមានសិទ្ធ ដើម្បី <span style="color:red;">បង្កើតជាវិក័យបត្រ</span> / We need approval from sale manager or person who have permission to <span style="color:red;">issue invoice</span> ! </marquee>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
@@ -146,6 +147,20 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL_AMOUNT");?>​</td>
 						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['paid'],2);?></td>
 					</tr>
+					<tr>
+						<td colspan="7" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;">
+						<strong  style="font-size: 13px;"><u>ខសន្យា និងលក្ខណ៏ទូទៅ / General Term & Conditions</u></strong>
+							<style>
+								ul.termcodition li{ line-height: 20px;list-style-type: none; font-size: 12px;}
+							</style>
+							<ul class="termcodition">
+							<?php if(!empty($this->rscondition))foreach ($this->rscondition as $key =>$rst){ ?>
+								<li style="text-align: left;"><?php echo $key+1;echo "-".$rst['con_khmer'];?></li>
+								<li style="text-align: left;"><?php echo $rst['con_english'];?></li>
+							<?php }?>
+							</ul>
+						</td>
+					</tr>
 		            </tbody>
 		           </table>
 		              <br>
@@ -154,7 +169,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 			              <table align="center" width="100%">
 							   <tbody>
 							   <tr style="font-size: 11px;">
-							        <td style="text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;">អ្នកកាន់ឃ្លាំង  / Stock Controller</td>
+							        <td style="text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;"></td>
 							        <td></td>
 							        <td style="width:20%;font-family:'Khmer MEF2';white-space: nowrap;">
 							        <select name="approved_name" id="approved_name" class="form-control select2me">
@@ -163,24 +178,24 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 							        </select>
 							        </td>
 							        <td><input type="hidden" name="id" id="id" value="<?php echo $this->product[0]['id'];?>" /></td>
-							        <td style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">អតិថិជន  /​ Customer</td>
+							        <td style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;"></td>
 							   </tr>
 							   <tr style="font-size: 11px; height: 75px;">
-							        <td valign="bottom" style="width:30%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;">ឈ្មោះ  /Name--------------------------</td>
+							        <td valign="bottom" style="width:30%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;"></td>
 							        <td></td>
 							        <td valign="bottom" style="width:40%;text-align:center; font-family:'Khmer MEF2';white-space: nowrap;"><textarea name="app_remark" id="app_remark" class="form-control" rows="3" cols="80" placeHolder="Approval Comment Here"><?php echo $this->product[0]['approved_note'];?></textarea></td>
 							        <td></td>
-							        <td valign="bottom" style="text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">ឈ្មោះ  /Name--------------------------</td>
+							        <td valign="bottom" style="text-align:center;font-family:'Khmer MEF2';white-space: nowrap;"></td>
 							   </tr>
 							   <tr style="font-size: 11px;">
 							        <td style="text-align:center;white-space: nowrap;"></td>
 							        <td></td>
 							        <td style="text-align:center;white-space: nowrap;"><strong>ថ្ងៃខែយល់ព្រម /Approved Date</strong><input name="app_date" id="app_date" value="<?php echo date("m/d/Y");?>" class="form-control form-control-inline date-picker" /></td>
 							        <td></td>
-							        <td style="text-align:center;white-space: nowrap;">ថ្ងៃ  /Date:----------------------------------</td>
+							        <td style="text-align:center;white-space: nowrap;"></td>
 							   </tr>
 							   <tr style="font-size: 11px; height: 60px">
-							        <td style="text-align:center;white-space: nowrap;"><a href="<?php echo $this->baseUrl();?>/sales/quoatation/"><button type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></td>
+							        <td style="text-align:center;white-space: nowrap;"><a href="<?php echo $this->baseUrl();?>/sales/salesapprove/"><button type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></td>
 							        <td></td>
 							        <td style="text-align:center;white-space: nowrap;"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-close"></i> <?php echo $tr->translate("SAVE_APPROVED")?></button></td>
 							        <td></td>

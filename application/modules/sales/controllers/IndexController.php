@@ -42,6 +42,7 @@ class Sales_IndexController extends Zend_Controller_Action
 		$list = new Application_Form_Frmlist();
 		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,
 				'sale_no'=>$link,'approval'=>$link1));
+		
 		$formFilter = new Sales_Form_FrmSearch();
 		$this->view->formFilter = $formFilter;
 	    Application_Model_Decorator::removeAllDecorator($formFilter);
@@ -86,6 +87,8 @@ class Sales_IndexController extends Zend_Controller_Action
 		if(empty($query->getProductSaleById($id))){
 			$this->_redirect("/sales/salesapprove");
 		}
+		$db= new Application_Model_DbTable_DbGlobal();
+		$this->view->rscondition = $db->getTermConditionById(1, $id);
 	}
 	public function getproductpriceAction(){
 		if($this->getRequest()->isPost()){

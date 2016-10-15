@@ -44,6 +44,8 @@ public function init()
 		));
 		$this->addElement($startDateElement);
 		
+// 		Application_Form_DateTimePicker::addDateField(array('start_date','end_date'));
+		
 		$options="";
 		$sql = "SELECT id, name FROM tb_sublocation WHERE name!='' ";
 		$sql.=" ORDER BY id DESC ";

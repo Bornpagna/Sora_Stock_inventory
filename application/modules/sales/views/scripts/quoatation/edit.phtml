@@ -1,9 +1,9 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$form=$this->form_sale;
-	$url_submit = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'));
+	$url_submit = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'edit'));
 	$url_cancel = $this->url(array('module'=>'sales','controller'=>'index','action'=>'index'));
-	$url_new = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'));
+	$url_new = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'edit'));
 ?>
 <title><?php echo $tr->translate("QUOTATION_ORDER");?></title>
 <div class="row">
@@ -26,6 +26,7 @@
 								<div class="input-icon right">
 									<i class="fa"></i>
 									<?php echo $form->getElement("customer_id");?>
+									<?php echo $form->getElement("id");?>
 								</div>
 							</div>
 							<label class="control-label col-md-2"><?php echo $tr->translate("BRANCH_NAME");?><span class="required">
@@ -80,7 +81,15 @@
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
-									<?php echo $form->getElement("remark");?>
+									<?php echo $form->getElement("txt_order");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("SALE_ORDER");?><span class="required">
+								 </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $form->getElement("so_number");?>
 								</div>
 							</div>
 						</div>
@@ -190,29 +199,24 @@
 					  </div>
 						<div class="form-group">
 							<div class="col-md-4">
-								<a href="<?php echo $this->baseUrl();?>/sales/quoatation/"><button type="button" class="btn blue btn-block btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
+									<a href="<?php echo $this->baseUrl();?>/sales/quoatation/"><button type="button" class="btn blue btn-block btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
 							</div>
 							<div class="col-md-4">
-								<div class="input-icon right">
-									<button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-close"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
+									<button type="submit" name="btnsavenew" class="btn blue btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("GO_EDIT")?> </button>
+							</div>
+							<div class="col-md-4">
+								<div class="input-icon right" <?php if($this->rsq['is_approved']!=1){echo"style='display:none;'";}?> >
+									<button type="submit" name="makeso" class="btn blue btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKESO")?> </button>
 								</div>
 							</div>
-							<div class="col-md-4">
-								<button type="submit" name="btnsavenew" class="btn yellow btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKESALEORDER")?> </button>
-							</div>
 						</div>
-						
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
-<!-- end new product -->
 <script>
-
-        
-		
 var index5 = 0;num=0;
 var option5 = '<?php echo $this->items; ?>';
 var baseUrl = '<?php echo BASE_URL; ?>';
@@ -251,14 +255,83 @@ function addRow(item_id) {
 	} else {$('#identity').val(index5);}
 	$("#item_id_"+index5).val(item_id);
 	getQtyById(index5);
-	$('#global_disc').val(0);
+	//getProductPrice(item_id,index5);
 	$("#paid").val(0);
 	$("#row_order_0").remove();
 }
+$( document ).ready(function() {
+	initList();
+	initListTermcondition();
+});
 function initList() {
+	index5=0;
+	var template;
+	var option5 = '<?php echo $this->items;?>';
+	<?php if(!empty($this->rs)) {
+		foreach($this->rs AS $i=>$r){?>
+	index5++; 
+	index=index+1;
+	template='<tr id="row_order_'+index5+'" style="height:33px;">';
+	var inp = '';
+	if(index5 == 1) {
+		template+='<td >&nbsp;</td>';
+	} else {
+		template+='<td ><img onClick="deleteRecord('+index5+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+	}
+	template+='<td  width="1%">'+index5+'</td>';
+	template+='<td width="30%"><select class="form-control select2me" Onchange="ShowPopupProduct('+ index5 + ');" id="item_id_'+index5+'" name="item_id_'+index5+'" >'+option5+'<option></option></select>'+inp+'</td>';
+	template+='<td><input style="background:#f5e1e1;" readonly type="text" class="form-control" id="current_qty'+index5+'" name="current_qty'+index5+'" /></td>';
+	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
+	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
+	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
+	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" required="1" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
+	template+='<td  width="5%"><input type="text" onkeyup="calculatePrice('+index5+')" value="0" id="dis_value'+index5+'" name="dis_value'+index5+'" class="form-control" /><input type="hidden" id="olddis_value_'+index5+'" name="olddis_value_'+index5+'"/><input type="hidden" readonly="readonly" class="input70px" id="real-value'+index5+'" name="real-value'+index5+'" /></td>';
+	template+='<td ><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
+	template+="</tr>";
+	$('#table_order').append(template);
 	
-}
+	$("#item_id_"+index5).val("<?php echo $r['pro_id'];?>");
+	$("#qty"+index5).val("<?php echo $r['qty_order'];?>");
+	$("#qty_unit_"+index5).val("<?php echo $r['qty_unit'];?>");
+	
+	$("#qty_per_unit_"+index5).val("<?php echo $r['qty_detail'];?>");
+	$("#total"+index5).val("<?php echo $r['sub_total'];?>");
+	$("#price"+index5).val("<?php echo $r['price'];?>");
+	$("#oldprice_"+index5).val("<?php echo $r['price'];?>");
+	$("#dis_value"+index5).val("<?php echo $r['disc_value'];?>");
+	
+	getQtyById(index5);
+	//getProductPrice(item_id,index5);
 
+	if($('#identity').val()!="") {
+		var identity = $('#identity').val();
+		$('#identity').val(identity+','+index5);
+	} else {$('#identity').val(index5);}
+	
+	$("#paid").val(0);
+	$("#row_order_0").remove();
+		<?php } }?>
+}
+function initListTermcondition() {
+	index1=0;
+	term_option = '<?php echo $this->term_opt; ?>';
+	<?php if(!empty($this->rsterm)) {
+		foreach($this->rsterm AS $i=>$rt){?>
+		index1++; 
+		template='<tr id="row_term_'+index1+'" style="height:33px;">';
+	    template+='<td width="20px" ><img onClick="deleteTermRecord('+index1+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+		template+='<td  width="2%">'+index1+'</td>';
+		template+='<td><select class="form-control select2me" id="termid_'+index1+'" name="termid_'+index1+'" >'+term_option+'<option></option></select></td>';
+		template+="</tr>";
+		$('#table_termcondition').append(template);
+		if($('#identity_term').val()!="") {
+			var identity = $('#identity_term').val();
+			$('#identity_term').val(identity+','+index1);
+		} else {$('#identity_term').val(index1);}
+		$("#termid_"+index1).val("<?php echo $rt['condition_id'];?>");
+		$("#row_term_0").remove();	
+	<?php } }?>
+}
 term_option = '<?php echo $this->term_opt; ?>';
 index1 = 0;
 function addtermcondition(t_id){
@@ -273,7 +346,7 @@ function addtermcondition(t_id){
 		var identity = $('#identity_term').val();
 		$('#identity_term').val(identity+','+index1);
 	} else {$('#identity_term').val(index1);}
-	$("#termid"+index1).val(item_id);
+	$("#termid_"+index1).val(t_id);
 	$("#row_term_0").remove();	
 }
 <?php $url_qty =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'getqtybyid')); ?>
@@ -300,7 +373,8 @@ function getQtyById(index){//use
 							detail_qty =  $("#qty_per_unit_"+index).val();
 							total_qty = parseFloat(main_qty) + parseFloat(detail_qty/(item_qty.qty_perunit));
 							$("#qty"+index).val(total_qty.toFixed(3));
-							calculatePrice(index);
+							//calculatePrice(index);
+							getProductPrice(item_id,index);
 						},
 						error:function(e){
 							alert(e);
@@ -309,10 +383,11 @@ function getQtyById(index){//use
 			}
 }
 <?php $url_price =  $this->url(array('module'=>'sales','controller'=>'index','action'=>'getproductprice')); ?>
-function getProductPrice(product_id){
+function getProductPrice(product_id,recordid){
 	customer_id=$("#customer_id").val();
 	if(customer_id==null || customer_id=="" || customer_id==-1){
 		alert("Please Select Customer First !");
+		return fale;
 		$("#customer_id").focus();
 	}else{
 		$.ajax({
@@ -321,8 +396,9 @@ function getProductPrice(product_id){
 			data:{'customer_id':customer_id,'product_id':product_id},
 			success: function(data){
 				data = $.parseJSON(data);			
-				$("#price"+product_id).val(data.price);
-				//if(data.price==''){}
+				$("#price"+recordid).val(data.price);
+				$("#oldprice_"+recordid).val(data.price);
+				calculatePrice(recordid);
 			},
 			error:function(e){
 				alert(e);
@@ -330,16 +406,21 @@ function getProductPrice(product_id){
 	});
   }
 }
+
 function getItemOrder(){
 	item_ids=$("#add_item").val();
 	$('#add_item').val('').trigger("liszt:updated");
 	if(item_ids==-1){
 		return false;
 	}
-	addRow(item_ids);
-	getProductPrice(item_ids);
+	customer_id=$("#customer_id").val();
+	if(customer_id==null || customer_id=="" || customer_id==-1){
+			alert("Please Select Customer First !");
+			return fale;
+	}else{
+		addRow(item_ids);
+	}
 	$("#add_item").val("");
-	
 }
 function getTermItem(){
 	termid=$("#term_item").val();
@@ -408,7 +489,6 @@ function totalQty(index){
 	getQtyById(index);
 }
 function calculatePrice(index) {
-	
 	var qty = $('#qty'+index).val();
 	var price = $('#price'+index).val();
 	var total = price * qty;
@@ -441,19 +521,20 @@ function calculatePrice(index) {
 		}
 }
  var record_id = 1;
-function ShowPopupProduct(product_id){
-	item_id = $("#item_id_"+ product_id).val();
-	record_id = product_id;
+function ShowPopupProduct(recordid){
+	//alert(recordid+"ddddd");
+	item_id = $("#item_id_"+ recordid).val();
+	record_id = recordid;
 	if(item_id==-1){
 		$('#productpopup').modal('show');
 	}
 	else{
-		getQtyById(product_id);
-		getProductPrice(product_id);
+		getQtyById(recordid);
+		//getProductPrice(item_id,recordid);
 	}
 }
 function getCustomerInfo(){
-	v_id = $("#v_name").val();
+	v_id = $("#customer_id").val();
 	if(v_id==-1){
 		$('#dialogvendor').modal('show');
 	}
@@ -485,37 +566,33 @@ function addNewVendor(){
         }
     });
 }
-function AddLocation(){
-	var location_id= $("#LocationId").val();
+function filterBranch(){
+	var location_id= $("#branch_id").val();
 	if(location_id==-1){
-		     AddNewLocation(true);
-	  }	
+		    // AddNewLocation(true);
+	  }	else{
+		  getQuotenumber();
+		  }
 }
-<?php $url_code =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'check-purchaseno')); ?>
-function CheckPOInvoice(){
-				pur_no=$("#txt_order").val();
-				if(pur_no=="" || pur_no ==null){
+<?php $url_code =  $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'getquoteno')); ?>
+function getQuotenumber(){
+	$("#txt_order").val("");
+				branch_id=$("#branch_id").val();
+				if(branch_id=="" || branch_id ==null || branch_id==-1){
 					return false;
 				}
 				else{
 				$.ajax({
 						url:"<?php echo $url_code;?>",
 						type:"post",
-						data:{'pur_no':pur_no},
+						data:{'branch_id':branch_id},
 						success: function(data){
-							value = $.parseJSON(data);
-							if(value=="" || value==null){
-							}
-							else{
-								alert("Invoice number is exist !");
-								$("#txt_order").css("border-color","red");
-								$("#txt_order").val("");
-							}
+							qo = $.parseJSON(data);
+							$("#txt_order").val(qo);
 						},
 						error:function(){
 						}
 					});
 				}	
-} 
-  
+}
 </script>	

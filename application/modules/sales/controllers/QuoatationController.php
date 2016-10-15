@@ -1,5 +1,5 @@
 <?php
-class Sales_QuoatationController extends Zend_Controller_Action
+class Sales_quoatationController extends Zend_Controller_Action
 {	
 	
     public function init()
@@ -34,7 +34,7 @@ class Sales_QuoatationController extends Zend_Controller_Action
 		$rows = $db->getAllQuoatation($search);
 		$list = new Application_Form_Frmlist();
 		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","QUOTATION_NO", "ORDER_DATE",
-				"CURRNECY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","BY_USER");
+				"CURRNECY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","BY_USER");
 		$link=array(
 				'module'=>'sales','controller'=>'quoatation','action'=>'edit',
 		);
@@ -55,12 +55,11 @@ class Sales_QuoatationController extends Zend_Controller_Action
 					$dbq->addQuoatationOrder($data);
 				}
 				Application_Form_FrmMessage::message("INSERT_SUCESS");
-				if(!empty($data['btnsavenew'])){
+				if(empty($data['btnsavenew'])){
 					Application_Form_FrmMessage::redirectUrl("/sales/quoatation");
 				}
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message('INSERT_FAIL');
-				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
@@ -77,35 +76,43 @@ class Sales_QuoatationController extends Zend_Controller_Action
 	function editAction(){
 		$dbq = new Sales_Model_DbTable_Dbquoatation();
 		$db = new Application_Model_DbTable_DbGlobal();
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			try {
-				
 				if(!empty($data['identity'])){
-					$dbq->addQuoatationOrder($data);
+					$dbq->updateQoutation($data);
 				}
-				Application_Form_FrmMessage::message("INSERT_SUCESS");
-				if(!empty($data['btnsavenew'])){
-					Application_Form_FrmMessage::redirectUrl("/sales/quoatation");
-				}
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/quoatation");
 			}catch (Exception $e){
-				Application_Form_FrmMessage::message('INSERT_FAIL');
+				Application_Form_FrmMessage::message('UPDATE_FAIL');
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
-		$this->view->rs = $dbq->getQuotationItemDetailid($id);
-		print_r( $dbq->getQuotationItemDetailid($id));
-		
 		$row = $dbq->getQuotationItemById($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/quoatation");
+		}		
+		$this->view->rs = $dbq->getQuotationItemDetailid($id);
+		$this->view->rsterm = $dbq->getTermconditionByid($id);
+		
 		$frm_purchase = new Sales_Form_FrmQuoatation();
 		$form_sale = $frm_purchase->SaleOrder($row);
 		Application_Model_Decorator::removeAllDecorator($form_sale);
 		$this->view->form_sale = $form_sale;
-			
+		$this->view->rsq = $row;
 		$items = new Application_Model_GlobalClass();
 		$this->view->items = $items->getProductOption();
 		$this->view->term_opt = $db->getAllTermCondition(1);
-	}		
+	}	
+	function getquotenoAction(){
+		if($this->getRequest()->isPost()){
+			$post=$this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$qo = $db->getQuoationNumber($post['branch_id']);
+			echo Zend_Json::encode($qo);
+			exit();
+		}
+	}
 }

@@ -38,10 +38,12 @@ public function init()
 			$db = new Branch_Model_DbTable_DbBranch();
 			$db->add($data);
 			if($data['save_close']){
-				$this->_redirect('/branch/index');
+				Application_Form_FrmMessage::message("INSER_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/branch/index');
 			}
 			else{
-				$this->_redirect('/branch/index/add');
+				Application_Form_FrmMessage::message("INSER_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/branch/index/add');
 			}
 		}
 		$formFilter = new Branch_Form_FrmBranch();
@@ -63,10 +65,12 @@ public function init()
 			$db = new Branch_Model_DbTable_DbBranch();
 			$db->edit($data);
 			if($data['save_close']){
-				$this->_redirect('/branch/index');
+				Application_Form_FrmMessage::message("EDIT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/branch/index');
 			}
 			else{
-				$this->_redirect('/branch/index/add');
+				Application_Form_FrmMessage::message("EDIT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/branch/index/add');
 			}
 		}
 		$rs = $db->getBranchById($id);

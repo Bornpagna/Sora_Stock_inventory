@@ -53,7 +53,8 @@ class Sales_Model_DbTable_Dbsalesapprov extends Zend_Db_Table_Abstract
 			$dbc=new Application_Model_DbTable_DbGlobal();
 			$pending=3;
 			if($data['approved_name']==2){$pending=1;}
-			$arr=array(				
+			$arr=array(		
+					'is_toinvocie'=>1,		
 					'is_approved'	=> $data['approved_name'],
 					'approved_userid'=> $GetUserId,
 					'approved_note'	=> $data['app_remark'],

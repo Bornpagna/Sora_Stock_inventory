@@ -1,5 +1,6 @@
 <?php 
 	$url_new = $this->url(array('module'=>'measure','controller'=>'index','action'=>'add',));
+	$url_cancel = $this->url(array('module'=>'measure','controller'=>'index','action'=>'index',));
 	$url_delete = $this->url(array('module'=>'measure','controller'=>'index','action'=>'delete',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->frmAdd;
@@ -11,7 +12,9 @@
 			<div class="caption">
 					<i class="fa fa-globe"></i><?php echo $tr->translate("ADD_MEASURE");?>
 			</div>
-			
+			<div class="tools">
+				<a href="<?php echo $url_cancel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
+			</div>
 		</div>
 		<div class="portlet-body form">
 			<form class="form-horizontal" method="post" action="<?php echo $url_new;?>" >

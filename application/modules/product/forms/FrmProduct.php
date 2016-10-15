@@ -34,7 +34,7 @@ class Product_Form_FrmProduct extends Zend_Form
 		$barcode = new Zend_Form_Element_Text("barcode");
 		$barcode->setAttribs(array(
 				'class'=>'form-control',
-				'required'=>'required'
+				//'required'=>'required'
 		));
 		 
 		$opt = array(''=>$tr->translate("SELECT_BRAND"));

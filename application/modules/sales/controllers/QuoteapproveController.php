@@ -1,5 +1,5 @@
 <?php
-class Sales_SalesapproveController extends Zend_Controller_Action
+class Sales_QuoteapproveController extends Zend_Controller_Action
 {	
 	
     public function init()
@@ -28,12 +28,12 @@ class Sales_SalesapproveController extends Zend_Controller_Action
 					'customer_id'=>-1,
 					);
 		}
-		$db = new Sales_Model_DbTable_Dbsalesapprov();
+		$db = new Sales_Model_DbTable_Dbquoteapprov();
 		$rows = $db->getAllSaleOrder($search);
-		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","SALE_NO", "ORDER_DATE",
-				"CURRNECY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","BY_USER");
+		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","QUOTATION_NO", "QUOATATION_DATE",
+				"CURRENTCY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","STATUS_TOSO","BY_USER");
 		$link=array(
-				'module'=>'sales','controller'=>'salesapprove','action'=>'add',
+				'module'=>'sales','controller'=>'quoteapprove','action'=>'add',
 		);
 		
 		$list = new Application_Form_Frmlist();
@@ -47,30 +47,32 @@ class Sales_SalesapproveController extends Zend_Controller_Action
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			try {
-				$dbq = new Sales_Model_DbTable_Dbsalesapprov();				
-				$dbq->addSaleOrderApproved($data);
-				Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/salesapprove");
-				$this->_redirect("/sales/salesapprove");
+				$dbq = new Sales_Model_DbTable_Dbquoteapprov();				
+				$dbq->addQuoateOrderApproved($data);
+				Application_Form_FrmMessage::message("APPROVED_SUCESS");
+				Application_Form_FrmMessage::redirectUrl("/sales/quoteapprove/index");
 			}catch (Exception $e){
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-				Application_Form_FrmMessage::Sucessfull("APPROVED_FAIL", "/sales/salesapprove");
+				Application_Form_FrmMessage::Sucessfull("APPROVED_FAIL", "/sales/quoteapprove/index");
 			}
 		}
-		
+		Application_Form_FrmMessage::message("APPROVED_SUCESS");
+		Application_Form_FrmMessage::redirectUrl("/sales/quoteapprove/index");
 	}	
 	function addAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
     	if(empty($id)){
-    		$this->_redirect("/sales/salesapprove");
+    		$this->_redirect("/sales/quoteapprove");
     	}
-    	$query = new Sales_Model_DbTable_Dbsalesapprov();
+    	
+    	$query = new Sales_Model_DbTable_Dbquoteapprov();
     	$this->view->product =  $query->getProductSaleById($id);
     	if(empty($query->getProductSaleById($id))){
-    		$this->_redirect("/sales/salesapprove");
+    		$this->_redirect("/sales/quoteapprove");
     	}
     	$db= new Application_Model_DbTable_DbGlobal();
-    	$this->view->rscondition = $db->getTermConditionById(2, $id);
+    	$this->view->rscondition = $db->getTermConditionById(1, $id);
 	}	
 	
 }

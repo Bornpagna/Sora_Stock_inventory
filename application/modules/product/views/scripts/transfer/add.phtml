@@ -7,7 +7,7 @@ $url_getProduct =  $this->url(array('module'=>'product','controller'=>'adjust','
 $formFilter = $this->formFilter;
 ?>
 <title><?php echo $tr->translate("TRANSFER_STOCK");?></title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
 <br/>
 <div class="portlet box blue">
 		<div class="portlet-title">
@@ -18,7 +18,7 @@ $formFilter = $this->formFilter;
 					<?php $formList = new Application_Form_Frmlist(); //echo $formList->showAddBuntton($url_new);?>
 			</div>
 			<div class="tools">
-				<a href="<?php echo $url_cancel;?>"></a><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
+				<a href="<?php echo $url_cancel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
 			</div>
 		</div>
 		<div class="portlet-body form">

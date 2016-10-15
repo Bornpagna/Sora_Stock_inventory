@@ -1,9 +1,9 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$form=$this->form_sale;
-	$url_submit = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'edit'));
+	$url_submit = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'));
 	$url_cancel = $this->url(array('module'=>'sales','controller'=>'index','action'=>'index'));
-	$url_new = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'edit'));
+	$url_new = $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'add'));
 ?>
 <title><?php echo $tr->translate("QUOTATION_ORDER");?></title>
 <div class="row">
@@ -65,7 +65,7 @@
 								<div class="input-icon right">
 									<?php echo $form->getElement("txt_order"); ?></div>
 							</div>
-							<label class="control-label col-md-2"><?php echo $tr->translate("CURRNECY_TYPE");?><span class="required">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CURRENTCY_TYPE");?><span class="required">
 								 </span>
 							</label>
 							<div class="col-md-4">
@@ -208,7 +208,6 @@
 		</div>
 	</div>
 </div>
-<!-- end new product -->
 <script>
 var index5 = 0;num=0;
 var option5 = '<?php echo $this->items; ?>';
@@ -248,11 +247,8 @@ function addRow(item_id) {
 	} else {$('#identity').val(index5);}
 	$("#item_id_"+index5).val(item_id);
 	getQtyById(index5);
-		//$("#dis-value"+index5).val(0);
-		//$('#dis_value').val(0);
-		$('#global_disc').val(0);
-		//getCurrentPrice(index5);
-		$("#paid").val(0);
+	//getProductPrice(item_id,index5);
+	$("#paid").val(0);
 	$("#row_order_0").remove();
 }
 term_option = '<?php echo $this->term_opt; ?>';
@@ -269,7 +265,7 @@ function addtermcondition(t_id){
 		var identity = $('#identity_term').val();
 		$('#identity_term').val(identity+','+index1);
 	} else {$('#identity_term').val(index1);}
-	$("#termid"+index1).val(item_id);
+	$("#termid_"+index1).val(t_id);
 	$("#row_term_0").remove();	
 }
 <?php $url_qty =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'getqtybyid')); ?>
@@ -296,7 +292,8 @@ function getQtyById(index){//use
 							detail_qty =  $("#qty_per_unit_"+index).val();
 							total_qty = parseFloat(main_qty) + parseFloat(detail_qty/(item_qty.qty_perunit));
 							$("#qty"+index).val(total_qty.toFixed(3));
-							calculatePrice(index);
+							//calculatePrice(index);
+							getProductPrice(item_id,index);
 						},
 						error:function(e){
 							alert(e);
@@ -305,10 +302,11 @@ function getQtyById(index){//use
 			}
 }
 <?php $url_price =  $this->url(array('module'=>'sales','controller'=>'index','action'=>'getproductprice')); ?>
-function getProductPrice(product_id){
+function getProductPrice(product_id,recordid){
 	customer_id=$("#customer_id").val();
 	if(customer_id==null || customer_id=="" || customer_id==-1){
 		alert("Please Select Customer First !");
+		return fale;
 		$("#customer_id").focus();
 	}else{
 		$.ajax({
@@ -317,8 +315,10 @@ function getProductPrice(product_id){
 			data:{'customer_id':customer_id,'product_id':product_id},
 			success: function(data){
 				data = $.parseJSON(data);			
-				$("#price"+product_id).val(data.price);
-				//if(data.price==''){}
+				$("#price"+recordid).val(data.price);
+				$("#oldprice_"+recordid).val(data.price);
+				
+				calculatePrice(recordid);
 			},
 			error:function(e){
 				alert(e);
@@ -326,22 +326,26 @@ function getProductPrice(product_id){
 	});
   }
 }
-$( document ).ready(function() {
+/*$( document ).ready(function() {
 	alert("ready loaded");
 });
 $( window ).load(function() {
     alert("load loaded");
-}); 
+});*/ 
 function getItemOrder(){
 	item_ids=$("#add_item").val();
 	$('#add_item').val('').trigger("liszt:updated");
 	if(item_ids==-1){
 		return false;
 	}
-	addRow(item_ids);
-	getProductPrice(item_ids);
+	customer_id=$("#customer_id").val();
+	if(customer_id==null || customer_id=="" || customer_id==-1){
+			alert("Please Select Customer First !");
+			return fale;
+	}else{
+		addRow(item_ids);
+	}
 	$("#add_item").val("");
-	
 }
 function getTermItem(){
 	termid=$("#term_item").val();
@@ -442,19 +446,20 @@ function calculatePrice(index) {
 		}
 }
  var record_id = 1;
-function ShowPopupProduct(product_id){
-	item_id = $("#item_id_"+ product_id).val();
-	record_id = product_id;
+function ShowPopupProduct(recordid){
+	//alert(recordid+"ddddd");
+	item_id = $("#item_id_"+ recordid).val();
+	record_id = recordid;
 	if(item_id==-1){
 		$('#productpopup').modal('show');
 	}
 	else{
-		getQtyById(product_id);
-		getProductPrice(product_id);
+		getQtyById(recordid);
+		//getProductPrice(item_id,recordid);
 	}
 }
 function getCustomerInfo(){
-	v_id = $("#v_name").val();
+	v_id = $("#customer_id").val();
 	if(v_id==-1){
 		$('#dialogvendor').modal('show');
 	}
@@ -486,32 +491,30 @@ function addNewVendor(){
         }
     });
 }
-function AddLocation(){
-	var location_id= $("#LocationId").val();
+function filterBranch(){
+	var location_id= $("#branch_id").val();
 	if(location_id==-1){
-		     AddNewLocation(true);
-	  }	
+		    // AddNewLocation(true);
+	  }	else{
+		  getQuotenumber();
+		  }
 }
-<?php $url_code =  $this->url(array('module'=>'purchase','controller'=>'index','action'=>'check-purchaseno')); ?>
-function CheckPOInvoice(){
-				pur_no=$("#txt_order").val();
-				if(pur_no=="" || pur_no ==null){
+
+<?php $url_code =  $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'getquoteno')); ?>
+function getQuotenumber(){
+	$("#txt_order").val("");
+				branch_id=$("#branch_id").val();
+				if(branch_id=="" || branch_id ==null || branch_id==-1){
 					return false;
 				}
 				else{
 				$.ajax({
 						url:"<?php echo $url_code;?>",
 						type:"post",
-						data:{'pur_no':pur_no},
+						data:{'branch_id':branch_id},
 						success: function(data){
-							value = $.parseJSON(data);
-							if(value=="" || value==null){
-							}
-							else{
-								alert("Invoice number is exist !");
-								$("#txt_order").css("border-color","red");
-								$("#txt_order").val("");
-							}
+							qo = $.parseJSON(data);
+							$("#txt_order").val(qo);
 						},
 						error:function(){
 						}

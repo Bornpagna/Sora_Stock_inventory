@@ -30,10 +30,10 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
 		}
 		$db = new Sales_Model_DbTable_Dbinvoiceapprove();
 		$rows = $db->getAllSaleOrder($search);
-		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","SALE_NO", "ORDER_DATE",
+		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","SALE_NO", "ORDER_DATE","SALE_APP_DATE",
 				"CURRNECY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","BY_USER");
 		$link=array(
-				'module'=>'sales','controller'=>'salesapprove','action'=>'add',
+				'module'=>'sales','controller'=>'invoiceapprove','action'=>'add',
 		);
 		
 		$list = new Application_Form_Frmlist();
@@ -48,13 +48,15 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
 			$data = $this->getRequest()->getPost();
 			try {
 				$dbq = new Sales_Model_DbTable_Dbinvoiceapprove();				
-				$dbq->addSaleOrderApproved($data);
-				Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/salesapprove");
-				$this->_redirect("/sales/salesapprove");
+				$dbq->addInvoiceApproved($data);
+				Application_Form_FrmMessage::message("APPROVED_SUCESS");
+				//Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/invoiceapprove");
+				//$this->_redirect("/sales/invoiceapprove");
 			}catch (Exception $e){
 				$err =$e->getMessage();
+				echo $err;exit();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-				Application_Form_FrmMessage::Sucessfull("APPROVED_FAIL", "/sales/salesapprove");
+				Application_Form_FrmMessage::Sucessfull("APPROVED_FAIL", "/sales/invoiceapprove");
 			}
 		}
 		
@@ -69,5 +71,7 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
     	if(empty($query->getProductSaleById($id))){
     		$this->_redirect("/sales/salesapprove");
     	}
+    	$db= new Application_Model_DbTable_DbGlobal();
+    	$this->view->rscondition = $db->getTermConditionById(1, $id);
 	}	
 }

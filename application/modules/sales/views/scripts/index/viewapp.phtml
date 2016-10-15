@@ -146,6 +146,20 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL_AMOUNT");?>​</td>
 						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['paid'],2);?></td>
 					</tr>
+					<tr>
+						<td colspan="7" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;">
+						<strong  style="font-size: 13px;"><u>ខសន្យា និងលក្ខណ៏ទូទៅ / General Term & Conditions</u></strong>
+							<style>
+								ul.termcodition li{ line-height: 20px;list-style-type: none; font-size: 12px;}
+							</style>
+							<ul class="termcodition">
+							<?php if(!empty($this->rscondition))foreach ($this->rscondition as $key =>$rst){ ?>
+								<li style="text-align: left;"><?php echo $key+1;echo "-".$rst['con_khmer'];?></li>
+								<li style="text-align: left;"><?php echo $rst['con_english'];?></li>
+							<?php }?>
+							</ul>
+						</td>
+					</tr>
 		            </tbody>
 		           </table>
 		              <br>
