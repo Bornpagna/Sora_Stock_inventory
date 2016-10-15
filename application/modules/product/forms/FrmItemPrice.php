@@ -1,6 +1,29 @@
 <?php 
 class Product_Form_FrmItemPrice extends Zend_Form
 {
+	function add($data=null){
+		$db=new Application_Model_DbTable_DbGlobal();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$name= new Zend_Form_Element_Text("price_name");
+		$name->setAttribs(array('class'=>'form-control'));
+		
+		$remark = new Zend_Form_Element_Text('price_decs');
+		$remark->setAttribs(array('class'=>'form-control'));
+		
+		$optionsStatus=array(1=>$tr->translate("ACTIVE"),0=>$tr->translate('DEACTIVE'));
+		$statusElement = new Zend_Form_Element_Select('status');
+		$statusElement->setAttribs(array('class'=>'form-control'));
+		$statusElement->setMultiOptions($optionsStatus);
+		
+		if($data!=""){
+			$name->setValue($data["name"]);
+			$remark->setValue($data["desc"]);
+			$statusElement->setValue($data["status"]);
+		}
+		
+		return $this->addElements(array($name,$remark,$statusElement));
+		
+	}
 	public function AddItemPrice($data=null) {
 		$db=new Application_Model_DbTable_DbGlobal();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -48,12 +71,12 @@ class Product_Form_FrmItemPrice extends Zend_Form
 		if($data != null) {
 			
 			$idElement = new Zend_Form_Element_Hidden('type_id');
-			$idElement->setValue($data["type_id"]);
+			$idElement->setValue($data["id"]);
 			$this->addElement($idElement);
 			
-			$priceElement->setValue($data["price_type_name"]);
+			$priceElement->setValue($data["name"]);
 			$price_descElement->setValue($data["desc"]);
-			$statusElement->setValue($data["public"]);
+			$statusElement->setValue($data["status"]);
 		}
 		return $this;
 	}
@@ -129,6 +152,7 @@ class Product_Form_FrmItemPrice extends Zend_Form
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$priceElement = new Zend_Form_Element_Text('price_type');
+		$priceElement->setAttribs(array('class'=>"form-control"));
 		$pricevalue = $request->getParam("price_type");
 		$priceElement->setValue($pricevalue);
 		$this->addElement($priceElement);
@@ -136,6 +160,7 @@ class Product_Form_FrmItemPrice extends Zend_Form
 		$optionsStatus=array(1=>$tr->translate("ACTIVE"),0=>$tr->translate("DEACTIVE"));
 		$statusElement = new Zend_Form_Element_Select('status');
 		$statusvalue = $request->getParam("status");
+		$statusElement->setAttribs(array('class'=>"form-control"));
 		$statusElement->setValue($statusvalue);
 		$statusElement->setMultiOptions($optionsStatus);
 		$this->addElement($statusElement);
