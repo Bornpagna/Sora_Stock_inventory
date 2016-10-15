@@ -58,38 +58,6 @@
 <link rel="shortcut icon" href="favicon.ico"/>
 
 </head>
-<body class="page-header-fixed page-quick-sidebar-over-content ">
-<!-- BEGIN HEADER -->
-<div class="page-header navbar navbar-fixed-top">
-	<!-- BEGIN HEADER INNER -->
-	<?php echo $this->render('head-toolbar.phtml')?>
-</div>
-<!-- END HEADER -->
-<div class="clearfix">
-</div>
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-	<?php echo $this->render('left-toolbar.phtml')?>
-	<!-- BEGIN CONTENT -->
-	<div class="page-content-wrapper" >
-		<div class="page-content" style="height: auto;" >
-			<?php echo $this->layout()->content; ?>
-		</div>
-	</div>
-	<?php // echo $this->render('rigth.phtml')?>
-</div>
-
-
-<!-- END CONTAINER -->
-<!-- BEGIN FOOTER -->
-<div class="page-footer">
-	<div class="page-footer-inner">
-		 2014 &copy; Metronic by keenthemes.
-	</div>
-	<div class="scroll-to-top">
-		<i class="icon-arrow-up"></i>
-	</div>
-</div>
 <!--[if lt IE 9]>
 
 <script src="<?php echo $this->baseUrl()?>/assets/global/plugins/respond.min.js"></script>
@@ -111,12 +79,15 @@
 <link type="text/css" rel="stylesheet" media="screen" href="<?php echo BASE_URL;?>/js/validation/validationEngine.jquery.css">
 <script src="<?php echo BASE_URL;?>/js/validation/languages/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?php echo BASE_URL;?>/js/validation/jquery.validationEngine.js" type="text/javascript" charset="utf-8"></script>
-<link type="text/css" href="<?php echo BASE_URL;?>/css/custom-theme/jquery-ui-1.8.20.custom.css" rel="stylesheet" />		
-<script type="text/javascript" src="<?php echo BASE_URL;?>/js/jquery-ui-1.8.20.custom.min.js"></script>
+<link type="text/css" href="<?php echo BASE_URL;?>/css/custom-theme/jquery-ui-1.8.20.custom.css" rel="stylesheet" />
+
+<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery.tablesorter.js"> </script>
+<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery.tablesorter.pager.js"> </script>			
+<script type="text/javascript" src="<?php echo $this->baseUrl();?>/js/jquery-ui-1.8.20.custom.min.js"></script>
 	<script type="text/javascript">
-			$(function(){		
+			/*$(function(){		
 				$("#frm").validationEngine();
-			});
+			});*/
 </script>
 		
 <!-- END CORE PLUGINS -->
@@ -134,7 +105,7 @@
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 
 <script type="text/javascript" src="<?php echo $this->baseUrl()?>/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="<?php echo $this->baseUrl()?>/assets/global/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+<!-- <script type="text/javascript" src="<?php //echo $this->baseUrl()?>/assets/global/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script> -->
 <script type="text/javascript" src="<?php echo $this->baseUrl()?>/assets/global/plugins/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->baseUrl()?>/assets/global/plugins/datatables/extensions/Scroller/js/dataTables.scroller.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->baseUrl()?>/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
@@ -181,25 +152,58 @@
 
 <!-- END PAGE LEVEL SCRIPTS -->
 	
-	
+	<body class="page-header-fixed page-quick-sidebar-over-content ">
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+	<!-- BEGIN HEADER INNER -->
+	<?php echo $this->render('head-toolbar.phtml')?>
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+	<?php echo $this->render('left-toolbar.phtml')?>
+	<!-- BEGIN CONTENT -->
+	<div class="page-content-wrapper" >
+		<div class="page-content" style="height: auto;" >
+			<?php echo $this->layout()->content; ?>
+		</div>
+	</div>
+	<?php // echo $this->render('rigth.phtml')?>
+</div>
+
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+	<div class="page-footer-inner">
+		
+	</div>
+	<div class="scroll-to-top">
+		<i class="icon-arrow-up"></i>
+	</div>
+</div>
+</body>
 	
 <!-- Validate Control's form -->
 
 <script>
-        jQuery(document).ready(function() { 
-            //alert(1);
-           Metronic.init(); // init metronic core components
-		   Layout.init(); // init current layout
-		   QuickSidebar.init(); // init quick sidebar
-		   Demo.init(); // init demo features
-           ComponentsFormTools.init();
-           ComponentsPickers.init();
-           TableManaged.init();
-           //TableAdvanced.init();
-           FormValidation.init();
-           displayPhoto();
-           FormFileUpload.init();
-        });   
+$(document).ready(function() { 
+   
+    Metronic.init(); // init metronic core components
+	Layout.init(); // init current layout
+	QuickSidebar.init(); // init quick sidebar
+	Demo.init(); // init demo features
+    ComponentsFormTools.init();
+    ComponentsPickers.init();
+    TableManaged.init();
+    TableAdvanced.init();
+    FormValidation.init();
+    displayPhoto();
+    FormFileUpload.init();
+ }); 
+ 
+          
     </script>
 <!-- END PAGE LEVEL SCRIPTS -->
 
