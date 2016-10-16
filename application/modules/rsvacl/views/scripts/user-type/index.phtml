@@ -1,0 +1,29 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<title><?php echo $tr->translate("USER_TYPE_CAP");?></title>
+<?php 
+	$url_new = $this->url(array(
+		'module'=>'rsvAcl',
+		'controller'=>'user-type',
+		'action'=>'add-user-type',
+	));
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<div class="right" style="padding:8px">
+	<div class="btn" align="right">
+		<a href="<?php echo $url_new;?>">
+			<img alt="" src="<?php echo BASE_URL?>/images/icon/add.png">
+			<?php echo $tr->translate('ADD');?>
+		</a>
+	</div>
+	<div class="">
+		<div class="head_form">
+			<?php echo $tr->translate('LIST_OF_CAP')." ".($tr->translate('USER_TYPE_CAP'))." ".$tr->translate('IN_SYSTEM_CAP');?>
+		</div>
+		<div class="contain_form">
+			<?php echo  $this->form;?>
+		</div>
+	</div>
+</div>
+	
