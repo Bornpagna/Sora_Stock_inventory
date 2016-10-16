@@ -12,7 +12,7 @@ class Sales_Model_DbTable_DbTermCondiction extends Zend_Db_Table_Abstract
 		$arr = array(
 				'con_khmer'		=>	$data["name_kh"],
 				'con_english'	=>	$data["name_en"],
-				//'date'			=>	new Zend_Date(),
+				'type'			=>	$data["type"],
 				'status'		=>	$data["status"],
 		);
 		//$this->_name = "tb_category";
@@ -23,7 +23,7 @@ class Sales_Model_DbTable_DbTermCondiction extends Zend_Db_Table_Abstract
 		$arr = array(
 				'con_khmer'		=>	$data["name_kh"],
 				'con_english'	=>	$data["name_en"],
-				//'date'			=>	new Zend_Date(),
+				'type'			=>	$data["type"],
 				'status'		=>	$data["status"],
 		);
 		//$this->_name = "tb_category";
