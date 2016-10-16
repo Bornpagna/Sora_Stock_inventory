@@ -40,8 +40,8 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 		$acc_no = $db->fetchOne($sql);
 		$new_acc_no= (int)$acc_no+1;
 		$acc_no= strlen((int)$acc_no+1);
-		$pre = $prefix."-SA-";
-		for($i = $acc_no;$i<3;$i++){
+		$pre = $prefix."EID";
+		for($i = $acc_no;$i<4;$i++){
 			$pre.='0';
 		}
 		return $pre.$new_acc_no;
@@ -151,7 +151,6 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 		$db->beginTransaction();
 		$userName=$session_user->user_name;
 		$GetUserId= $session_user->user_id;
-	print_r($data);
 		try{
 			// photo image
 			$part= PUBLIC_PATH.'/images/stuffdocument/';

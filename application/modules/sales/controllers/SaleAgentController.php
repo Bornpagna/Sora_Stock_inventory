@@ -81,7 +81,7 @@ public function init()
     			$this->_redirect("sales/saleagent/index");
     		}
     		else{
-    			$this->_redirect("sales/sale-agent/index");    		}
+    			$this->_redirect("sales/saleagent/index");    		}
     	}
     	// show form with value
     	$sql="SELECT * FROM tb_sale_agent where id=".$id;

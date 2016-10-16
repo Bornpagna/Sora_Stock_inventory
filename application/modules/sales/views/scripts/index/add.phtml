@@ -284,6 +284,7 @@ function addRow(item_id) {
 		$('#identity').val(identity+','+index5);
 	} else {$('#identity').val(index5);}
 	$("#item_id_"+index5).val(item_id);
+	$("#item_id_"+index5).select2();
 	getQtyById(index5);
 	if(free.checked){
 		$("#pricefree_"+index5).attr({checked:'checked'});  

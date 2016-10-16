@@ -8,7 +8,7 @@ class Rsvacl_UserController extends Zend_Controller_Action
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     }
 
-    public function IndexAction()
+    public function indexAction()
     {
 		$formfilter=new Rsvacl_Form_FrmUser();
 		$this->view->formfilter=$formfilter;

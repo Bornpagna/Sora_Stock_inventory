@@ -27,7 +27,7 @@ public function Formcustomer($data=null) {
     	$this->addElement($mainStockElement);
     	
     	$rows= $db->getGlobalDb('SELECT id,name FROM `tb_price_type` WHERE name!="" AND status=1');
-    	$opt= array('1'=>'Default Location','-1'=>'Add New Location');
+    	$opt= array('1'=>'Default Location');
     	if(count($rows) > 0) {
     		foreach($rows as $readStock) $opt[$readStock['id']]=$readStock['name'];
     	}
@@ -85,10 +85,10 @@ public function Formcustomer($data=null) {
     	$credit_tearm->setAttribs(array("class"=>"form-control"));
     	$this->addElement($credit_tearm);
     	
-    	$rows= $db->getGlobalDb('SELECT v.id,v.`name_en`,v.`name_kh` FROM `tb_view` AS v WHERE v.`status`=1 AND v.`name_en`!="" AND v.`type`=6');
+    	$rows= $db->getGlobalDb('SELECT v.key_code,v.`name_en`,v.`name_kh` FROM `tb_view` AS v WHERE v.`status`=1 AND v.`name_en`!="" AND v.`type`=6');
     	$opt= array('-1'=>'Add New Customer Type');
     	if(count($rows) > 0) {
-    		foreach($rows as $readStock) $opt[$readStock['id']]=$readStock['name_en'];
+    		foreach($rows as $readStock) $opt[$readStock['key_code']]=$readStock['name_en'];
     	}
     	$customer_type = new Zend_Form_Element_Select('customer_type');
     	$customer_type->setAttribs(array('class'=>'form-control select2me'));

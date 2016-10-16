@@ -60,8 +60,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   	$acc_no = $db->fetchOne($sql);
   	$new_acc_no= (int)$acc_no+1;
   	$acc_no= strlen((int)$acc_no+1);
-  	$pre = "PR-";
-  	for($i = $acc_no;$i<3;$i++){
+  	$pre = "PID";
+  	for($i = $acc_no;$i<5;$i++){
   		$pre.='0';
   	}
   	return $pre.$new_acc_no;
