@@ -21,10 +21,17 @@ public function Formterm($data=null) {
     	$status->setMultiOptions($opt);
     	$this->addElement($status);
     	
+    	$opt_type= array('1'=>'Quotation',2=>'Sale',3=>"Invoice",4=>"Delivery Note");
+    	$type = new Zend_Form_Element_Select('type');
+    	$type->setAttribs(array('class'=>'validate[required] form-control select2me'));
+    	$type->setMultiOptions($opt_type);
+    	$this->addElement($type);
+    	 
     	if($data != null) {
     	   $name_en->setValue($data["con_english"]);
     	   $name_kh->setValue($data["con_khmer"]);
     	   $status->setValue($data["status"]);
+    	   $type->setValue($data["type"]);
     	}
     	return $this;
 	}
