@@ -91,7 +91,7 @@ class Product_Form_FrmOther extends Zend_Form
 		$status_search->setAttribs(array(
 				'class'=>'form-control',));
 		$_status_opt = array(
-				-1=>$tr->translate("ALL"),
+				''=>$tr->translate("ALL"),
 				1=>$tr->translate("ACTIVE"),
 				0=>$tr->translate("DACTIVE"));
 		$status_search->setMultiOptions($_status_opt);

@@ -29,6 +29,7 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
     	if($data["type"]!=""){
     		$where.=' AND v.type='.$data["type"];
     	}
+    	echo $sql.$where;
     	return $db->fetchAll($sql.$where);
     }
     function getViewById($id){
