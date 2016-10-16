@@ -194,11 +194,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 							        <td></td>
 							        <td style="text-align:center;white-space: nowrap;"><strong>ថ្ងៃខែយល់ព្រម /Approved Date</strong><input name="app_date" id="app_date" value="<?php echo date("m/d/Y");?>" class="form-control form-control-inline date-picker" /></td>
 							   </tr>
-							   <tr style="font-size: 11px; height: 60px">
-							        <td style="text-align:center;white-space: nowrap;"><a href="<?php echo $this->baseUrl();?>/sales/invoiceapprove/"><button type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></td>
-							        <td></td>
-							        <td style="text-align:center;white-space: nowrap;"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKEINVOICE")?></button></td>
-							   </tr>
+							  
 							</tbody>
 						</table>
 					</form>	
@@ -206,7 +202,16 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		    	</tr>
 			</tbody>
 		</table>
+		</div><!-- end print -->
+		<div class="form-group">
+				<label class="col-md-2 control-label"></label>
+				<div class="col-md-2"></div>
+				<label class="col-md-4 control-label"><a href="<?php echo $this->baseUrl();?>/sales/invoiceapprove/" ><button style="width:90%;" type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></label>
+				<div class="col-md-4"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKEINVOICE")?></button></div>
 		</div>
+		
+		
+		
 	  </div>		
 	</div>
 	 </div>

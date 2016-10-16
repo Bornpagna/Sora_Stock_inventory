@@ -1,5 +1,5 @@
 <?php 
-class RsvAcl_Form_FrmUserType extends Zend_Form
+class Rsvacl_Form_FrmUserType extends Zend_Form
 {
 
 	public function init()
@@ -14,7 +14,7 @@ class RsvAcl_Form_FrmUserType extends Zend_Form
     	
     	//Main parent of user type
 		$db=new Application_Model_DbTable_DbGlobal();
-		$rs=$db->getGlobalDb('SELECT user_type_id,user_type FROM rsv_acl_user_type');
+		$rs=$db->getGlobalDb('SELECT user_type_id,user_type FROM tb_acl_user_type');
 		$options=array(''=>'Please select');
 		foreach($rs as $read) $options[$read['user_type_id']]=$read['user_type'];
 		$user_type_id=new Zend_Form_Element_Select('parent_id');		

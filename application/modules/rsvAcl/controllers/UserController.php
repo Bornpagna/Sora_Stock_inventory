@@ -1,6 +1,6 @@
 <?php
 
-class RsvAcl_UserController extends Zend_Controller_Action
+class Rsvacl_UserController extends Zend_Controller_Action
 {
     public function init()
     {
@@ -10,12 +10,12 @@ class RsvAcl_UserController extends Zend_Controller_Action
 
     public function indexAction()
     {
-		$formfilter=new RsvAcl_Form_FrmUser();
+		$formfilter=new Rsvacl_Form_FrmUser();
 		$this->view->formfilter=$formfilter;
     	$where = "";
 		// action body
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-        $getUser = new RsvAcl_Model_DbTable_DbUser();
+        $getUser = new Rsvacl_Model_DbTable_DbUser();
               
         if($this->getRequest()->getParam('user_type_filter')){
 			$user_type_id = $this->getRequest()->getParam('user_type_filter');
@@ -55,7 +55,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
     {   
     	/* Initialize action controller here */
     	if($this->getRequest()->getParam('id')){
-    		$db = new RsvAcl_Model_DbTable_DbUser();
+    		$db = new Rsvacl_Model_DbTable_DbUser();
     		$user_id = $this->getRequest()->getParam('id');
     		$rs=$db->getUser($user_id);
     		$this->view->rs=$rs;
@@ -66,19 +66,19 @@ class RsvAcl_UserController extends Zend_Controller_Action
 	{		
 		if($this->getRequest()->isPost())
 		{
-			$db=new RsvAcl_Model_DbTable_DbUser();
+			$db=new Rsvacl_Model_DbTable_DbUser();
 			$post=$this->getRequest()->getPost();
 			if(!$db->ifUserExist($post['username']))
 			{
 				$id=$db->insertUser($post);
 				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-				$this->_redirect('/rsvAcl/user/index');
+				$this->_redirect('/rsvacl/user/index');
 			}
 			else {
 				Application_Form_FrmMessage::message('User had existed already');
 			}
 		}
-		$form= new RsvAcl_Form_FrmUser();
+		$form= new Rsvacl_Form_FrmUser();
 		$this->view->form=$form;
 		Application_Model_Decorator::removeAllDecorator($form);
 		
@@ -98,8 +98,8 @@ class RsvAcl_UserController extends Zend_Controller_Action
     {
     	$user_id=$this->getRequest()->getParam('id');
     	if(!$user_id)$user_id=0;
-   		$form = new RsvAcl_Form_FrmUser();
-    	$db = new RsvAcl_Model_DbTable_DbUser();
+   		$form = new Rsvacl_Form_FrmUser();
+    	$db = new Rsvacl_Model_DbTable_DbUser();
 		$rs = $db->getUserInfo('SELECT * FROM tb_acl_user where user_id='.$user_id);
 		Application_Model_Decorator::setForm($form, $rs);
 		
@@ -119,8 +119,8 @@ class RsvAcl_UserController extends Zend_Controller_Action
 			$db->updateUser($post,$user_id);
 // 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 // 			Application_Form_FrmMessage::message($tr->translate('ROW_AFFECTED'));
-// 			Application_Form_FrmMessage::redirector('/rsvAcl/user/index');
-			$this->_redirect('/rsvAcl/user/index');
+// 			Application_Form_FrmMessage::redirector('/Rsvacl/user/index');
+			$this->_redirect('/Rsvacl/user/index');
 		}
 		Application_Model_Decorator::removeAllDecorator($form);
 		
@@ -132,12 +132,12 @@ class RsvAcl_UserController extends Zend_Controller_Action
 		$session_user=new Zend_Session_Namespace('auth');
 		
 		if($session_user->user_id==$this->getRequest()->getParam('id') OR $session_user->level == 1){
-			$form = new RsvAcl_Form_FrmChgpwd();	
+			$form = new Rsvacl_Form_FrmChgpwd();	
 			$this->view->form=$form;
 			
 			if($this->getRequest()->isPost())
 			{
-				$db=new RsvAcl_Model_DbTable_DbUser();
+				$db=new Rsvacl_Model_DbTable_DbUser();
 				$user_id=$this->getRequest()->getParam('id');		
 				if(!$user_id) $user_id=0;			
 				$current_password=$this->getRequest()->getParam('current_password');
@@ -145,14 +145,14 @@ class RsvAcl_UserController extends Zend_Controller_Action
 				if($db->isValidCurrentPassword($user_id,$current_password)){ 
 					$db->changePassword($user_id, md5($password));	
 					Application_Form_FrmMessage::message('Password has been changed');
-					Application_Form_FrmMessage::redirector('/rsvacl/user/'.$user_id);
+					Application_Form_FrmMessage::redirector('/Rsvacl/user/'.$user_id);
 				}else{
 					Application_Form_FrmMessage::message('Invalid current password');
 				}
 			}		
 		}else{ 
 			Application_Form_FrmMessage::message('Access Denied!');
-		    Application_Form_FrmMessage::redirector('/rsvAcl');	
+		    Application_Form_FrmMessage::redirector('/Rsvacl');	
 		}
 		
 	}

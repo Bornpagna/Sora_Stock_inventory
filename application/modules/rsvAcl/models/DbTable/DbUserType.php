@@ -1,9 +1,9 @@
 <?php
 
-class RsvAcl_Model_DbTable_DbUserType extends Zend_Db_Table_Abstract
+class Rsvacl_Model_DbTable_DbUserType extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'rsv_acl_user_type';
+    protected $_name = 'tb_acl_user_type';
 	//function for getting record user_type by user_type_id
 	public function getUserType($user_id)
 	{

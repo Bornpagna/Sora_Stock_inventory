@@ -1,12 +1,12 @@
 <?php 
 
-class RsvAcl_Model_DbTable_DbAcl extends Zend_Db_Table_Abstract
+class Rsvacl_Model_DbTable_DbAcl extends Zend_Db_Table_Abstract
 {
-	protected  $_name = "rsv_acl_acl";
+	protected  $_name = "tb_acl_acl";
 	//get infomation of acl
 	public function getAclInfo($sql)
 	{
-		$db = RsvAcl_Model_DbTable_DbAcl::getAdapter();  		
+		$db = Rsvacl_Model_DbTable_DbAcl::getAdapter();  		
   		$stm=$db->query($sql);
   		$row=$stm->fetchAll();
   		if(!$row) return NULL;
@@ -74,16 +74,7 @@ class RsvAcl_Model_DbTable_DbAcl extends Zend_Db_Table_Abstract
 		return $row['user_id'];
 	}
 	//function retrieve record users by column 
-	public function getUsers($column)
-	{		
-		$sql='user_id not in(select user_id from pdbs_acl) AND status=1 ';	
-		$select=$this->select();
-		$select->from($this,$column)
-			   ->where($sql);
-		$row=$this->fetchAll($select);
-		if(!$row) return NULL;		
-		return $row->toArray();
-	}
+	
 	//function check actopm have exist
 	public function isActionExist($action)
 	{
@@ -123,7 +114,7 @@ class RsvAcl_Model_DbTable_DbAcl extends Zend_Db_Table_Abstract
 	 * */
 	public function isActionExists($module, $controller, $action) {
 		$db = RsvAcl_Model_DbTable_DbAcl::getAdapter();
-		$sql = 'SELECT * FROM rsv_acl_acl WHERE module="'.$module.'" && controller="'.$controller.'" && action="'.$action.'"';
+		$sql = 'SELECT * FROM tb_acl_acl WHERE module="'.$module.'" && controller="'.$controller.'" && action="'.$action.'"';
 		echo $sql; exit();
   		$stm=$db->query($sql);
   		$row=$stm->fetchAll();

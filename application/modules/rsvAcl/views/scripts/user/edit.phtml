@@ -1,6 +1,6 @@
 <?php 
 $cancel_url=$this->url(array(
-		'module'=>'rsvAcl',
+		'module'=>'rsvacl',
 		'controller'=>'user',
 		'action'=>'index',
 	));
@@ -32,7 +32,7 @@ table.user td{
 					<i class="icon-home"></i><?php echo $tr->translate("ADD_PURCAHSE_ORDER")?>
 				</div>
 				<div class="tools" >
-					<a href="<?php //echo $url_cancel;?>" class="btn btn-sm pull-right" style="color:white;">
+					<a href="<?php echo $cancel_url;?>" class="btn btn-sm pull-right" style="color:white;">
 					<i class="fa fa-undo"></i>	&nbsp;<?php echo $tr->translate("GO_BACK");?>
 					</a>
 				</div>

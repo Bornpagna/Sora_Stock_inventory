@@ -1,5 +1,5 @@
 <?php
-class RsvAcl_AclController extends Zend_Controller_Action
+class Rsvacl_AclController extends Zend_Controller_Action
 {
 	public function init()
     {
@@ -12,8 +12,8 @@ class RsvAcl_AclController extends Zend_Controller_Action
         // action body    	
     	//$this->_helper->layout()->disableLayout();
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-        $getAcl = new RsvAcl_Model_DbTable_DbAcl();
-        $aclQuery = "SELECT `acl_id`,`module`,`controller`,`action`,`status` FROM rsv_acl_acl";
+        $getAcl = new Rsvacl_Model_DbTable_DbAcl();
+        $aclQuery = "SELECT `acl_id`,`module`,`controller`,`action`,`status` FROM tb_acl_acl";
         $rows = $getAcl->getAclInfo($aclQuery);
         if($rows){        	
         	$imgnone='<img src="'.BASE_URL.'/images/icon/none.png"/>';
@@ -71,7 +71,7 @@ class RsvAcl_AclController extends Zend_Controller_Action
     	if(!$acl_id)$acl_id=0;  
    		$form = new RsvAcl_Form_FrmAcl();
     	$db = new RsvAcl_Model_DbTable_DbAcl();
-        $rs = $db->getUserInfo('SELECT * FROM rsv_acl_acl where acl_id='.$acl_id);
+        $rs = $db->getUserInfo('SELECT * FROM tb_acl_acl where acl_id='.$acl_id);
 		Application_Model_Decorator::setForm($form, $rs);
     	$this->view->form = $form;
     	$this->view->acl_id = $acl_id;

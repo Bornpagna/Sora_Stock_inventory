@@ -668,5 +668,41 @@ class report_indexController extends Zend_Controller_Action
 		Application_Model_Decorator::removeAllDecorator($form_search);
 		$this->view->form_transfer = $form_search;
 	}
+	/* Quotation*/
+	public function rptQuotationissueAction()//purchase report
+	{
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$data['start_date']=date("Y-m-d",strtotime($data['start_date']));
+			$data['end_date']=date("Y-m-d",strtotime($data['end_date']));
+		}else{
+			$data = array(
+					'text_search'=>'',
+					'start_date'=>date("Y-m-d"),
+					'end_date'=>date("Y-m-d"),
+					'suppliyer_id'=>0,
+					'branch_id'=>0,
+			);
+		}
+		$this->view->rssearch = $data;
+		$query = new report_Model_DbQuery();
+		$this->view->repurchase =  $query->getAllQuotation($data);
+		$frm = new Application_Form_FrmReport();
+	
+		$form_search=$frm->FrmReportPurchase($data);
+		Application_Model_Decorator::removeAllDecorator($form_search);
+		$this->view->form_purchase = $form_search;
+	}
+	public function quotadetailAction(){
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		if(empty($id)){
+			$this->_redirect("/report/index/rpt-quotationissue");
+		}
+		$query = new report_Model_DbQuery();
+		$this->view->product =  $query->getQuotationById($id);
+		if(empty($query->getQuotationById($id))){
+			$this->_redirect("/report/index/rpt-sales");
+		}
+	}
 	
 }

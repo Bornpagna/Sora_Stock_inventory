@@ -98,7 +98,7 @@ class Sales_CustomerController extends Zend_Controller_Action
 		if($this->getRequest()->isPost()){
 			try {
 			$post=$this->getRequest()->getPost();
-			$add_customer = new sales_Model_DbTable_DbCustomer();
+			$add_customer = new Sales_Model_DbTable_DbCustomer();
 			$customer_id = $add_customer->addNewCustomer($post);
 			$result = array('cus_id'=>$customer_id);
 			echo Zend_Json::encode($result);

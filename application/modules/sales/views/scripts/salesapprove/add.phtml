@@ -2,7 +2,7 @@
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
 <title><?php echo $tr->translate("SALEDETAIL_REPORT");?></title>
-<marquee style="margin-top:-20px;" behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">យើងត្រូវការ ការយល់ព្រមពី ប្រធានផ្នែកលក់ ឫអ្នកដែលមានសិទ្ធ ដើម្បី <span style="color:red;">បង្កើតជាវិក័យបត្រ</span> / We need approval from sale manager or person who have permission to <span style="color:red;">issue invoice</span> ! </marquee>
+<marquee style="margin-top:-20px;" behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">យើងត្រូវការ ការយល់ព្រមពី ផ្នែកគណនេយ្យ /ហិរញ្ញវត្ថុ ឫអ្នកដែលមានសិទ្ធ ដើម្បី <span style="color:red;">បង្កើតជាវិក័យបត្រ</span> / We need approval from  or person who have permission to <span style="color:red;">issue invoice</span> ! </marquee>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
@@ -194,13 +194,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 							        <td></td>
 							        <td style="text-align:center;white-space: nowrap;"></td>
 							   </tr>
-							   <tr style="font-size: 11px; height: 60px">
-							        <td style="text-align:center;white-space: nowrap;"><a href="<?php echo $this->baseUrl();?>/sales/salesapprove/"><button type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></td>
-							        <td></td>
-							        <td style="text-align:center;white-space: nowrap;"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-close"></i> <?php echo $tr->translate("SAVE_APPROVED")?></button></td>
-							        <td></td>
-							        <td style="text-align:center;white-space: nowrap;"></td>
-							   </tr>
+							  
 							</tbody>
 						</table>
 					</form>	
@@ -208,6 +202,12 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		    	</tr>
 			</tbody>
 		</table>
+		</div>
+		<div class="form-group">
+				<label class="col-md-2 control-label"></label>
+				<div class="col-md-2"></div>
+				<label class="col-md-4 control-label"><a href="<?php echo $this->baseUrl();?>/sales/salesapprove/" ><button style="width:90%;" type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></label>
+				<div class="col-md-4"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKEINVOICE")?></button></div>
 		</div>
 	  </div>		
 	</div>

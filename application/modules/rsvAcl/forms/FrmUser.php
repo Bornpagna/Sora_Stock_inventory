@@ -1,5 +1,5 @@
 <?php 
-class RsvAcl_Form_FrmUser extends Zend_Form
+class Rsvacl_Form_FrmUser extends Zend_Form
 {
 	public function init()
     {$tr = Application_Form_FrmLanguages::getCurrentlanguage();

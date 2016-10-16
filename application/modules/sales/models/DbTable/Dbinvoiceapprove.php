@@ -63,8 +63,15 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 // 			$this->_name="tb_sales_order";
 // 			$where = " id = ".$data["id"];
 // 			$sale_id = $this->update($arr, $where);
-			
-			unset($info_purchase_order);
+			if($data['approved_name']==1){
+				$this->_name="tb_sales_order";
+				$data_to = array(
+						'is_toinvocie'=>1
+				);
+				$where=" id = ".$data['id'];
+				$this->update($data_to, $where);
+			}
+			$this->_name="tb_invoice";
 				$arr = array(
 						'approved_note'=>$data['app_remark'],
 						'sale_id'=>$data['id'],

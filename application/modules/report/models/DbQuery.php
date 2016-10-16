@@ -656,6 +656,65 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		$rows = $db->fetchAll($sql);
 		return $rows;
 	}
+	public function getAllQuotation($search){//4
+		$db= $this->getAdapter();
+		$sql=" SELECT id,
+		(SELECT name FROM `tb_sublocation` WHERE tb_sublocation.id = s.branch_id AND status=1 AND name!='' LIMIT 1) AS branch_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT NAME FROM `tb_sale_agent` WHERE id=s.saleagent_id LIMIT 1) AS agent_name,
+		s.quoat_number,s.date_order,all_total,discount_value,net_total,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
+		(SELECT name_en FROM `tb_view` WHERE type=7 AND key_code=is_approved LIMIT 1) as is_approved ,
+		(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1) pending_status,
+		s.currency_id,
+		s.net_total,
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name
+		FROM `tb_quoatation` AS s ";
+		$from_date =(empty($search['start_date']))? '1': " s.date_order >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " s.date_order <= '".$search['end_date']." 23:59:59'";
+		$where = " WHERE ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " s.quoat_number LIKE '%{$s_search}%'";
+			$s_where[] = " s.net_total LIKE '%{$s_search}%'";
+// 			$s_where[] = " s.balance LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['customer_id']>0){
+			$where .= " AND s.customer_id = ".$search['customer_id'];
+		}
+		if($search['branch_id']>0){
+			$where .= " AND branch_id =".$search['branch_id'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbg->getAccessPermission();
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+	function getQuotationById($id){//5
+		$db = $this->getAdapter();
+		$sql=" 
+		SELECT
+		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		s.quoat_number,s.date_order,s.remark,s.discount_value,
+		(SELECT NAME FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
+		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
+		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
+		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
+		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
+		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
+		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
+		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS approval_by,
+		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total
+		FROM `tb_quoatation` AS s,
+		`tb_quoatation_item` AS so WHERE s.id=so.quoat_id
+		AND s.status=1 AND s.id = $id ";
+		return $db->fetchAll($sql);
+	}
 	
 }
 

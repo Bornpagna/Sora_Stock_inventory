@@ -129,17 +129,26 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$userName=$session_user->user_name;
 		$GetUserId= $session_user->user_id;
 			$data=array(
-					'type_price'	=> $post['price_type'],
-					'cust_name'		=> $post['customer_name'],
-					'contact_name'	=> $post['contact'],//test
-					'phone'			=> $post['phone'],
-					'add_name'		=> $post['address'],
-					'email'			=> $post['txt_mail'],
-					'last_usermod'	=> $GetUserId,
-					'last_mod_date'	=> new Zend_Date(),
-					'CurrencyId'	=> 1
-			);
-		$result=$db->addRecord($data, "tb_customer");
-		return $result;	
+ 				//'cu_code'		=> $post['cu_code'],
+				'cust_name'		=> $post['txt_name'],
+				'phone'			=> $post['txt_phone'],
+				'contact_name'	=> $post['txt_contact_name'],//test
+				'contact_phone'	=> $post['contact_phone'],//test
+				'address'		=> $post['txt_address'],
+// 				'fax'			=> $post['txt_fax'],
+				'email'			=> $post['txt_mail'],
+// 				'website'		=> $post['txt_website'],//test
+// 				'add_remark'	=>	$post['remark'],
+				'user_id'		=> $GetUserId,
+				'date'			=> date("Y-m-d"),
+				'branch_id'		=> $post['branch_id'],
+				'customer_level'=> $post['customer_level'],
+				'cu_type'		=>	$post["customer_type"],
+				'credit_limit'	=>	$post["credit_limit"],
+				'credit_team'	=>	$post["credit_tearm"],
+		);
+// 		$result=$db->addRecord($data, "tb_customer");
+
+		return $this->insert($data);;	
 	}
 }
