@@ -209,6 +209,31 @@
 	</div>
 </div>
 <script>
+$( document ).ready(function() {
+	initListTermcondition();
+});
+
+function initListTermcondition() {
+	index1=0;
+	term_option = '<?php echo $this->term_opt; ?>';
+	<?php if(!empty($this->rsterm)) {
+		foreach($this->rsterm AS $i=>$rt){?>
+		index1++; 
+		template='<tr id="row_term_'+index1+'" style="height:33px;">';
+	    template+='<td width="20px" ><img onClick="deleteTermRecord('+index1+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
+		template+='<td  width="2%">'+index1+'</td>';
+		template+='<td><select class="form-control select2me" id="termid_'+index1+'" name="termid_'+index1+'" >'+term_option+'<option></option></select></td>';
+		template+="</tr>";
+		$('#table_termcondition').append(template);
+		if($('#identity_term').val()!="") {
+			var identity = $('#identity_term').val();
+			$('#identity_term').val(identity+','+index1);
+		} else {$('#identity_term').val(index1);}
+		$("#termid_"+index1).val("<?php echo $rt['id'];?>");
+		$("#row_term_0").remove();	
+	<?php } }?>
+}
+
 var index5 = 0;num=0;
 var option5 = '<?php echo $this->items; ?>';
 var baseUrl = '<?php echo BASE_URL; ?>';
@@ -326,12 +351,8 @@ function getProductPrice(product_id,recordid){
 	});
   }
 }
-/*$( document ).ready(function() {
-	alert("ready loaded");
-});
-$( window ).load(function() {
-    alert("load loaded");
-});*/ 
+
+
 function getItemOrder(){
 	item_ids=$("#add_item").val();
 	$('#add_item').val('').trigger("liszt:updated");
