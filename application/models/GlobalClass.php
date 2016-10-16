@@ -310,10 +310,14 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 		foreach($row_cate as $cate){
 			$option .= '<optgroup  label="'.htmlspecialchars($cate['name'], ENT_QUOTES).'">';
 			if($result["level"]==1 OR $result["level"]==2){
-				$sql = "SELECT id,item_name,item_code FROM tb_product WHERE cate_id = ".$cate['id']." 
+				$sql = "SELECT id,item_name,
+				(SELECT tb_brand.name FROM `tb_brand` WHERE tb_brand.id=brand_id limit 1) As brand_name,
+				item_code FROM tb_product WHERE cate_id = ".$cate['id']." 
 						AND item_name!='' ORDER BY id DESC ";
 			}else{
-				$sql = " SELECT p.id,p.item_name,p.item_code FROM tb_product AS p
+				$sql = " SELECT p.id,p.item_name,p.item_code,
+				(SELECT tb_brand.name FROM `tb_brand` WHERE tb_brand.id=p.brand_id limit 1) As brand_name
+				 FROM tb_product AS p
 				INNER JOIN tb_prolocation As pl ON p.id = pl.pro_id
 				WHERE p.cate_id = ".$cate['id']."
 				AND p.item_name!='' AND pl.location_id =".$result['location_id']." ORDER BY user_id DESC ";
@@ -321,8 +325,8 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 				$rows = $db->fetchAll($sql);
 				if($rows){
 					foreach($rows as $value){
-						$option .= '<option value="'.$value['id'].'" label="'.htmlspecialchars($value['item_name'], ENT_QUOTES).'">'.
-							htmlspecialchars($value['item_name'], ENT_QUOTES)." ".htmlspecialchars($value['item_code'], ENT_QUOTES)
+						$option .= '<option value="'.$value['id'].'" label="'.htmlspecialchars($value['item_name']." ".$value['brand_name'], ENT_QUOTES).'">'.
+							htmlspecialchars($value['item_name']." ".$value['brand_name'], ENT_QUOTES)." ".htmlspecialchars($value['item_code'], ENT_QUOTES)
 						.'</option>';
 					}
 				}

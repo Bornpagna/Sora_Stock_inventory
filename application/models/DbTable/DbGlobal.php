@@ -446,14 +446,16 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	$sql = " SELECT branch_code FROM `tb_sublocation` WHERE id = $branch_id  LIMIT 1";
     	return $db->fetchOne($sql);
     }
-    function getAllTermCondition($opt=null){
+    function getAllTermCondition($opt=null,$type=null){
     	$db = $this->getAdapter();
     	$sql = " SELECT id,con_khmer,con_english FROM `tb_termcondition` WHERE con_khmer!='' AND status = 1 ";
+    	if($type!=null){
+    		$sql.=" AND type = $type";
+    	}
     	$rows =  $db->fetchAll($sql);
     	if($opt!=null){
     		$option='';
     		if(!empty($rows)){foreach ($rows as $key =>$rs){ 
-    			//$options[$rs['id']]=$rs['con_khmer'];
     			$option .= '<option value="'.$rs['id'].'" >'.($key+1)." - ".htmlspecialchars($rs['con_khmer'], ENT_QUOTES)
     					.'</option>';
     		}
