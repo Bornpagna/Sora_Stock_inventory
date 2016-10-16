@@ -38,10 +38,12 @@ public function init()
 			$db = new Sales_Model_DbTable_DbTermCondiction();
 			$db->add($data);
 			if($data['save_close']){
-				$this->_redirect('/sales/termcondiction/index');
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				Application_Form_FrmMessage::redirectUrl('/sales/termcondiction/index');
 			}
 			else{
-				$this->_redirect('/sales/termcondiction/add');
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				//Application_Form_FrmMessage::redirectUrl('/sales/termcondiction/index/add');
 			}
 		}
 		$formFilter = new Sales_Form_FrmTermCondiction();
@@ -62,10 +64,7 @@ public function init()
 			$db = new Sales_Model_DbTable_DbTermCondiction();
 			$db->edit($data);
 			if($data['save_close']){
-				$this->_redirect('/sales/termcondiction/index');
-			}
-			else{
-				$this->_redirect('/sales/termcondiction/index');
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS", '/sales/termcondiction/index');
 			}
 		}
 		$rs = $db->getTermById($id);
