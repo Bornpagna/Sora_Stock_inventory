@@ -60,7 +60,6 @@ public function init()
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			$data["id"] = $id;
-			$db = new Branch_Model_DbTable_DbBranch();
 			$db->edit($data);
 			if($data['save_close']){
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS", '/product/branch/index');

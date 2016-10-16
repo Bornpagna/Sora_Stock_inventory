@@ -26,15 +26,23 @@
 									<?php echo $formFilter->getElement('branch_name');?>
 								</div>
 												
-								<label class="col-md-2 control-label"><?php echo $tr->translate("CON_NAME");?></label>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("CODE");?></label>
 								<div class="col-md-4">
-									<?php echo $formFilter->getElement('contact');?>
+									<?php echo $formFilter->getElement('code');?>
 								</div>
 							</div>
 											
 							<div class="form-group">
-								
-												
+								<label class="col-md-2 control-label"><?php echo $tr->translate("CON_NAME");?></label>
+								<div class="col-md-4">
+									<?php echo $formFilter->getElement('contact');?>
+								</div>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("PREFIX");?></label>
+								<div class="col-md-4">
+									<?php echo $formFilter->getElement('prefix');?>
+								</div>
+							</div>
+							<div class="form-group">					
 								<label class="col-md-2 control-label"><?php echo $tr->translate("PHONE_NUM");?></label>
 								<div class="col-md-4">
 									<?php echo $formFilter->getElement('contact_num');?>

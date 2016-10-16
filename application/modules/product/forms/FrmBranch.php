@@ -14,7 +14,19 @@ class Product_Form_FrmBranch extends Zend_Form
 				'class'=>'form-control',
 				'required'=>'required'
 		));
-		 
+		
+		$code = new Zend_Form_Element_Text("code");
+		$code->setAttribs(array(
+				'class'=>'form-control',
+				//'required'=>'required'
+		));
+		
+		$prefix = new Zend_Form_Element_Text("prefix");
+		$prefix->setAttribs(array(
+				'class'=>'form-control',
+				//'required'=>'required'
+		));
+		
 		$addres = new Zend_Form_Element_Textarea("address");
 		$addres->setAttribs(array(
 				'class'=>'form-control',
@@ -76,9 +88,11 @@ class Product_Form_FrmBranch extends Zend_Form
 			$status->setValue($data["status"]);
 			$remark->setValue($data["remark"]);
 			$addres->setValue($data["address"]);
+			$code->setValue($data["code"]);
+			$prefix->setValue($data["prefix"]);
 		}
 			
-		$this->addElements(array($branch_name,$addres,$contact_name,$contact_num,$email,$fax,$office_num,$status,$remark));
+		$this->addElements(array($code,$prefix,$branch_name,$addres,$contact_name,$contact_num,$email,$fax,$office_num,$status,$remark));
 		return $this;
 	}
 }

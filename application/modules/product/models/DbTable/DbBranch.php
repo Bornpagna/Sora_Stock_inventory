@@ -12,6 +12,8 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$arr = array(
 			'name'			=>	$data["branch_name"],
+			'code'			=>	$data["code"],
+			'prefix'		=>	$data["prefix"],
 			'contact'		=>	$data["contact"],
 			'phone'			=>	$data["contact_num"],
 			'email'			=>	$data["email"],
@@ -33,6 +35,8 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$arr = array(
 				'name'			=>	$data["branch_name"],
+				'code'			=>	$data["code"],
+				'prefix'		=>	$data["prefix"],
 				'contact'		=>	$data["contact"],
 				'phone'			=>	$data["contact_num"],
 				'email'			=>	$data["email"],
@@ -87,6 +91,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$sql = "SELECT 
 				  s.`id`,
 				  s.`code`,
+				  s.prefix,
 				  s.`name`,
 				  s.`contact`,
 				  s.`phone`,
