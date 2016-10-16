@@ -74,10 +74,11 @@ public function init()
     	$db = new Application_Model_DbTable_DbGlobal();
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
-    		if($data["submit_update"]){
-    			$update_agent = new sales_Model_DbTable_DbSalesAgent();
-    			$update_agent ->updateSalesAgent($data);
-    			$this->_redirect("sales/sale-agent/index");
+    		$data["id"] = $id;
+    		if(isset($data["saveclose"])){
+    			$update_agent = new Sales_Model_DbTable_DbSalesAgent();
+    			$update_agent ->editSalesAgent($data);
+    			$this->_redirect("sales/saleagent/index");
     		}
     		else{
     			$this->_redirect("sales/sale-agent/index");    		}
@@ -89,6 +90,8 @@ public function init()
 		$formShowAgent = $formAgent->showSaleAgentForm($rows);
 		Application_Model_Decorator::removeAllDecorator($formShowAgent);
 		$this->view->form_agent = $formShowAgent;
+		
+		$this->view->row = $rows;
 		
 		$formpopup = new Application_Form_FrmPopup(null);
 		$formAdd = $formpopup->popuLocation(null);
