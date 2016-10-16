@@ -34,6 +34,14 @@
 									<?php echo $formFilter->getElement('name_kh');?>
 								</div>
 							</div>
+							
+							<div class="form-group">
+								<label class="col-md-2 control-label"><?php echo $tr->translate("TYPE");?></label>
+								<div class="col-md-8">
+									<?php echo $formFilter->getElement('type');?>
+								</div>
+							</div>
+							
 							<div class="form-group">
 								<label class="col-md-2 control-label"><?php echo $tr->translate("STATUS");?></label>
 								<div class="col-md-8">
@@ -42,9 +50,8 @@
 							</div>
 					<div class="form-group">
 						<label  class="col-md-12 col-md-offset-4 col-md-8">
-							<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
-							<button type="submit" name="save_new" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
-							<a href="<?php echo $this->baseUrl();?>/sales/termcondiction"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+						<a href="<?php echo $this->baseUrl();?>/sales/termcondiction"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
+							<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("GO_EDIT")?></button>
 						</label>
 					</div>
 					</div>
