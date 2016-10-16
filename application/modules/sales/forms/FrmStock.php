@@ -117,6 +117,17 @@ class Sales_Form_FrmStock extends Zend_Form
     	$code->setValue($codes);
     	$this->addElement($code);
     	
+    	$old_photo = new Zend_Form_Element_Hidden("old_photo");
+    	$this->addElement($old_photo);
+    	
+    	$old_document = new Zend_Form_Element_Hidden("old_document");
+    	$this->addElement($old_document);
+    	
+    	$old_signature = new Zend_Form_Element_Hidden("old_signature");
+    	$this->addElement($old_signature);
+    	
+    	$user_id = new Zend_Form_Element_Hidden("user_id");
+    	$this->addElement($user_id);
 //     	$sex = $db->getGlobalDb('SELECT u.`user_id`,u.`fullname` FROM `tb_acl_user` AS u,`tb_acl_user_type` AS ut WHERE u.`status`=1 AND u.`user_type_id`=ut.`user_type_id` AND u.`user_type_id`=5');
 //     	$option_user = array('-1'=>'Select User Type');
 //     	if(count($row_manger) > 0) {
@@ -139,6 +150,21 @@ class Sales_Form_FrmStock extends Zend_Form
     		$jobTitleElement->setValue($data['job_title']);
     		$mainStockElement->setValue($data["branch_id"]);
     		$descriptionElement->setValue($data['description']);
+    		$code->setValue($data["code"]);
+    		$pob->setValue($data["pob"]);
+    		$dob->setValue($data["dob"]);
+    		$user_name->setValue($data["user_name"]);
+    		//$password->setAttribs(array('class'=>'form-control','readOnly'=>true));
+    		$user_type->setValue($data["user_type"]);
+    		$manage_by->setValue($data["manage_by"]);
+    		$refer_name->setValue($data["refer_name"]);
+    		$refer_phone->setValue($data["refer_phone"]);
+    		$refer_addres->setValue($data["refer_add"]);
+    		$bank_acc->setValue($data["bank_acc"]);
+    		$old_photo->setValue($data["photo"]);
+    		$old_document->setValue($data["document"]);
+    		$old_signature->setValue($data["signature"]);
+    		$user_id->setValue($data["acl_user"]);
     	}
     	return $this;
 	}
