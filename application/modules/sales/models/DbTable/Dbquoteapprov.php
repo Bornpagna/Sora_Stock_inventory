@@ -15,7 +15,9 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 			all_total,discount_value,net_total,
 			(SELECT name_en FROM `tb_view` WHERE type=7 AND key_code=is_approved LIMIT 1),
 			(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1),
+			'Make SO',
 			(SELECT name_en FROM `tb_view` WHERE type=9 AND key_code=is_tosale LIMIT 1),
+			
 			(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = user_mod) AS user_name
 			FROM `tb_quoatation` ";
 			
@@ -100,4 +102,85 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 		AND s.status=1 AND s.id = $id ";
 		return $db->fetchAll($sql);
 	} 
+	public function convertQouteToSO($data)
+	{
+		$id=$data["id"];
+		$db = $this->getAdapter();
+		$db->beginTransaction();
+		try{
+			$db_global = new Application_Model_DbTable_DbGlobal();
+			$session_user=new Zend_Session_Namespace('auth');
+			$userName=$session_user->user_name;
+			$GetUserId= $session_user->user_id;
+					$this->_name="tb_quoatation";
+					$arr = array(
+					'is_tosale'=>1);
+					$where ="id = ".$id;
+					$this->update($arr,$where);
+				
+					$so = $db_global->getSalesNumber($data["branch_id"]);
+					$qdata=array(
+							'quote_id'=>$id,
+							"customer_id"    => $data['customer_id'],
+							"branch_id"      => $data["branch_id"],
+							"sale_no"       => 	$so,//$data['txt_order'],
+							"date_sold"     => date("Y-m-d",strtotime($data['order_date'])),
+							"saleagent_id"  => 	$data['saleagent_id'],
+							"currency_id"    => $data['currency'],
+							"remark"         => $data['remark'],
+							"all_total"      => $data['totalAmoun'],
+							"discount_value" => $data['dis_value'],
+							"net_total"      => $data['all_total'],
+							"user_mod"       => $GetUserId,
+							"date"      	 => date("Y-m-d"),
+// 							'is_approved'=>0,
+							'pending_status' =>2,
+							"date"      => 	date("Y-m-d"),
+					);
+					$this->_name="tb_sales_order";
+					$sale_id = $this->insert($qdata);
+					
+					$this->_name='tb_salesorder_item';
+					$ids=explode(',',$data['identity']);
+					foreach ($ids as $i)
+					{
+						$data_item= array(
+								'saleorder_id'=> $sale_id,
+								'pro_id'	  => 	$data['item_id_'.$i],
+								'qty_order'	  => 	$data['qty'.$i],
+								'qty_detail'  => 	$data['qty_per_unit_'.$i],
+								'price'		  => 	$data['price'.$i],
+								'old_price'   =>    $data['oldprice_'.$i],
+								'disc_value'  => $data['dis_value'.$i],
+								'sub_total'	  => $data['total'.$i],
+						);
+						
+						$this->insert($data_item);
+					}
+					///add term condtion of so
+					$ids=explode(',',$data['identity_term']);
+					if(!empty($data['identity_term'])){
+						foreach ($ids as $i)
+						{
+							$data_item= array(
+									'quoation_id'=> $sale_id,
+									'condition_id'=> $data['termid_'.$i],
+									"user_id"   => 	$GetUserId,
+									"date"      => 	date("Y-m-d"),
+									'term_type'=>2
+							);
+							$this->_name='tb_quoatation_termcondition';
+							$this->insert($data_item);
+						}
+					}
+				
+		    
+			$db->commit();
+		}catch(Exception $e){
+			$db->rollBack();
+			Application_Form_FrmMessage::message('INSERT_FAIL');
+			$err =$e->getMessage();
+			Application_Model_DbTable_DbUserLog::writeMessageError($err);
+		}
+	}
 }

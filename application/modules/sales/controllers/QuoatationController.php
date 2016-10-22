@@ -104,7 +104,7 @@ class Sales_quoatationController extends Zend_Controller_Action
 		}		
 		$this->view->rs = $dbq->getQuotationItemDetailid($id);
 		$this->view->rsterm = $dbq->getTermconditionByid($id);
-// 		$this->view->rsq = $row;
+		$this->view->rsq = $row;
 		$frm_purchase = new Sales_Form_FrmQuoatation();
 		$form_sale = $frm_purchase->SaleOrder($row);
 		Application_Model_Decorator::removeAllDecorator($form_sale);

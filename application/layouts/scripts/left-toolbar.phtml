@@ -27,7 +27,7 @@
 	// module sales
 	$url_sales_list = array($this->url(array('module'=>'sales','controller'=>'index','action'=>'index'),null, true), "MENU_SALES_SALES_ORDER_INDEX");
 	$url_sales_approved = array($this->url(array('module'=>'sales','controller'=>'salesapprove','action'=>'index'),null, true), "MENU_APPROVED");
-	$url_invocie_approved = array($this->url(array('module'=>'sales','controller'=>'invoiceapprove','action'=>'index'),null, true), "MENU_INVOICEAPPROVED");
+	$url_invocie_approved = array($this->url(array('module'=>'sales','controller'=>'invoiceapprove','action'=>'index'),null, true), "MENU_APPROVED");
 	$url_qoute_approved = array($this->url(array('module'=>'sales','controller'=>'quoteapprove','action'=>'index'),null, true), "MENU_QOUTEAPPROVED");
 	
 	$url_sales_add = array($this->url(array('module'=>'sales','controller'=>'index','action'=>'add'),null, true), "MENU_SALES_SALES_ORDER_ADD_CUSTOMER_ORDER");
@@ -153,8 +153,6 @@
 	            			<a href="<?php echo $url_other[0]; ?>">
 							 <i class="icon-bulb"></i><?php echo $tr->translate($url_other[1])?></a>
 	            		<li>
-	            		
-	            			
             		<?php //}?>   
             		<?php //}?>-->
 					</ul>
@@ -264,11 +262,11 @@
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_invocie_approved[1])?>
 	            		</a>
             		</li>
-            		<li>
-            			<a href="<?php echo $url_sales_approved[0]; ?>">
-	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_approved[1])?>
+            		<!-- <li>
+            			<a href="<?php //echo $url_sales_approved[0]; ?>">
+	            			<i class="icon-arrow-right"></i><?php //echo $tr->translate($url_sales_approved[1])?>
 	            		</a>
-            		</li>
+            		</li> -->
 	            	<li>
             			<a href="<?php echo $url_qoute_approved[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_qoute_approved[1])?>

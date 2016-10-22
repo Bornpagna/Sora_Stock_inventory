@@ -132,20 +132,11 @@ class Application_Form_Frmlist
     public function showAddBuntton($url_new) {
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    	$addButton = '<a class="btn btn-primary"  href="'.$url_new.'">'
+    	$addButton = '<a href="'.$url_new.'">'
 					.'<img alt="" src="'.BASE_URL.'/images/icon/add.png">'
 					.$tr->translate("ADD")
 					.'</a>';
 		return $addButton;
-    }
-    public function printBacordLabel($url_new) {
-    	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
-    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    	$addButton = '<a href="'.$url_new.'">'
-    	.'<img alt="" src="'.BASE_URL.'/images/icon/add.png">'
-    	.$tr->translate("ADD")
-    	.'</a>';
-    	return $addButton;
     }
     /* @ Desc: show delete button
      * @param $url_new
@@ -178,13 +169,9 @@ class Application_Form_Frmlist
     	$stringPagination = '<script type="text/javascript">
 				$(document).ready(function(){
 					$("#'.$id.'").tablesorter();
-					
 					$("#'.$id.'").tablesorter().tablesorterPager({container: $("#pagination_'.$id.'")});
-					$("input:.pagedisplay").focus(function(){ this.blur(); });
-					
-					function changeColor(){
-						alert("change color on mouse over");
-					}
+					$("#pagedisplay").focus(function(){ this.blur(); 
+                   });
 				});
 		</script>
 		<div id="pagination_'.$id.'" class="pager" >
@@ -192,7 +179,7 @@ class Application_Form_Frmlist
 						<table  style="width: 200px;"><tr>
 						<td><img src="'.BASE_URL.'/images/first.gif" class="first"/></td>
 						<td><img src="'.BASE_URL.'/images/previous.gif" class="prev"/></td>
-						<td><input type="text" class="pagedisplay"/></td>
+						<td><input id="pagedisplay" type="text" class="pagedisplay"/></td>
 						<td><img src="'.BASE_URL.'/images/next.gif" class="next"/></td>
 						<td><img src="'.BASE_URL.'/images/last.gif" class="last"/></td>
 						<td><select class="pagesize" >
@@ -275,9 +262,8 @@ class Application_Form_Frmlist
     						$row_str.='<td class="'.$class.'" '.$text.'>'.$read.'</td>';
 			  				if($i == count($columns)) {
 	    						if($editLink != "") {
-	    							
-											$row_str.='<td class="'.$class.'"><a class="edit" href="'.$editLink.'?id='.$temp.'">'.'</a></td>';
-			    							}
+									$row_str.='<td class="'.$class.'"><a class="edit" href="'.$editLink.'?id='.$temp.'">'.'</a></td>';
+			    				}
 	    					}
     					}
     					$i++;

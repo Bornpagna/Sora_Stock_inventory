@@ -31,13 +31,13 @@ class Sales_QuoteapproveController extends Zend_Controller_Action
 		$db = new Sales_Model_DbTable_Dbquoteapprov();
 		$rows = $db->getAllSaleOrder($search);
 		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","QUOTATION_NO", "QUOATATION_DATE",
-				"CURRENTCY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","STATUS_TOSO","BY_USER");
-		$link=array(
-				'module'=>'sales','controller'=>'quoteapprove','action'=>'add',
-		);
+				"CURRENTCY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","MAKE_SO","STATUS_TOSO","BY_USER");
+		$link=array('module'=>'sales','controller'=>'quoteapprove','action'=>'add');
+		$link1=array('module'=>'sales','controller'=>'quoteapprove','action'=>'edit');
 		
 		$list = new Application_Form_Frmlist();
-		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,'sale_no'=>$link));
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,
+		'sale_no'=>$link,'Make SO'=>$link1));
 		$formFilter = new Sales_Form_FrmSearch();
 		$this->view->formFilter = $formFilter;
 	    Application_Model_Decorator::removeAllDecorator($formFilter);
@@ -73,6 +73,44 @@ class Sales_QuoteapproveController extends Zend_Controller_Action
     	}
     	$db= new Application_Model_DbTable_DbGlobal();
     	$this->view->rscondition = $db->getTermConditionById(1, $id);
+	}	
+	function editAction(){
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		$dbq = new Sales_Model_DbTable_Dbquoatation();
+		if($this->getRequest()->isPost()) {
+			$data = $this->getRequest()->getPost();
+			try {
+				$db = new Sales_Model_DbTable_Dbquoteapprov();
+				if(!empty($data['identity'])){
+					$db->convertQouteToSO($data);
+				}else{
+					Application_Form_FrmMessage::message('No Data to Submit');
+				}
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/quoteapprove");
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message('UPDATE_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		$row = $dbq->getQuotationItemById($id);
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/quoteapprove");
+		}		
+		$this->view->rs = $dbq->getQuotationItemDetailid($id);
+		$this->view->rsterm = $dbq->getTermconditionByid($id);
+		$this->view->rsq = $row;
+		$frm_purchase = new Sales_Form_FrmQuoatation();
+		$form_sale = $frm_purchase->SaleOrder($row);
+		Application_Model_Decorator::removeAllDecorator($form_sale);
+		$this->view->form_sale = $form_sale;
+		
+		$db = new Application_Model_GlobalClass();
+		$this->view->items = $db->getProductOption();
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->term_opt = $db->getAllTermCondition(1);
+		//print_r($row);
 	}	
 	
 }

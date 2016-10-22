@@ -129,6 +129,13 @@ class Sales_Model_DbTable_Dbquoatation extends Zend_Db_Table_Abstract
 			$GetUserId= $session_user->user_id;
 // 			$qoatationid = $db_global->getQuoationNumber($data["branch_id"]);
 				if(!empty($data['makeso'])){//if edit quote=>sale order
+				
+					$this->_name="tb_quoatation";
+					$arr = array(
+					'is_tosale'=>1);
+					$where ="id = ".$id;
+					$this->update($arr,$where);
+				
 					$so = $db_global->getSalesNumber($data["branch_id"]);
 					$qdata=array(
 							'quote_id'=>$id,

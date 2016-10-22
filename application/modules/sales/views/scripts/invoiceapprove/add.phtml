@@ -1,13 +1,14 @@
 <?php 
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-<title><?php echo $tr->translate("SALEDETAIL_REPORT");?></title>
+<title><?php echo $tr->translate("MAKE_INVOCIE");?></title>
 <div class="row">
+<marquee style="margin-top:-20px;" behavior="scroll" direction="left" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="5">យើងត្រូវការ ការយល់ព្រមពី ផ្នែកគណនេយ្យ /ហិរញ្ញវត្ថុ ឫអ្នកដែលមានសិទ្ធ ដើម្បី <span style="color:red;">បង្កើតជាវិក័យបត្រ និង របាយការណ៏ប្រគល់ទំនិញ</span> / We need approval from  or person who have permission to <span style="color:red;">issue invoice and Delivery Report</span> ! </marquee>
 	<div class="col-md-12">
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("SALEORDER_APPROVED");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("INVOICE_APPROVED");?>
 				</div>
 						<div class="btn-group pull-right">
 							 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">
@@ -29,6 +30,8 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
             <div class="portlet-body form frmfilter">
 					<div style="clear:both;"></div>	
 	<div style=" min-height:28cm; margin:0 auto; border: 1px dotted #ccc; padding:0px 0.2cm">
+	 <?php $url_submit = $this->url(array('module'=>'sales','controller'=>'invoiceapprove','action'=>'approved'));?>
+	<form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">		   
 	<div id="divPrint" style="width: 100%;">
 	<style>
 		.style{
@@ -100,8 +103,6 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		    </tr>
 		    <tr>
 		    	<td id="exportExcel"><br />
-		    	 <?php $url_submit = $this->url(array('module'=>'sales','controller'=>'invoiceapprove','action'=>'approved'));?>
-		              <form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
 		            <table border="1" style="border-collapse:collapse;border:1px solid #000; font-size:10px;" width="100%" cellspacing="0">
 		                 <tbody>
 		                 <tr align="center" style="font-weight:bold; line-height: 20px;  padding:1px 0px; white-space: nowrap;border:1px solid #fff;border-bottom: 1px solid #000 !important; ">
@@ -135,13 +136,18 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
                     }?>
                     <tr>
 						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL");?></td>
-						<td >&nbsp;&nbsp;<input type="text" name="net_total" id="net_total" value="<?php echo number_format($this->product[0]['net_total'],2);?>"   ><?php echo number_format($this->product[0]['net_total'],2);?></td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL");?><input type="hidden" name="soid" id="soid" value="<?php echo ($this->product[0]['id']);?>"/></td>
+						<td >&nbsp;&nbsp;<input type="text" name="all_total" id="all_total" value="<?php echo number_format($this->product[0]['all_total'],2);?>"   ><?php echo number_format($this->product[0]['all_total'],2);?></td>
 					</tr>
 					<tr>
 						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
 						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("DISCOUNT");?></td>
 						<td >&nbsp;&nbsp;<input type="text" name="discount" id="discount" value="<?php echo number_format($this->product[0]['discount_real'],2);?>"   ><?php echo number_format($this->product[0]['discount_real'],2);?></td>
+					</tr>
+					<tr>
+						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL_AMOUNT");?></td>
+						<td >&nbsp;&nbsp;<input type="text" name="net_total" id="net_total" value="<?php echo number_format($this->product[0]['net_total'],2);?>"   ><?php echo number_format($this->product[0]['net_total'],2);?></td>
 					</tr>
 					<tr>
 						<td colspan="4" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
@@ -197,7 +203,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 							  
 							</tbody>
 						</table>
-					</form>	
+					
 		    		</td>
 		    	</tr>
 			</tbody>
@@ -209,6 +215,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 				<label class="col-md-4 control-label"><a href="<?php echo $this->baseUrl();?>/sales/invoiceapprove/" ><button style="width:90%;" type="button" class="btn blue btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a></label>
 				<div class="col-md-4"><button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MAKEINVOICE")?></button></div>
 		</div>
+		</form>	
 		
 		
 		
@@ -219,6 +226,13 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 </div>
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 <script>
+function calculateBalance(){
+	deposit= $("#deposit").val();
+	net_total = $('#net_total').val();
+	balance = net_total-deposit;
+	//alert(balance);
+	$("#balance").val(balance);
+}
 function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=document.getElementById('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();

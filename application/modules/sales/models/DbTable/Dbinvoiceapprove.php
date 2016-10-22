@@ -71,6 +71,9 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 				$where=" id = ".$data['id'];
 				$this->update($data_to, $where);
 			}
+			
+			
+			
 			$this->_name="tb_invoice";
 				$arr = array(
 						'approved_note'=>$data['app_remark'],
@@ -83,9 +86,20 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 						'discount'=>$data['discount'],
 						'paid_amount'=>$data['deposit'],
 						'balance'=>$data['balance'],
+						'balance_after'=>$data['balance'],
 						'is_approved'=>$data['approved_name'],
 						);		
-				$this->insert($arr);		
+				$invoice_id = $this->insert($arr);	
+				
+				
+			$this->_name="tb_deliverynote";
+			$arr = array(
+				'invoice_id'=>$invoice_id,
+				'so_id'=>$data['soid'],
+				'delivery_userid'=>$data['app_remark'],
+				'deli_date'=>$data['app_remark'],
+				'user_id'=>$data['app_remark'],
+			);
 // 			 $ids=explode(',',$data['identity_term']);
 // 			 if(!empty($data['identity_term'])){
 // 				 foreach ($ids as $i)
@@ -108,7 +122,6 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$db->rollBack();
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
-			echo $err;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
@@ -117,7 +130,7 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 		$sql=" SELECT
 		s.id,
 		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
-		s.sale_no,s.date_sold,s.remark,s.approved_note,s.approved_date,
+		s.sale_no,s.date_sold,s.remark,s.approved_note,s.approved_date,s.all_total,
 		(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
