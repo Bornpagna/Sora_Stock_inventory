@@ -169,7 +169,7 @@ class Application_Form_Frmlist
     	$stringPagination = '<script type="text/javascript">
 				$(document).ready(function(){
 					$("#'.$id.'").tablesorter();
-					$("#'.$id.'").tablesorter().tablesorterPager({container: $("#pagination_'.$id.'")});
+					$("#'.$id.'").tablesorter().tablesorterPager({container: $("#pagination_'.$id.'"),size:15});
 					$("#pagedisplay").focus(function(){ this.blur(); 
                    });
 				});
@@ -183,7 +183,8 @@ class Application_Form_Frmlist
 						<td><img src="'.BASE_URL.'/images/next.gif" class="next"/></td>
 						<td><img src="'.BASE_URL.'/images/last.gif" class="last"/></td>
 						<td><select class="pagesize" >
-							<option selected="selected"  value="10">10</option>
+							<option   value="10">10</option>
+							<option selected="selected"  value="15">15</option>
 							<option value="20">20</option>
 							<option value="30">30</option>
 							<option value="40">40</option>
@@ -201,7 +202,7 @@ class Application_Form_Frmlist
 			</div>	';
     	/* end define string*/
     	
-    	$head='<form name="list"><div style="overflow:scroll; max-height: 300px; overflow-x:hidden;" ><table class="collape tablesorter" id="'.$id.'" width="100%">';
+    	$head='<form name="list"><div style="overflow:scroll; max-height: 450px; overflow-x:hidden;" ><table class="collape tablesorter" id="'.$id.'" width="100%">';
     	$col_str='';
     	$col_str .='<thead><tr>';
     	if($delete== 1) {

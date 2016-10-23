@@ -9,6 +9,8 @@ class Application_Form_FrmMessage
     }
 	public static function Sucessfull($msg,$url)
 	{
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$msg=$tr->translate($msg);
 		echo '<script language="javascript">
 		           alert("'.$msg.'");
 				  window.location = "'.Zend_Controller_Front::getInstance()->getBaseUrl().$url.'";
