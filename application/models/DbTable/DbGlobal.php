@@ -441,6 +441,20 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	}
     	return $pre.$new_acc_no;
     }
+	public function getInvoiceNumber($branch_id = 1){
+    	$this->_name='tb_invoice';
+    	$db = $this->getAdapter();
+    	$sql=" SELECT COUNT(id)  FROM $this->_name WHERE branch_id=".$branch_id." LIMIT 1 ";
+    	$pre = $this->getPrefixCode($branch_id)."IV";
+    	$acc_no = $db->fetchOne($sql);
+    
+    	$new_acc_no= (int)$acc_no+1;
+    	$acc_no= strlen((int)$acc_no+1);
+    	for($i = $acc_no;$i<5;$i++){
+    		$pre.='0';
+    	}
+    	return $pre.$new_acc_no;
+    }
     function getPrefixCode($branch_id){
     	$db  = $this->getAdapter();
     	$sql = " SELECT branch_code FROM `tb_sublocation` WHERE id = $branch_id  LIMIT 1";
@@ -471,10 +485,18 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		(SELECT customer_level FROM `tb_customer` WHERE id=$customer_id limit 1) AND pro_id=$product_id LIMIT 1 ";
    	return $db->fetchRow($sql);
    }
-   function getTermConditionById($term_type,$record_id){
+   function getTermConditionById($term_type,$record_id=null){
    	$db = $this->getAdapter();
-   	$sql="SELECT t.con_khmer,t.con_english FROM `tb_termcondition` AS t,`tb_quoatation_termcondition` AS tc 
-   		WHERE t.id=tc.condition_id AND tc.term_type=$term_type AND quoation_id=$record_id ";
+   	$sql=" SELECT t.con_khmer,t.con_english FROM `tb_termcondition` AS t,`tb_quoatation_termcondition` AS tc 
+   		WHERE t.id=tc.condition_id AND tc.term_type=$term_type ";
+		if($record_id!=null){$sql.=" AND quoation_id=$record_id ";}
+   	return $db->fetchAll($sql); 
+   }
+   function getTermConditionByIdIinvocie($term_type,$record_id=null){
+   	$db = $this->getAdapter();
+   	$sql=" SELECT t.con_khmer,t.con_english FROM `tb_termcondition` AS t
+   		WHERE t.type=$term_type ";
+		
    	return $db->fetchAll($sql); 
    }
 }
