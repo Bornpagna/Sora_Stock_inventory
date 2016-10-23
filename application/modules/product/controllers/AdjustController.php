@@ -41,8 +41,10 @@ public function init()
     		$db_adjust= new Product_Model_DbTable_DbAdjustStock();
     		$db_result = $db_adjust->add($post);
     		if(isset($post["save_close"])){
-    			Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL_ADD_CLOSE);
-    		}
+    			Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL_ADD_CLOSE);
+    		}else{
+				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+			}
     		
     	}
 

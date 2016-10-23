@@ -19,7 +19,7 @@ public function init()
     	}else{
     		$data = array(
     			'tran_num'	=>	'',
-    			'tran_date'	=>	date("m/d/Y"),
+    			'tran_date'	=>	1,
     			'type'		=>	'',
     			'status'	=>	1,
     			'to_loc'	=>	'',

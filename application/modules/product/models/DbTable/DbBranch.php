@@ -59,6 +59,8 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$sql = "SELECT 
 				  s.`id`,
 				  s.`name`,
+				  s.`code`,
+				  s.prefix,
 				  s.`contact`,
 				  s.`phone`,
 				  s.`email`,
@@ -74,6 +76,8 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 			$s_where[]= " s.`name` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`contact` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`phone` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`code` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`prefix` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`email` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`office_tel` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`address` LIKE '%{$s_search}%'";
@@ -83,6 +87,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		if($data["status"]!=""){
 			$where.=' AND s.status='.$data["status"];
 		}
+		//echo $sql;
 		return $db->fetchAll($sql.$where);
 	}
 	

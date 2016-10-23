@@ -68,11 +68,7 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 							'user_mod'		=>	$result["user_id"],
 					);
 					$this->_name="tb_move_history";
-					$db->getProfiler()->setEnabled(true);
 					$this->insert($arr);
-					Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
-					Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
-					$db->getProfiler()->setEnabled(false);
 	
 					$rs = $this->getProductById($data["pro_id_".$i],$result["location_id"]);
 	
@@ -82,13 +78,7 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 						);
 						$this->_name="tb_prolocation";
 						$where = array('pro_id=?'=>$data["pro_id_".$i],"location_id=?"=>$result["location_id"]);
-						//$where = $db->quoteInto("pro_id=?", $data["pro_id_".$i]);
-						//$where .=$db->quoteInto("location_id=?", $result["location_id"]);
-						$db->getProfiler()->setEnabled(true);
 						$this->update($arr_p, $where);
-						Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
-						Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
-						$db->getProfiler()->setEnabled(false);
 					}else{
 						$arr_p = array(
 								'pro_id'			=>	$data["pro_id_".$i],
@@ -99,11 +89,7 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 								'last_mod_date'		=>	new Zend_Date(),
 						);
 						$this->_name="tb_prolocation";
-						$db->getProfiler()->setEnabled(true);
 						$this->insert($arr_p);
-						Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
-						Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
-						$db->getProfiler()->setEnabled(false);
 					}
 				}
 			}

@@ -13,7 +13,7 @@ public function init()
     }
     public function indexAction()
     {
-		$db = new Branch_Model_DbTable_DbBranch();
+		$db = new Product_Model_DbTable_DbBranch();
 		$formFilter = new Product_Form_FrmBranchFilter();
 		$frmsearch = $formFilter->branchFilter();
 		if($this->getRequest()->isPost()){

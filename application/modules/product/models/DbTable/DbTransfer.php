@@ -41,7 +41,7 @@ class Product_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
   				  (SELECT u.`fullname` FROM `tb_acl_user` AS u WHERE u.`user_id`=p.`user_mod`) AS user_tran
 				FROM
 				  `tb_product_transfer` AS p 
-				WHERE p.`date`>='$tran_date'";
+				WHERE 1 AND p.`date`<='$tran_date'";
 		$where = '';
 	  	if($data["tran_num"]!=""){
 	  		$s_where=array();

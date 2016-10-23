@@ -199,9 +199,10 @@ $form=$this->form;
 										</div>
 										<div class="form-group">
 											<label  class="col-md-12 col-md-offset-4 col-md-8">
+												<a href="<?php echo $this->baseUrl();?>/sales/saleagent"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
 												<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
 												<button type="submit" name="btnsavenew" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
-												<a href="<?php echo $this->baseUrl();?>/sales/saleagent"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+												
 											</label>
 										</div>
 							<!--</div>-->
@@ -213,7 +214,257 @@ $form=$this->form;
 						</div>
 					</div>
 							
-			</form>		
+			</form>	
+
+
+<!--Popup Form Brand-->
+<?php $formBrand = $this->frmBrand; ?>
+<div id="brandpopup" class="modal fade" tabindex="-1" data-width="1200">
+       <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">   
+		<div class="row">
+		<div class="col-md-12">
+			<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" >
+						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form id="frmbrand" name="frmcustomer" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<div class="form-body">
+					<div class="form-group">
+								<label class="col-md-2 control-label"><?php echo $tr->translate("PARENT");?></label>
+								<div class="col-md-4">
+									<?php echo $formBrand->getElement('parent');?>
+								</div>
+												
+								<label class="col-md-2 control-label"><?php echo $tr->translate("BRAND_NAME");?></label>
+								<div class="col-md-4">
+									<?php echo $formBrand->getElement('brand_name');?>
+								</div>
+												
+							</div>
+							<div class="form-group">
+												
+								<label class="col-md-2 control-label"><?php echo $tr->translate("STATUS");?></label>
+								<div class="col-md-4">
+									<?php echo $formBrand->getElement('status');?>
+								</div>
+												
+								<label class="col-md-2 control-label"><?php echo $tr->translate("REMARK");?></label>
+								<div class="col-md-4">
+									<?php echo $formBrand->getElement('remark');?>
+								</div>
+					</div>
+					
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<button type="button" name="btnsavenew" onclick="addNewBrand();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_BRAND")?> </button>
+						</label>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+          </div>
+        </div>
+    </div>
+ </div>	
+
+<!-- CATEGORY Popup -->
+<?php $formcat = $this->frmCat; ?>
+<div id="categorypopup" class="modal fade" tabindex="-1" data-width="1200">
+       <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">   
+		<div class="row">
+		<div class="col-md-12">
+			<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" >
+						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form id="frmCat" name="frmcustomer" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<div class="form-body">
+					<div class="form-group">
+								<label class="col-md-2 control-label"><?php echo $tr->translate("PARENT");?></label>
+								<div class="col-md-4">
+									<?php echo $formcat->getElement('parent');?>
+								</div>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("CATEGORY_NAME");?></label>
+								<div class="col-md-4">
+									<?php echo $formcat->getElement('cat_name');?>
+								</div>
+												
+							</div>
+							<div class="form-group">
+												
+								<label class="col-md-2 control-label"><?php echo $tr->translate("STATUS");?></label>
+								<div class="col-md-4">
+									<?php echo $formcat->getElement('status');?>
+								</div>
+								<label class="col-md-2 control-label"><?php echo $tr->translate("REMARK");?></label>
+								<div class="col-md-4">
+									<?php echo $formcat->getElement('remark');?>
+								</div>
+							</div>
+					
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<button type="button" name="btnsavenew" onclick="addNewCategory();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_CATEGORY")?> </button>
+						</label>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+          </div>
+        </div>
+    </div>
+ </div>	
+
+<!-- MEASURE Popup-->
+<?php $frmMesure = $this->frmMesure; ?>
+<div id="measurepopup" class="modal fade" tabindex="-1" data-width="1200">
+       <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">   
+		<div class="row">
+		<div class="col-md-12">
+			<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" >
+						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form id="frmMesure" name="frmcustomer" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<div class="form-body">
+					<div class="form-group">
+								<label class="col-md-4 control-label"><?php echo $tr->translate("MEASURE_NAME");?></label>
+								<div class="col-md-6">
+									<?php echo $frmMesure->getElement('measure_name');?>
+								</div>
+												
+							</div>
+							<div class="form-group">
+												
+								<label class="col-md-4 control-label"><?php echo $tr->translate("STATUS");?></label>
+								<div class="col-md-6">
+									<?php echo $frmMesure->getElement('status');?>
+								</div>
+							</div>
+							<div class="form-group">
+												
+								<label class="col-md-4 control-label"><?php echo $tr->translate("REMARK");?></label>
+								<div class="col-md-6">
+									<?php echo $frmMesure->getElement('remark');?>
+								</div>
+							</div>
+					
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<button type="button" name="btnsavenew" onclick="addNewMeasure();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MEASURE")?> </button>
+						</label>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+          </div>
+        </div>
+    </div>
+ </div>	
+
+<!-- Color Model Size Popup -->
+<?php $frmOther = $this->frmOther; ?>
+<div id="otherpopup" class="modal fade" tabindex="-1" data-width="1200">
+       <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">   
+		<div class="row">
+		<div class="col-md-12">
+			<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" >
+						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form id="frmOther" name="frmOther" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<div class="form-body">
+					<div class="form-group">
+									<label class="col-md-4 control-label"><?php echo $tr->translate("TITLE");?></label>
+									<div class="col-md-6">
+										<?php echo $frmOther->getElement('title_en');?>
+									</div>
+													
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label"><?php echo $tr->translate("TYPE");?></label>
+									<div class="col-md-6">
+										<?php echo $frmOther->getElement('type');?>
+									</div>
+													
+								</div>
+								<div class="form-group">
+													
+									<label class="col-md-4 control-label"><?php echo $tr->translate("STATUS");?></label>
+									<div class="col-md-6">
+										<?php echo $frmOther->getElement('status');?>
+									</div>
+								</div>
+					
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<button type="button" id="savecolor"name="btnsavenew" onclick="addNewColor();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_COLOR")?> </button>
+							<button type="button" id="savemodel" name="btnsavenew" onclick="addNewModel();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_MODEL")?> </button>
+							<button type="button"id="savesize" name="btnsavenew" onclick="addNewSize();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_SIZE")?> </button>
+						</label>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+          </div>
+        </div>
+    </div>
+ </div>
+
+<!--Model --->
+
 			      
 <script>
 $( document ).ready(function() {
@@ -236,8 +487,8 @@ $( document ).ready(function() {
 			template='<tr id="row_location_<?php echo $key+1;?>">';
 			template+='<td><?php echo $key+1;?></td>';
 			template+='<td><?php echo $rs["name"];?><input type="hidden" id="branch_id_<?php echo $key+1;?>" name="branch_id_<?php echo $key+1;?>" value="'+id+'"</td>';
-			template+='<td><input type="text" id="current_qty_<?php echo $key+1;?>" name="current_qty_<?php echo $key+1;?>" class="form-control"></td>'; 
-			template+='<td><input type="text" id="qty_warning_<?php echo $key+1;?>" name="qty_warnning_<?php echo $key+1;?>" class="form-control"></td>';
+			template+='<td><input type="text" id="current_qty_<?php echo $key+1;?>" name="current_qty_<?php echo $key+1;?>" value="0" class="form-control"></td>'; 
+			template+='<td><input type="text" id="qty_warning_<?php echo $key+1;?>" name="qty_warnning_<?php echo $key+1;?>" value="0" class="form-control"></td>';
 			template+='<td><button type="button" onClick="deleteRecord(<?php echo $key+1;?>,1)" name="save_close" class="btn default"><?php echo $tr->translate("DELETE");?></button></td>';
 			template+='</tr>';
 			$('#tr_location').append(template);
@@ -256,8 +507,8 @@ $( document ).ready(function() {
 			template='<tr id="row_location_'+index+'">';
 			template+='<td>'+index+'</td>';
 			template+='<td>'+txt_br+'<input type="hidden" id="branch_id_'+index+'" name="branch_id_'+index+'" value="'+branch_id+'" </td>';
-			template+='<td><input type="text" id="current_qty_'+index+'" name="current_qty_'+index+'" class="form-control"></td>'; 
-			template+='<td><input type="text" id="qty_warning_'+index+'" name="qty_warnning_'+index+'" class="form-control"></td>';
+			template+='<td><input type="text" id="current_qty_'+index+'" name="current_qty_'+index+'" value="0" class="form-control"></td>'; 
+			template+='<td><input type="text" id="qty_warning_'+index+'" name="qty_warnning_'+index+'" value="0" class="form-control"></td>';
 			template+='<td><button type="button" onClick="deleteRecord('+index+',1)" name="save_close" class="btn default"><?php echo $tr->translate("DELETE");?></button></td>';
 			template+='</tr>';
 			$('#tr_location').append(template);
@@ -276,7 +527,7 @@ $( document ).ready(function() {
 			template='<tr id="row_price_<?php echo $key+1;?>">';
 			template+='<td><?php echo $key+1;?></td>';
 			template+='<td><?php echo $rs["name"];?><input type="hidden" id="price_type_<?php echo $key+1;?>" name="price_type_<?php echo $key+1;?>" value="'+id_price+'"</td>';
-			template+='<td><input type="text" id="price_<?php echo $key+1;?>" name="price_<?php echo $key+1;?>" class="form-control"></td>'; 
+			template+='<td><input type="text" id="price_<?php echo $key+1;?>" name="price_<?php echo $key+1;?>" value="0" class="form-control"></td>'; 
 			template+='<td><input type="text" id="price_remark_<?php echo $key+1;?>" name="price_remark_<?php echo $key+1;?>" class="form-control"></td>'; 
 			template+='<td><button type="button" onClick="deleteRecord(<?php echo $key+1;?>,2)" name="save_close" class="btn default"><?php echo $tr->translate("DELETE");?></button></td>';
 			template+='</tr>';
@@ -297,7 +548,7 @@ $( document ).ready(function() {
 			template='<tr id="row_price_'+indexs+'">';
 			template+='<td>'+indexs+'</td>';
 			template+='<td>'+txt_pr+'<input type="hidden" id="price_type_'+indexs+'" name="price_type_'+indexs+'" value="'+price_id+'" </td>';
-			template+='<td><input type="text" id="price_'+indexs+'" name="price_'+indexs+'" class="form-control"></td>'; 
+			template+='<td><input type="text" id="price_'+indexs+'" name="price_'+indexs+'" value="0" class="form-control"></td>'; 
 			template+='<td><input type="text" id="price_remark_'+indexs+'" name="price_remark_'+indexs+'" class="form-control"></td>'; 
 			template+='<td><button type="button" onClick="deleteRecord('+indexs+',2)" name="save_close" class="btn default"><?php echo $tr->translate("DELETE");?></button></td>';
 			template+='</tr>';
@@ -332,6 +583,187 @@ $( document ).ready(function() {
 		
 
 		// total price
+	}
+	
+	function getPopupBrand(){
+		val = $('#brand').val();
+		if(val==-1){
+			$('#brandpopup').modal('show');
+		}
+	}
+	
+	function getPopupCategory(){
+		val = $('#category').val();
+		if(val==-1){
+			$('#categorypopup').modal('show');
+		}
+	}
+	
+	function getPopupMeasure(){
+		val = $('#measure').val();
+		if(val==-1){
+			$('#measurepopup').modal('show');
+		}
+	}
+	
+	function getPopupColor(){
+		val = $('#color').val();
+		if(val==-1){
+			$('#otherpopup').modal('show');
+			$('#type').val(4);
+			$('#type').attr('readOnly',true);
+			$('#savemodel').hide();
+			$('#savesize').hide();
+			$('#savecolor').show();
+		}
+	}
+	
+	function getPopupModel(){
+		val = $('#model').val();
+		if(val==-1){
+			$('#otherpopup').modal('show');
+			$('#type').val(2);
+			$('#type').attr('readOnly',true);
+			$('#savecolor').hide();
+			$('#savesize').hide();
+			$('#savemodel').show();
+		}
+	}
+	
+	function getPopupSize(){
+		val = $('#size').val();
+		if(val==-1){
+			$('#otherpopup').modal('show');
+			$('#type').val(3);
+			$('#type').attr('readOnly',true);
+			$('#savemodel').hide();
+			$('#savecolor').hide();
+			$('#savesize').show();
+		}
+	}
+	
+	<?php $url_add_brand =  $this->url(array('module'=>'product','controller'=>'index','action'=>'add-brand')); ?>
+	function addNewBrand(){
+		//alert(1);
+		var brand_name  = $("#brand_name").val();
+		$.ajax({
+			url: "<?php echo $url_add_brand;?>",
+			type: "post",
+			data: $('#frmbrand').serialize(),
+			success: function(data){
+				rs = $.parseJSON(data);
+				 $('#brand').append($("<option></option>").attr("value",rs['brand_id']).attr("selected",true).text(brand_name));                       
+				 $("#brand").select2();
+				$('#brandpopup').modal('hide');
+			},
+			error:function(err){
+				alert("faile insert");
+			   
+			}
+		});
+	}
+	
+	<?php $url_add_category =  $this->url(array('module'=>'product','controller'=>'index','action'=>'add-category')); ?>
+	function addNewCategory(){
+		//alert(1);
+		var cat_name  = $("#cat_name").val();
+		$.ajax({
+			url: "<?php echo $url_add_category;?>",
+			type: "post",
+			data: $('#frmCat').serialize(),
+			success: function(data){
+				rs = $.parseJSON(data);
+				 $('#category').append($("<option></option>").attr("value",rs['cat_id']).attr("selected",true).text(cat_name));                       
+				 $("#category").select2();
+				$('#categorypopup').modal('hide');
+			},
+			error:function(err){
+				alert("faile insert");
+			   
+			}
+		});
+	}
+	
+	<?php $url_add_measure =  $this->url(array('module'=>'product','controller'=>'index','action'=>'add-measure')); ?>
+	function addNewMeasure(){
+		//alert(1);
+		var measure_name  = $("#measure_name").val();
+		$.ajax({
+			url: "<?php echo $url_add_measure;?>",
+			type: "post",
+			data: $('#frmMesure').serialize(),
+			success: function(data){
+				rs = $.parseJSON(data);
+				 $('#measure').append($("<option></option>").attr("value",rs['measure_id']).attr("selected",true).text(measure_name));                       
+				 $("#measure").select2();
+				$('#measurepopup').modal('hide');
+			},
+			error:function(err){
+				alert("faile insert");
+			   
+			}
+		});
+	}
+	
+	<?php $url_add_color =  $this->url(array('module'=>'product','controller'=>'index','action'=>'add-other')); ?>
+	function addNewColor(){
+		//alert(1);
+		var title  = $("#title_en").val();
+		$.ajax({
+			url: "<?php echo $url_add_color;?>",
+			type: "post",
+			data: $('#frmOther').serialize(),
+			success: function(data){
+				rs = $.parseJSON(data);
+				 $('#color').append($("<option></option>").attr("value",rs['other_id']).attr("selected",true).text(title));                       
+				 $("#color").select2();
+				$('#otherpopup').modal('hide');
+			},
+			error:function(err){
+				alert("faile insert");
+			   
+			}
+		});
+	}
+	
+	function addNewModel(){
+		//alert(1);
+		var title  = $("#title_en").val();
+		$.ajax({
+			url: "<?php echo $url_add_color;?>",
+			type: "post",
+			data: $('#frmOther').serialize(),
+			success: function(data){
+				rs = $.parseJSON(data);
+				 $('#model').append($("<option></option>").attr("value",rs['other_id']).attr("selected",true).text(title));                       
+				 $("#model").select2();
+				$('#otherpopup').modal('hide');
+			},
+			error:function(err){
+				alert("faile insert");
+			   
+			}
+		});
+	}
+	
+	function addNewSize(){
+		//alert(1);
+		var title  = $("#title_en").val();
+		$.ajax({
+			url: "<?php echo $url_add_color;?>",
+			type: "post",
+			data: $('#frmOther').serialize(),
+			success: function(data){
+				rs = $.parseJSON(data);
+				 $('#size').append($("<option></option>").attr("value",rs['other_id']).attr("selected",true).text(title));                       
+				 $("#size").select2();
+				$('#otherpopup').modal('hide');
+			},
+			error:function(err){
+				alert("faile insert");
+			   
+			}
+		});
 	}
 </script>		
 </body>

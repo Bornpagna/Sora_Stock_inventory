@@ -68,8 +68,8 @@ $row_price = $this->pricetype_option;
 								</tr>
 								<tr>
 									<td colspan="2" align="center">
-										<input class="btn_submit" type="submit" name="update" value="<?php echo $tr->translate("UPDATE_CLOSE");?>"></input>
-										<input class="btn_submit" type="button" value="Cancel" name="payment" onclick="Cancel()"></input>
+										<a href="<?php echo $this->baseUrl();?>/product/pricelevel"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+										<input class="btn_submit" type="submit" name="update" value="<?php echo $tr->translate("GO_EDIT");?>"></input>
 									</td>
 								</tr>
 							

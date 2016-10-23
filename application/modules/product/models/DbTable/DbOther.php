@@ -63,7 +63,21 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
     	$where = $db->quoteInto("id=?", $data["id"]);
     	$this->update($arr, $where);
     }
-    
+    //Insert Popup=====================================================================
+	
+	function addNew($data){
+    	$db = $this->getAdapter();
+    	$key_code = $this->getLastKeycodeByType($data['type']);
+    	$arr = array(
+    		'name_en'	=>	$data["title_en"],
+    		'key_code'	=>	$key_code,
+    		'type'		=>	$data["type"],
+    		'status'	=>	$data["status"],
+    	);
+    	$this->_name = "tb_view";
+    	$id = $this->insert($arr);
+		return $key_code;
+    }
     function getLastKeycodeByType($type){
     	$sql = "SELECT key_code FROM `tb_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
     	$db =$this->getAdapter();

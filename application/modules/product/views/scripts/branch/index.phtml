@@ -8,11 +8,11 @@
 	$rs = $this->resulr;
 ?>
 <title><?php echo $tr->translate("LOCATION_LIST");?></title>
-<div class="col-md-12">
+
 	<div class="portlet box blue">
 		<div class="portlet-title">
 			<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("MENU_BRANCH_ADVANCE_INDEX");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("LOCATION_LIST");?>
 			</div>
 			<div class="caption" style="float:right">
 					<?php $formList = new Application_Form_Frmlist(); echo $formList->showAddBuntton($url_new);?>
@@ -45,11 +45,13 @@
 							<div class="table-toolbar">
 								
 							</div>
-							<table class="table table-striped table-bordered table-hover" id="sample_1">
+							<table class="table table-striped table-bordered table-hover" id="sample_2">
 							<thead>
 								<tr>
 									<th><?php echo $tr->translate("NO");?></th>
 									<th><?php echo $tr->translate("BRANCH_NAME");?></th>
+									<th><?php echo $tr->translate("CODE");?></th>
+									<th><?php echo $tr->translate("PREFIX");?></th>
 									<th><?php echo $tr->translate("CONTACT_NAME");?></th>
 									<th><?php echo $tr->translate("PHONE");?></th>
 									<th><?php echo $tr->translate("EMAIL");?></th>
@@ -64,6 +66,8 @@
 								<tr class="odd gradeX">
 									<td><?php echo $key+1;?></td>
 									<td><?php echo $row["name"]?></td>
+									<td><?php echo $row["code"]?></td>
+									<td><?php echo $row["prefix"]?></td>
 									<td><?php echo $row["contact"]?></td>
 									<td><?php echo $row["phone"]?></td>
 									<td><a href="mailto:shuxer@gmail.com"><?php echo $row["email"]?> </a></td>
@@ -87,4 +91,3 @@
 					<!-- END EXAMPLE TABLE PORTLET-->
 			<!-- End Result list -->
 	</div>
-</div>

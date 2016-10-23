@@ -14,7 +14,7 @@ print_r($this->rs_detail);
 <div class="portlet box blue">
 		<div class="portlet-title">
 			<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("MENU_PRODUCT_ADVANCE_INDEX");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("EDIT_TRANSFER");?>
 			</div>
 			<div class="tools">
 				<a href="<?php echo $url_cancel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a>
@@ -67,7 +67,7 @@ print_r($this->rs_detail);
 					<div class="portlet box blue">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-cogs"></i><?php echo $tr->translate("PRODUCT_LOCATION");?>
+								<i class="fa fa-cogs"></i><?php echo $tr->translate("PRODUCT_LIST");?>
 							</div>
 						</div>	
 							<div class="portlet-body">
@@ -87,8 +87,9 @@ print_r($this->rs_detail);
 									</table>
 								</div>
 								<input type="hidden" name="identity" id="identity" value="<?php //echo $identity;?>" >
-								<button type="submit" name="save_new" class="btn green"><?php echo $tr->translate("SAVE_NEW");?></button>
-								<button type="submit" name="save_close" class="btn default"><?php echo $tr->translate("SAVE_CLOSE");?></button>
+								<a href="<?php echo $this->baseUrl();?>/product/transfer"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("EXIT")?></button></a>
+								<button type="submit" name="save_new" class="btn btn-primary"><?php echo $tr->translate("SAVE_NEW");?></button>
+								<button type="submit" name="save_close" class="btn btn-primary"><?php echo $tr->translate("SAVE_CLOSE");?></button>
 							</div>
 					</div>
 				</div>

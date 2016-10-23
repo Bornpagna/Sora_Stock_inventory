@@ -10,7 +10,7 @@ class Product_Form_FrmBrand extends Zend_Form
 	public function Brand($data=null){
 		$db = new Brand_Model_DbTable_DbBrand();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$name = new Zend_Form_Element_Text('cat_name');
+		$name = new Zend_Form_Element_Text('brand_name');
 		$name->setAttribs(array(
 				'class'=>'form-control',
 				'required'=>'required'

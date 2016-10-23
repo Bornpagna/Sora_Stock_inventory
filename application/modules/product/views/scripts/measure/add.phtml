@@ -5,7 +5,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->frmAdd;
 ?>
-<title><?php echo $tr->translate("MEASURE_LIST");?></title>
+<title><?php echo $tr->translate("ADD_MEASURE");?></title>
 <div class="col-md-12">
 	<div class="portlet box blue">
 		<div class="portlet-title">
@@ -24,7 +24,7 @@
 							<div class="form-group">
 								<label class="col-md-4 control-label"><?php echo $tr->translate("MEASURE_NAME");?></label>
 								<div class="col-md-6">
-									<?php echo $formFilter->getElement('name');?>
+									<?php echo $formFilter->getElement('measure_name');?>
 								</div>
 												
 							</div>

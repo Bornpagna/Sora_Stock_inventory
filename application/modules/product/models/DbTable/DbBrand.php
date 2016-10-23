@@ -10,7 +10,7 @@ class Product_Model_DbTable_DbBrand extends Zend_Db_Table_Abstract
 	public function add($data){
 		$db = $this->getAdapter();
 		$arr = array(
-				'name'			=>	$data["cat_name"],
+				'name'			=>	$data["brand_name"],
 				'parent_id'		=>	$data["parent"],
 				'date'			=>	new Zend_Date(),
 				'status'		=>	$data["status"],
@@ -22,7 +22,7 @@ class Product_Model_DbTable_DbBrand extends Zend_Db_Table_Abstract
 	public function edit($data){
 		$db = $this->getAdapter();
 		$arr = array(
-				'name'			=>	$data["cat_name"],
+				'name'			=>	$data["brand_name"],
 				'parent_id'		=>	$data["parent"],
 				'date'			=>	new Zend_Date(),
 				'status'		=>	$data["status"],
@@ -31,6 +31,20 @@ class Product_Model_DbTable_DbBrand extends Zend_Db_Table_Abstract
 		$this->_name = "tb_brand";
 		$where = $db->quoteInto("id=?", $data["id"]);
 		$this->update($arr, $where);
+	}
+	
+	//Popup Insert=======================================\
+	public function addNew($data){
+		$db = $this->getAdapter();
+		$arr = array(
+				'name'			=>	$data["brand_name"],
+				'parent_id'		=>	$data["parent"],
+				'date'			=>	new Zend_Date(),
+				'status'		=>	$data["status"],
+				'remark'		=>	$data["remark"],
+		);
+		$this->_name = "tb_brand";
+		return $this->insert($arr);
 	}
 	
 	public function getAllBrands($data){

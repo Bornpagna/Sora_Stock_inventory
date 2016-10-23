@@ -6,12 +6,12 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->frmAdd;
 ?>
-<title><?php echo $tr->translate("MEASURE_LIST");?></title>
+<title><?php echo $tr->translate("EDIT_MEASURE");?></title>
 <div class="col-md-12">
 	<div class="portlet box blue">
 		<div class="portlet-title">
 			<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("ADD_MEASURE");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("EDIT_MEASURE");?>
 			</div>
 			<div class="tools">
 				<label><a href="<?php echo $url_cancel;?>"><button type="button" name="calcel" class="btn red"><?php echo $tr->translate("GO_BACK");?></button></a></label>
@@ -24,7 +24,7 @@
 							<div class="form-group">
 								<label class="col-md-3 control-label"><?php echo $tr->translate("MEASURE_NAME");?></label>
 								<div class="col-md-7">
-									<?php echo $formFilter->getElement('name');?>
+									<?php echo $formFilter->getElement('measure_name');?>
 								</div>
 												
 							</div>

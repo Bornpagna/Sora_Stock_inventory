@@ -10,7 +10,7 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
 	public function add($data){
 		$db = $this->getAdapter();
 		$arr = array(
-				'name'			=>	$data["name"],
+				'name'			=>	$data["measure_name"],
 // 				'parent_id'		=>	$data["parent"],
 				'date'			=>	new Zend_Date(),
 				'status'		=>	$data["status"],
@@ -22,7 +22,7 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
 	public function edit($data){
 		$db = $this->getAdapter();
 		$arr = array(
-				'name'			=>	$data["name"],
+				'name'			=>	$data["measure_name"],
 // 				'parent_id'		=>	$data["parent"],
 				'date'			=>	new Zend_Date(),
 				'status'		=>	$data["status"],
@@ -32,7 +32,19 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
 		$where = $db->quoteInto("id=?", $data["id"]);
 		$this->update($arr, $where);
 	}
-	
+	//Insert Popup=============================================================================
+	public function addNew($data){
+		$db = $this->getAdapter();
+		$arr = array(
+				'name'			=>	$data["measure_name"],
+// 				'parent_id'		=>	$data["parent"],
+				'date'			=>	new Zend_Date(),
+				'status'		=>	$data["status"],
+				'remark'		=>	$data["remark"],
+		);
+		$this->_name = "tb_measure";
+		return $this->insert($arr);
+	}
 	public function getAllMeasure(){
 		$db = $this->getAdapter();
 		$sql = "SELECT m.id,m.`name`,m.`status`,m.`remark` FROM `tb_measure` AS m ";
