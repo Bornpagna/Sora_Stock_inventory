@@ -19,7 +19,7 @@ public function init()
 		else{
 			$search =array(
 					'text_search'=>'',
-					'start_date'=>date("Y-m-d"),
+					'start_date'=>1,
 					'end_date'=>date("Y-m-d"),
 					'branch_id'=>-1,
 					);
@@ -27,7 +27,7 @@ public function init()
 		$db = new Sales_Model_DbTable_DbSalesAgent();
 		$rows= $db->getAllSaleAgent($search);
         $list = new Application_Form_Frmlist();
-    	$columns=array("BRANCH_NAME","SALE_AGENT","CONTACT_NUM","EMAIL","CONTACT_NUM","POSTION","DESC_CAP");
+    	$columns=array("BRANCH_NAME","AGENT_CODE","SALE_AGENT","CONTACT_NUM","EMAIL","ADDRESS","POSTION","START_WORKING_DATE","DESC_CAP");
     	$link=array(
     		'module'=>'sales','controller'=>'saleagent','action'=>'edit',
     	);
@@ -111,6 +111,15 @@ public function init()
 			exit();
 		}
 		
+	}
+	
+	public function getSaleAgentCodeAction(){//dynamic by customer
+	
+		$post=$this->getRequest()->getPost();
+		$get_code = new Sales_Model_DbTable_DbSalesAgent();
+		$result = $get_code->getSaleAgentCode($post["id"]);
+		echo Zend_Json::encode($result);
+		exit();
 	}
 }
 

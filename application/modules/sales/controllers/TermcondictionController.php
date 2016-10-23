@@ -19,7 +19,7 @@ public function init()
 		$glClass = new Application_Model_GlobalClass();
 		$rows = $glClass->getImgStatus($rows, BASE_URL, true);
 		$list = new Application_Form_Frmlist();
-		$columns=array("NAME_KH","NAME_EN","STATUS");
+		$columns=array("NAME_KH","NAME_EN","TYPE","STATUS");
 		$link=array(
 				'module'=>'sales','controller'=>'termcondiction','action'=>'edit',
 		);
