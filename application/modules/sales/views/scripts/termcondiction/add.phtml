@@ -4,12 +4,12 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->frmAdd;
 ?>
-<title><?php echo $tr->translate("LOCATION_LIST");?></title>
+<title><?php echo $tr->translate("ADD_TERMCONDICTION");?></title>
 <div class="col-md-12">
 	<div class="portlet box blue">
 		<div class="portlet-title">
 			<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("ADD_LOCATION");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("ADD_TERMCONDICTION");?>
 			</div>
 			<div class="caption pull-right">
 				<a href="<?php echo $url_new;?>" class="btn btn-sm green  pull-right">
@@ -51,8 +51,7 @@
 					<div class="form-group">
 						<label  class="col-md-12 col-md-offset-4 col-md-8">
 						<a href="<?php echo $this->baseUrl();?>/sales/termcondiction"><button type="button" class="btn red"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
-							<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("GO_EDIT")?></button>
-						</label>
+							<button type="submit" name="save_close" value="saveclose" class="btn btn-primary" ><i class="glyphicon glyphicon-log-in"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
 					</div>
 					</div>
 				</div>
