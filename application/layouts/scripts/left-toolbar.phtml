@@ -7,13 +7,13 @@
 	//must add edit it
 	$url_pro_add =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'add'),null, true), "MENU_PRODUCT_INDEX_ADD");
 	$url_pro_list =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_INDEX");
-	$url_category =  array($this->url(array('module'=>'category','controller'=>'index','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_CATEGORY");
-	$url_brand = array($this->url(array('module'=>'brand','controller'=>'index','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_BRAND");
+	$url_category =  array($this->url(array('module'=>'product','controller'=>'category','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_CATEGORY");
+	$url_brand = array($this->url(array('module'=>'product','controller'=>'brand','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_BRAND");
 	$url_curr =  array($this->url(array('module'=>'product','controller'=>'current-stock','action'=>'index'),null, true), "MENU_PRODUCT_CURRENT_STOCK_INDEX");
 	$url_adj =  array($this->url(array('module'=>'product','controller'=>'adjust','action'=>'add'),null, true), "MENU_PRODUCT_ADJUST_STOCK_ADJUST");
 	//$url_adj_price =  array($this->url(array('module'=>'product','controller'=>'adjust-stock','action'=>'price')), "MENU_PRODUCT_ADJUST_STOCK_ADJUST_PRICE");
 	$url_transfer = array($this->url(array('module'=>'product','controller'=>'transfer','action'=>'index'),null, true), "MENU_PRODUCT_ADJUST_STOCK_TRANSFER_STOCK");
-	$url_location = array($this->url(array('module'=>'branch','controller'=>'index','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_INDEX_LOCATION");
+	$url_location = array($this->url(array('module'=>'product','controller'=>'branch','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_INDEX_LOCATION");
 	$url_other = array($this->url(array('module'=>'product','controller'=>'other','action'=>'index')), "MENU_OTHER");
 	//$url_alert = array($this->url(array('module'=>'product','controller'=>'index','action'=>'itemalert')), "MENU_PRODUCT_INDEX_ITEMALERT");
 	//module purchase
@@ -219,11 +219,12 @@
 						    <i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_list[1]);?>
 	            		</a>
             		</li> 
+					<!--
             		<li>
-            			<a href="<?php echo $url_sales_add[0]; ?>">
-	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_add[1])?>
+            			<a href="<?php //echo $url_sales_add[0]; ?>">
+	            			<i class="icon-arrow-right"></i><?php //echo $tr->translate($url_sales_add[1])?>
 	            		</a>
-            		</li>
+            		</li>-->
             		<?php //if($result["level"]==3 ){ ?>
             		<!-- <li>
             			<a href="<?php echo  $url_return_in[0]; ?>">
@@ -252,11 +253,12 @@
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_quotelist[1])?>
 	            	</a>
             		</li> 
+					<!--
             		<li>
-            			<a href="<?php echo $url_sales_quote[0]; ?>">
-	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_sales_quote[1])?>
+            			<a href="<?php //echo $url_sales_quote[0]; ?>">
+	            			<i class="icon-arrow-right"></i><?php //echo $tr->translate($url_sales_quote[1])?>
 	            		</a>
-            		</li> 
+            		</li>-->
             		<li>
             			<a href="<?php echo $url_invocie_approved[0]; ?>">
 	            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_invocie_approved[1])?>
