@@ -17,7 +17,7 @@ class Purchase_vendorController extends Zend_Controller_Action
 		}else{
 			$search =array(
 					'text_search'=>'',
-					'start_date'=>date("Y-m-d"),
+					'start_date'=>1,
 					'end_date'=>date("Y-m-d"),
 					'suppliyer_id'=>0,
 					);
