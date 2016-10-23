@@ -13,7 +13,7 @@ public function init()
     }
     public function indexAction()
     {
-		$db = new Category_Model_DbTable_DbCategory();
+		$db = new Product_Model_DbTable_DbCategory();
 		$formFilter = new Product_Form_FrmCategory();
 		$frmsearch = $formFilter->categoryFilter();
 		$this->view->formFilter = $frmsearch;
