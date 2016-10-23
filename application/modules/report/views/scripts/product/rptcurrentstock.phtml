@@ -32,33 +32,45 @@ $formFilter = $this->formFilter;
 				<form method="post" action="<?php //echo $formFilter->getAction(); ?>">
 					<div class="form-body">
 							<div class="form-group">
-								<div class="col-md-3">
+								<label class="control-label col-md-3">
 									<?php echo $formFilter->getElement('ad_search');?>
-								</div>
-								<div class="col-md-3">
+								</label>
+								
+								<label class="control-label col-md-3">
+									<?php echo $formFilter->getElement('branch');?>
+								</label>
+								
+								<label class="control-label col-md-3">
 									<?php echo $formFilter->getElement('brand');?>
-								</div>
-								<div class="col-md-3">
+								</label>
+								
+								<label class="control-label col-md-3">
 									<?php echo $formFilter->getElement('category');?>
-								</div>
-								<div class="col-md-3">
-									<?php echo $formFilter->getElement('model');?>
-								</div>
+								</label>
+								
 							</div>
 							<div class="form-group">
-								<div class="col-md-3">
+								<label class="control-label col-md-3">
+									<?php echo $formFilter->getElement('model');?>
+								</label>
+								<label class="control-label col-md-3">
 									<?php echo $formFilter->getElement('size');?>
-								</div>
-								<div class="col-md-3">
+								</label>
+								
+								<label class="control-label col-md-3">
 									<?php echo $formFilter->getElement('color');?>
-								</div>
-								<div class="col-md-3">
+								</label>
+								
+								<label class="control-label col-md-3">
 									<?php echo $formFilter->getElement('status');?>
-								</div>
-								<div class="col-md-3">
-									<button type="submit" class="btn green"><?php echo $tr->translate("SEARCH");?></button>
-								</div>
-							</div>		
+								</label>
+								
+							</div>
+							<div class="form-group">
+								<label class="control-label col-md-2  pull-right">
+									<button type="submit" class="btn btn-primary col-md-12"><?php echo $tr->translate("SEARCH");?></button>
+								</label>
+							</div>
 							
 						
 				</div><div style="clear:both;"></div>	
@@ -85,8 +97,8 @@ $formFilter = $this->formFilter;
 		                	<td width="60%" valign="top">
 		                		<ul>
 		                			<li style="text-align:center; font-size:16px; font-family:'Khmer MEF2'">សូរ៉ា ហាងលក់សម្ភារៈអគ្គិសនី</li>
-		                			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'">របាយការណ៏ បញ្ជីចំនួនផលិតផលក្នុងស្តុក</li>
-		                			<!-- <li style="text-align:center; font-size:13px;"><?php //echo date("d/m/Y",strtotime($this->rssearch['start_date']));?> ដល់ <?php //echo date("d/m/Y",strtotime($this->rssearch['end_date']));?></li> -->
+		                			<li style="text-align:center; font-size:13px; font-family:'Khmer MEF2'">របាយការណ៏ បញ្ជីផលិតផល</li>
+		                			<li style="text-align:center; font-size:13px;"><?php echo date("d/m/Y",strtotime($this->rssearch['start_date']));?> ដល់ <?php echo date("d/m/Y",strtotime($this->rssearch['end_date']));?></li>
 		                		</ul>
 		                	</td>
 		                    <td width="20%"></td>
@@ -120,8 +132,9 @@ $formFilter = $this->formFilter;
 									<td><?php echo $tr->translate("CATEGORY");?></td>
 									<td><?php echo $tr->translate("MODEL");?></td>
 									<td><?php echo $tr->translate("MEASURE");?></td>
+									<td><?php echo $tr->translate("BRANCH");?></td>
 									<td><?php echo $tr->translate("QTY");?></td>
-									<!-- <td><?php //echo $tr->translate("STATUS");?></td> -->
+									<!--<td><?php echo $tr->translate("STATUS");?></td>-->
 		                </tr>
 		                <?php $num=1; 
 		                $r_netotal = 0;$r_paid = 0; $r_balance = 0;
@@ -131,21 +144,22 @@ $formFilter = $this->formFilter;
 						<tr height="30" class='row-format<?php echo $num; ?>' id="item_<?php echo $index; ?>">
 								<td align="center">&nbsp;<?php echo $index ?></td>
 								<td><?php echo $row["item_code"]?></td>
-									<td><?php echo $row["item_name"]?></td>
-									<td><?php echo $row["barcode"]?></td>
-									<td><?php echo $row["serial_number"]?> </td>
-									<td><?php echo $row["brand"]?></td>
-									<td class="center"><?php echo $row["cat"]?></td>
-									<td class="center"><?php echo $row["model"]?></td>
-									<td class="center"><?php echo $row["measure"]?></td>
-									<td class="center"><?php echo $row["qty"]?></td>
-									<!-- <td class="center">
+									<td style="width:30%"><?php echo $row["item_name"]?></td>
+									<td style="width:5% !important"><?php echo $row["barcode"]?></td>
+									<td style="width:8% !important"><?php echo $row["serial_number"]?> </td>
+									<td style="width:8% !important"><?php echo $row["brand"]?></td>
+									<td style="width:10% !important" class="center"><?php echo $row["cat"]?></td>
+									<td style="width:8% !important" class="center"><?php echo $row["model"]?></td>
+									<td style="width:5% !important" class="center"><?php echo $row["measure"]?></td>
+									<td style="width:8% !important" class="center"><?php echo $row["branch"]?></td>
+									<td style="width:8% !important" class="center"><?php echo $row["qty"]?></td>
+									<!--<td style="white-space:nowrap"class="center">
 										<?php //if($row["status"] == 1){?>
 										<span class="label label-sm label-success"><?php //echo $tr->translate("ACTIVE");?> </span>
 										<?php //}else{?>
 										<span class="label label-sm label-danger"><?php //echo $tr->translate("DEACTIVE");?> </span>
 										<?php //}?>
-									</td> -->
+									</td>-->
 							</tr>
 						  <?php }?> 
 		                </tbody>
