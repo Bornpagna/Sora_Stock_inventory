@@ -41,12 +41,12 @@ class Sales_Form_FrmStock extends Zend_Form
     		foreach($rowsStock as $readStock) $optionsStock[$readStock['id']]=$readStock['name'];
     	}
     	$mainStockElement = new Zend_Form_Element_Select('branch_id');
-    	$mainStockElement->setAttribs(array('OnChange'=>'AddLocation()','class'=>'form-control select2me'));
+    	$mainStockElement->setAttribs(array('OnChange'=>'getSaleCode()','class'=>'form-control select2me'));
     	$mainStockElement->setMultiOptions($optionsStock);
     	$this->addElement($mainStockElement);
     	
     	$user_name = new Zend_Form_Element_Text('user_name');
-    	$user_name->setAttribs(array('placeholder'=>'Enter User Name',"class"=>"form-control"));
+    	$user_name->setAttribs(array('placeholder'=>'Enter User Name',"class"=>"form-control",'required'=>'required'));
     	$this->addElement($user_name);
     	
     	$password = new Zend_Form_Element_Password('password');

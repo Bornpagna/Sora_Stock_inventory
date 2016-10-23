@@ -6,7 +6,8 @@ class Sales_Form_FrmTermCondiction extends Zend_Form
 	}
 	/////////////	Form vendor		/////////////////
 public function Formterm($data=null) {
-		
+		$db = new Sales_Model_DbTable_DbTermCondiction();
+		$rs_type = $db->getTermcondictionType();
 		$name_en = new Zend_Form_Element_Textarea('name_en');
 		$name_en->setAttribs(array('class'=>'validate[required] form-control','placeholder'=>'Enter Name EN',"style"=>"height:40px;"));
     	$this->addElement($name_en);
@@ -21,7 +22,12 @@ public function Formterm($data=null) {
     	$status->setMultiOptions($opt);
     	$this->addElement($status);
     	
-    	$opt_type= array('1'=>'Quotation',2=>'Sale',3=>"Invoice",4=>"Delivery Note");
+    	//$opt_type= array('1'=>'Quotation',2=>'Sale',3=>"Invoice",4=>"Delivery Note");
+		if(!empty($rs_type)){
+			foreach($rs_type AS $rs){
+				$opt_type[$rs["key_code"]] = $rs["name_en"];
+			}
+		}
     	$type = new Zend_Form_Element_Select('type');
     	$type->setAttribs(array('class'=>'validate[required] form-control select2me'));
     	$type->setMultiOptions($opt_type);
