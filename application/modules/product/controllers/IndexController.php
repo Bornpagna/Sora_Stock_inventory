@@ -11,6 +11,10 @@ public function init()
     	$result = $user_info->getUserInfo();
     	return $result;
     }
+	function updatecodeAction(){
+		$db = new Product_Model_DbTable_DbProduct();
+		$db->getProductCoded();
+	}
     public function indexAction()
     {
     	$db = new Product_Model_DbTable_DbProduct();

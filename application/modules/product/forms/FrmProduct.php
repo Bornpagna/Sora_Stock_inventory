@@ -248,8 +248,8 @@ class Product_Form_FrmProduct extends Zend_Form
 				'class'=>'form-control select2me',
 		));
 		if(!empty($db->getModel())){
-			foreach ($db->getModel() as $rs){
-				$opt[$rs["key_code"]] = $rs["name"];
+			foreach ($db->getModel() as $rss){
+				$opt[$rss["key_code"]] = $rss["name"];
 			}
 		}
 		$model->setMultiOptions($opt);

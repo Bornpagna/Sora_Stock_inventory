@@ -13,6 +13,25 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 		return Application_Model_DbTable_DbGlobal::GlobalgetUserId();
 	}
     
+	 public function getProductCoded(){
+		$db =$this->getAdapter();
+		$sql=" SELECT id FROM tb_customer ";
+		$acc_no = $db->fetchAll($sql);
+		foreach($acc_no as $rs){
+			$new_acc_no= $rs["id"];
+			$acc_no= strlen($rs["id"]);
+			$pre = "CID";
+			for($i = $acc_no;$i<5;$i++){
+				$pre.='0';
+				$code = $pre.$new_acc_no;
+				$sqls = "UPDATE tb_customer SET cu_code = "."'".$code."'"." WHERE id=".$rs["id"];
+				//echo $sqls;
+				$db->query($sqls);
+			}
+		}
+		
+		
+  }
   public function getBrand(){
   	$db = $this->getAdapter();
   	$sql = "SELECT b.`id`,b.`name` FROM `tb_brand` AS b WHERE b.`status`=1";
@@ -21,7 +40,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   
   public function getModel(){
   	$db = $this->getAdapter();
-  	$sql = "SELECT v.`id`,v.`name_kh` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 2";
+  	$sql = "SELECT v.`id`,v.`name_en` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 2";
   	return $db->fetchAll($sql);
   }
   
@@ -37,7 +56,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   }
   public function getSize(){
   	$db = $this->getAdapter();
-  	$sql = "SELECT v.`id`,v.`name_kh` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 3";
+  	$sql = "SELECT v.`id`,v.`name_en` as name,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` = 3";
   	return $db->fetchAll($sql);
   }
   
