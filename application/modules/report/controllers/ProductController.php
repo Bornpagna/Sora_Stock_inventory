@@ -36,7 +36,7 @@ class report_ProductController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($formFilter);
     
     }
-    public function rptproductlistAction()
+    public function rptcurrentstockAction()
     {
     	$db = new Product_Model_DbTable_DbProduct();
     	if($this->getRequest()->isPost()){
@@ -59,7 +59,7 @@ class report_ProductController extends Zend_Controller_Action
     	Application_Model_Decorator::removeAllDecorator($formFilter);
     
     }
-    public function rptcurrentstockAction()
+    public function rptproductlistAction()
     {
     	$db = new report_Model_DbProduct();
     	if($this->getRequest()->isPost()){
