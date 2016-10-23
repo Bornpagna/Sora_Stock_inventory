@@ -6,7 +6,7 @@ $url_edit =  $this->url(array('module'=>'purchase','controller'=>'vendor','actio
 $form=$this->form;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-<title><?php echo $tr->translate("EDIT_NEW_VENDOR");?></title>
+<title><?php echo $tr->translate("EDIT_VENDOR");?></title>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
@@ -147,7 +147,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 </html>
 <script>
 jQuery(document).ready(function() { 
-	alert(1);
+isOverSea();
 });
 	function isOverSea(){
 		val = $('#is_over_sea');
