@@ -424,7 +424,7 @@ function addRow(item_id) {
 	template+='<td><input style="background:#f5e1e1;" readonly type="text" class="form-control" id="current_qty'+index5+'" name="current_qty'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
-	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
+	template+='<td ><input type="text" readonly onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
 	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" required="1" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
 	template+='<td  width="5%"><input type="text" onkeyup="calculatePrice('+index5+')" value="0" id="dis_value'+index5+'" name="dis_value'+index5+'" class="form-control" /><input type="hidden" id="olddis_value_'+index5+'" name="olddis_value_'+index5+'"/><input type="hidden" readonly="readonly" class="input70px" id="real-value'+index5+'" name="real-value'+index5+'" /></td>';
 	template+='<td ><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
@@ -579,8 +579,7 @@ function netTotal() {//use
 	calculateDiscount();
 }
 function calculateDiscount(){//use
-	var discountValue = ($('#dis_value').val());
-	if(discountValue==''){$('#dis_value').val(0);discountValue=0;}
+	var discountValue = $('#dis_value').val();
 	if(discountValue.length!=0){
 		if(discountValue.indexOf("%")!==-1){
 			var pds=discountValue.split("%");
@@ -593,6 +592,10 @@ function calculateDiscount(){//use
 				totalpayment = alltotal - discountValue;
 				$('#all_total').val(totalpayment);
 		}
+	}else{
+		alltotal = $("#totalAmoun").val();
+		totalpayment = alltotal - 0;
+		$('#all_total').val(totalpayment);
 	}
 }
 function CalcualteTax() {
@@ -606,8 +609,10 @@ function calculatePrice(index) {
 	var price = $('#price'+index).val();
 	var total = price * qty;
 	//alert("total then aftet discount"+total);
+	
 	var ds = $('#dis_value'+index).val();
 	if(ds.length!=0){
+		
 		if(ds.indexOf("%")!==-1){//if have %
 			var pds=ds.split("%");
 			if(!isNaN(pds[0])){
@@ -619,6 +624,7 @@ function calculatePrice(index) {
 			}
 			$('#total'+index).val(after_discount.toFixed(2));
 		}else{
+		
 			after_discount=0;
 			if(!isNaN(ds)&&ds!=0){
 				discount = parseFloat(ds).toFixed(2);
@@ -629,9 +635,12 @@ function calculatePrice(index) {
 			}
 			$('#total'+index).val(parseFloat(after_discount).toFixed(2));
 		}
-		netTotal();
+		//netTotal();
 	}else{
+		$('#total'+index).val(parseFloat(total).toFixed(2));
+		
 		}
+		netTotal();
 }
  var record_id = 1;
 function ShowPopupProduct(recordid){
@@ -670,6 +679,9 @@ function addNewCustomer(){
            
         }
     });
+}
+function filterBranch(){
+	 getQuotenumber();
 }
 <?php $url_code =  $this->url(array('module'=>'sales','controller'=>'quoatation','action'=>'getquoteno')); ?>
 function getQuotenumber(){

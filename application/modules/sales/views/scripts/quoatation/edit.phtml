@@ -84,12 +84,18 @@
 									<?php echo $form->getElement("remark");?>
 								</div>
 							</div>
-							<label class="control-label col-md-2"><?php echo $tr->translate("SALE_ORDER");?><span class="required">
+							<label class="control-label col-md-2">
+							<?php if($this->rsq['is_approved']==1){?>
+								<?php echo $tr->translate("SALE_ORDER");?>
+							<?php }?>
+							<span class="required">
 								 </span>
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
+								 <?php if($this->rsq['is_approved']==1){?>
 									<?php echo $form->getElement("so_number");?>
+								<?php }?>
 								</div>
 							</div>
 						</div>
@@ -380,7 +386,7 @@ function getQtyById(index){//use
 							getProductPrice(item_id,index);
 						},
 						error:function(e){
-							alert(e);
+							//alert(e);
 						}
 				});
 			}
@@ -404,7 +410,7 @@ function getProductPrice(product_id,recordid){
 				calculatePrice(recordid);
 			},
 			error:function(e){
-				alert(e);
+				//alert(e);
 			}
 	});
   }
@@ -470,7 +476,6 @@ function netTotal() {//use
 }
 function calculateDiscount(){//use
 	var discountValue = ($('#dis_value').val());
-	if(discountValue==''){$('#dis_value').val(0);discountValue=0;}
 	if(discountValue.length!=0){
 		if(discountValue.indexOf("%")!==-1){
 			var pds=discountValue.split("%");
@@ -483,6 +488,10 @@ function calculateDiscount(){//use
 				totalpayment = alltotal - discountValue;
 				$('#all_total').val(totalpayment);
 		}
+	}else{
+		alltotal = $("#totalAmoun").val();
+		totalpayment = alltotal - 0;
+		$('#all_total').val(totalpayment);
 	}
 }
 function CalcualteTax() {
@@ -519,9 +528,11 @@ function calculatePrice(index) {
 			}
 			$('#total'+index).val(parseFloat(after_discount).toFixed(2));
 		}
-		netTotal();
+		
 	}else{
-		}
+		$('#total'+index).val(parseFloat(total).toFixed(2));
+	}
+	netTotal();
 }
  var record_id = 1;
 function ShowPopupProduct(recordid){

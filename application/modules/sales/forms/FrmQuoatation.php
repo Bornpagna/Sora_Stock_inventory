@@ -48,7 +48,7 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$options="";
     	$sql = "SELECT id, name FROM tb_sublocation WHERE name!='' AND status=1";
     	if($user["level"]==1 OR $user["level"]== 2){
-    		$options=array("1"=>$tr->translate("Please_Select"),"-1"=>$tr->translate("ADD_NEW_LOCATION"));
+    		$options=array();//array("1"=>$tr->translate("Please_Select"));
     	}
     	else{
     		$sql.=" AND id = ".$user["location_id"];
@@ -115,7 +115,7 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$this->addElement($discountValueElement);
     	
     	$dis_valueElement = new Zend_Form_Element_Text('dis_value');
-    	$dis_valueElement->setAttribs(array("required"=>1,'placeholder' => 'Discount Value','style'=>'text-align:right'));
+    	$dis_valueElement->setAttribs(array('placeholder' => 'Discount Value','style'=>'text-align:right'));
     	$dis_valueElement->setValue(0);
     	$dis_valueElement->setAttribs(array("onkeyup"=>"calculateDiscount();","class"=>"form-control"));
     	$this->addElement($dis_valueElement);

@@ -52,7 +52,75 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 			$session_user=new Zend_Session_Namespace('auth');
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
+			
+			if(!empty($data['makeso'])){//if edit quote=>sale order
+				
+					/*$this->_name="tb_quoatation";
+					$arr = array(
+					'is_tosale'=>1);
+					$where ="id = ".$id;
+					$this->update($arr,$where);*/
+				$dbq = new Sales_Model_DbTable_Dbquoatation();
+				$row = $dbq->getQuotationItemById($data["id"]);
+					$so = $db_global->getSalesNumber($row["branch_id"]);
+					$qdata=array(
+					       'is_toinvocie'=>1,
+							'quote_id'=>$data["id"],
+							"customer_id"    => $row['customer_id'],
+							"branch_id"      => $row["branch_id"],
+							"sale_no"       => 	$so,//$data['txt_order'],
+							"date_sold"     => date("Y-m-d"),
+							"saleagent_id"  => 	$row['saleagent_id'],
+							"currency_id"    => $row['currency_id'],
+							"remark"         => $row['remark'],
+							"all_total"      => $row['all_total'],
+							"discount_value" => $row['discount_value'],
+							"net_total"      => $row['net_total'],
+							"user_mod"       => $GetUserId,
+							"date"      	 => date("Y-m-d"),
+							'pending_status' =>3,
+							"date"      => 	date("Y-m-d"),
+					);
+					$this->_name="tb_sales_order";
+					$sale_id = $this->insert($qdata);
+					
+					 $rs = $dbq->getQuotationItemDetailid($data["id"]);
+					 
+					$this->_name='tb_salesorder_item';
+					foreach ($rs as $r)
+					{
+						$data_item= array(
+								'saleorder_id'=> $sale_id,
+								'pro_id'	  => 	$r['pro_id'],//$data['item_id_'.$i],
+								'qty_order'	  => 	$r['qty_order'],
+								'qty_detail'  => 	$r['qty_detail'],
+								'qty_unit'  => 	$r['qty_unit'],
+								'price'		  => 	$r['price'],
+								'old_price'   =>    $r['old_price'],
+								'disc_value'  => $r['disc_value'],
+								'sub_total'	  => $r['sub_total'],
+								'remark'=> $r['remark'],
+						);
+						$this->insert($data_item);
+					}
 			$dbc=new Application_Model_DbTable_DbGlobal();
+			$pending=3;
+			if($data['approved_name']==2){$pending=1;}
+			$arr=array(		
+ 					'is_tosale'=>1,		
+					'is_approved'	=> $data['approved_name'],
+					'approved_userid'=> $GetUserId,
+					'approval_note'	=> $data['app_remark'],
+					'approved_date'	=> date("Y-m-d",strtotime($data['app_date'])),
+					'pending_status'=>$pending,					
+			);
+			$this->_name="tb_quoatation";
+			$where = " id = ".$data["id"];
+			$sale_id = $this->update($arr, $where);
+			
+			}else{
+				
+				$dbc=new Application_Model_DbTable_DbGlobal();
 			$pending=2;
 			if($data['approved_name']==2){$pending=1;}
 			$arr=array(		
@@ -66,13 +134,16 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 			$this->_name="tb_quoatation";
 			$where = " id = ".$data["id"];
 			$sale_id = $this->update($arr, $where);
-			unset($info_purchase_order);
-			 
+			
+			}
+			
+			
 			$db->commit();
 		}catch(Exception $e){
 			$db->rollBack();
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
+			echo $err ;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
@@ -85,6 +156,10 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 		(SELECT NAME FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
+		(SELECT qty_perunit FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS qty_perunit,
+		(SELECT unit_label FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS unit_label,
+		(SELECT serial_number FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS serial_number,
+		(SELECT name_en FROM `tb_view` WHERE TYPE=2 AND key_code=(SELECT model_id FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) LIMIT 1) As model_name,
 		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
 		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
 		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
@@ -95,13 +170,14 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.approved_userid LIMIT 1 ) AS approved_by,
 		(SELECT name_en FROM `tb_view` WHERE TYPE=7 AND key_code=is_approved LIMIT 1) approval_status,
 		(SELECT name_en FROM `tb_view` WHERE TYPE=8 AND key_code=pending_status LIMIT 1) processing,
-		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total
+		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total,s.discount_value,so.disc_value AS disc_detailvalue
 		
 		FROM `tb_quoatation` AS s,
 		`tb_quoatation_item` AS so WHERE s.id=so.quoat_id
 		AND s.status=1 AND s.id = $id ";
 		return $db->fetchAll($sql);
 	} 
+	
 	public function convertQouteToSO($data)
 	{
 		$id=$data["id"];

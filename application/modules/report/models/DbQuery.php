@@ -715,6 +715,69 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		AND s.status=1 AND s.id = $id ";
 		return $db->fetchAll($sql);
 	}
+	public function getAllDeliveryReport($search){//4
+		$db= $this->getAdapter();
+		$sql=" SELECT s.id,
+		(SELECT name FROM `tb_sublocation` WHERE tb_sublocation.id = s.branch_id AND status=1 AND name!='' LIMIT 1) AS branch_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT name FROM `tb_sale_agent` WHERE id=s.saleagent_id LIMIT 1) AS agent_name,
+		s.sale_no,s.date_sold,s.tax,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id limit 1) As curr_name,
+		s.currency_id,
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
+		iv.sub_total,iv.discount,iv.paid_amount,iv.balance,iv.invoice_no,iv.invoice_date
+		FROM `tb_sales_order` AS s ,tb_invoice as iv WHERE iv.sale_id = s.id ";
+		$from_date =(empty($search['start_date']))? '1': " s.date_sold >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " s.date_sold <= '".$search['end_date']." 23:59:59'";
+		$where = " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['text_search']));
+			$s_where[] = " s.order_number LIKE '%{$s_search}%'";
+			$s_where[] = " s.net_total LIKE '%{$s_search}%'";
+			$s_where[] = " s.paid LIKE '%{$s_search}%'";
+			$s_where[] = " s.balance LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if($search['customer_id']>0){
+			$where .= " AND s.customer_id = ".$search['customer_id'];
+		}
+		if($search['branch_id']>0){
+			$where .= " AND branch_id =".$search['branch_id'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbg->getAccessPermission();
+		$order=" ORDER BY id DESC ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+	function getProductDelivyerId($id){//5
+		$db = $this->getAdapter();
+		$sql=" SELECT
+		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		s.sale_no,s.date_sold,s.remark,
+		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
+		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
+		(SELECT qty_perunit FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS qty_perunit,
+		(SELECT unit_label FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS unit_label,
+		(SELECT serial_number FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS serial_number,
+		(SELECT name_en FROM `tb_view` WHERE TYPE=2 AND key_code=(SELECT model_id FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) LIMIT 1) As model_name,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
+		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
+		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
+		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
+		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
+		so.qty_order,so.qty_unit,so.qty_detail,so.price,so.old_price,so.sub_total,s.net_total,
+		s.paid,s.discount_real,s.tax,
+		s.balance,
+		(SELECT tb_invoice.invoice_no FROM `tb_invoice` WHERE tb_invoice.id= d.invoice_id  LIMIT 1) As invoice_no,
+		d.deli_date
+		FROM `tb_sales_order` AS s,
+		`tb_salesorder_item` AS so ,tb_deliverynote as d WHERE d.so_id =s.id AND s.id=so.saleorder_id
+		AND s.status=1 AND s.id = $id ";
+		return $db->fetchAll($sql);
+	}
 	
 }
 

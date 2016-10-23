@@ -81,9 +81,9 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
 			try {
 				$dbq = new Sales_Model_DbTable_Dbinvoiceapprove();				
 				$dbq->addInvoiceApproved($data);
-				Application_Form_FrmMessage::message("APPROVED_SUCESS");
-				//Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/invoiceapprove");
-				//$this->_redirect("/sales/invoiceapprove");
+				//Application_Form_FrmMessage::message("APPROVED_SUCESS");
+				Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/invoiceapprove");
+				
 			}catch (Exception $e){
 				$err =$e->getMessage();
 				echo $err;exit();
@@ -104,6 +104,6 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
     		$this->_redirect("/sales/salesapprove");
     	}
     	$db= new Application_Model_DbTable_DbGlobal();
-    	$this->view->rscondition = $db->getTermConditionById(1, $id);
+    	$this->view->rscondition = $db->getTermConditionByIdIinvocie(3, null);
 	}	
 }

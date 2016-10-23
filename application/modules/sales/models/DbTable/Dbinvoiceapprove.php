@@ -41,8 +41,8 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$order=" ORDER BY id DESC ";
 			return $db->fetchAll($sql.$where.$order);
 	}
-	public function addInvoiceApproved($data)
-	{
+	public function addInvoiceApproved($data)	{
+
 		$db = $this->getAdapter();
 		$db->beginTransaction();
 		try{
@@ -71,14 +71,14 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 				$where=" id = ".$data['id'];
 				$this->update($data_to, $where);
 			}
-			
-			
-			
+			$dbg = new Application_Model_DbTable_DbGlobal();
+			$invoice_number = $dbg->getInvoiceNumber($data['branch_id']);
 			$this->_name="tb_invoice";
 				$arr = array(
 						'approved_note'=>$data['app_remark'],
 						'sale_id'=>$data['id'],
-						'invoice_no'=>$data['invoice_no'],
+						'branch_id'=>$data['branch_id'],
+						'invoice_no'=>$invoice_number,
 						'invoice_date'=>date("Y-m-d",strtotime($data['app_date'])),
 						'approved_date'=>date("Y-m-d",strtotime($data['app_date'])),
 						'user_id'=>$GetUserId,
@@ -94,12 +94,15 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 				
 			$this->_name="tb_deliverynote";
 			$arr = array(
+			    'branch_id'=>$data['branch_id'],
 				'invoice_id'=>$invoice_id,
 				'so_id'=>$data['soid'],
 				'delivery_userid'=>$data['app_remark'],
-				'deli_date'=>$data['app_remark'],
-				'user_id'=>$data['app_remark'],
+				'deli_date'=>date("Y-m-d",strtotime($data['dilivery_date'])),
+				'user_id'=>$GetUserId,
+				'notefrom_accounting'=>$data['notefrom_accountingk'],
 			);
+			$this->insert($arr);
 // 			 $ids=explode(',',$data['identity_term']);
 // 			 if(!empty($data['identity_term'])){
 // 				 foreach ($ids as $i)
@@ -130,10 +133,15 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 		$sql=" SELECT
 		s.id,
 		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		s.branch_id,
 		s.sale_no,s.date_sold,s.remark,s.approved_note,s.approved_date,s.all_total,
 		(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
+		(SELECT qty_perunit FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS qty_perunit,
+		(SELECT unit_label FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS unit_label,
+		(SELECT serial_number FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS serial_number,
+		(SELECT name_en FROM `tb_view` WHERE TYPE=2 AND key_code=(SELECT model_id FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) LIMIT 1) As model_name,
 		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
 		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
 		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
@@ -144,8 +152,8 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.approved_userid LIMIT 1 ) AS approved_by,
 		(SELECT name_en FROM `tb_view` WHERE type=7 AND key_code=is_approved LIMIT 1) approval_status,
 		(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1) processing,
-		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total,
-		s.paid,s.discount_real,s.tax,
+		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total,so.disc_value,
+		s.paid,s.discount_real,s.tax,s.discount_value,
 		s.balance
 		FROM `tb_sales_order` AS s,
 		`tb_salesorder_item` AS so WHERE s.id=so.saleorder_id
