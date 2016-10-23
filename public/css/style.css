@@ -41,7 +41,7 @@ th.tdheader {
     font-size: 12px;
     font-weight: bold;
     line-height: 30px;
-    padding: 2px 5px 2px 5px;
+    padding: 2px 1px 2px 1px;
     text-align: center;
     cursor: pointer;
 }
@@ -144,7 +144,7 @@ table.collape td{
 	//
 	padding: 0 5px 0 5px;
 	border: 1px solid #ddd;
-	font-family: "Open Sans", sans-serif;
+	font-family: "Open Sans", sans-serif,'Kh Battambang','Khmer Battambang';
 	font-size: 11px;
 }
 
