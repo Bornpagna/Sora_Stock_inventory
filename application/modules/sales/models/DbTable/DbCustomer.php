@@ -13,12 +13,12 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$sql = "SELECT s.`prefix` FROM `tb_sublocation` AS s WHERE s.id=$id";
 		$prefix = $db->fetchOne($sql);
 		
-		$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
+		$sql=" SELECT id FROM $this->_name AS s WHERE s.`branch_id`=$id ORDER BY id DESC LIMIT 1 ";
 		$acc_no = $db->fetchOne($sql);
 		$new_acc_no= (int)$acc_no+1;
 		$acc_no= strlen((int)$acc_no+1);
-		$pre = $prefix."-";
-		for($i = $acc_no;$i<3;$i++){
+		$pre = $prefix."CID";
+		for($i = $acc_no;$i<5;$i++){
 			$pre.='0';
 		}
 		return $pre.$new_acc_no;

@@ -33,7 +33,15 @@ class Sales_Model_DbTable_DbTermCondiction extends Zend_Db_Table_Abstract
 	
 	public function getAllTerm(){
 		$db = $this->getAdapter();
-		$sql = "SELECT t.id,t.con_khmer,t.con_english,t.status FROM tb_termcondition AS t";
+		$sql = "SELECT 
+				  t.id,
+				  t.con_khmer,
+				  t.con_english,
+				  (SELECT v.name_en FROM `tb_view` AS v WHERE v.key_code=t.`type` AND v.type=10) AS `type`,
+				  t.status
+				  
+				FROM
+				  tb_termcondition AS t ";
 		return $db->fetchAll($sql);
 	}
 	
@@ -41,5 +49,11 @@ class Sales_Model_DbTable_DbTermCondiction extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql = "SELECT t.* FROM tb_termcondition AS t WHERE t.id= $id";
 		return $db->fetchRow($sql);
+	}
+	
+	public function getTermcondictionType(){
+		$db = $this->getAdapter();
+		$sql = "SELECT v.`key_code`,v.`name_en` FROM tb_view AS v WHERE v.`type`=10";
+		return $db->fetchAll($sql);
 	}
 }
