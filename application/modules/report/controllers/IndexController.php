@@ -688,10 +688,10 @@ class report_indexController extends Zend_Controller_Action
 		$query = new report_Model_DbQuery();
 		$this->view->repurchase =  $query->getAllQuotation($data);
 		$frm = new Application_Form_FrmReport();
-	
-		$form_search=$frm->FrmReportPurchase($data);
-		Application_Model_Decorator::removeAllDecorator($form_search);
-		$this->view->form_purchase = $form_search;
+		
+		$formFilter = new Sales_Form_FrmSearch();
+		$this->view->form_purchase = $formFilter;
+	    Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
 	public function quotadetailAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
@@ -703,6 +703,8 @@ class report_indexController extends Zend_Controller_Action
 		if(empty($query->getQuotationById($id))){
 			$this->_redirect("/report/index/rpt-sales");
 		}
+		$db= new Application_Model_DbTable_DbGlobal();
+    	$this->view->rscondition = $db->getTermConditionById(1, $id);
 	}
 	public function rptDeliveryAction()//purchase report
     {
@@ -731,12 +733,23 @@ class report_indexController extends Zend_Controller_Action
 	public function deliverynoteAction(){
     	$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
     	if(empty($id)){
-    		$this->_redirect("/report/index/rpt-sales");
+    		$this->_redirect("/report/index/rpt-delivery");
     	}
     	$query = new report_Model_DbQuery();
     	$this->view->product =  $query->getProductDelivyerId($id);
     	if(empty($query->getProductDelivyerId($id))){
-    		$this->_redirect("/report/index/rpt-sales");
+    		$this->_redirect("/report/index/rpt-delivery");
+    	}
+    }
+	public function invoiceAction(){
+    	$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+    	if(empty($id)){
+    		$this->_redirect("/report/index/rpt-delivery");
+    	}
+    	$query = new report_Model_DbQuery();
+    	$this->view->product =  $query->getInvoiceById($id);
+    	if(empty($query->getInvoiceById($id))){
+    		$this->_redirect("/report/index/rpt-delivery");
     	}
     }
 	

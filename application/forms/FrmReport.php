@@ -16,43 +16,45 @@ class Application_Form_FrmReport extends Zend_Form
     	$db=new Application_Model_DbTable_DbGlobal();
     	$request = Zend_Controller_Front::getInstance()->getRequest();
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-//     	$itemElement = new Zend_Form_Element_Text("item");
-//     	$itemvalue = $request->getParam("item");
-//     	$itemElement->setValue($itemvalue);
-//     	$itemElement->setAttribs(array('placeholder'=>'Item Name,Code...'));
-		
     	
-    	$rs=$db->getGlobalDb('SELECT pro_id, item_name,item_code FROM tb_product WHERE item_name!="" ORDER BY item_name ');
+    	$rs=$db->getGlobalDb('SELECT id, item_name,item_code FROM tb_product WHERE item_name!="" ORDER BY item_name ');
     	$options=array(''=>$tr->translate('Select_Products'));
     	$proValue = $request->getParam('item');
-    	foreach($rs as $read) $options[$read['pro_id']]=$read['item_code']." ".$read['item_name'];
+    	foreach($rs as $read) $options[$read['id']]=$read['item_name']." ".$read['item_code'];
     	$pro_id=new Zend_Form_Element_Select('item');
     	$pro_id->setMultiOptions($options);
     	$pro_id->setAttribs(array(
     			'id'=>'item',
-    	//		'onchange'=>'this.form.submit()'
     	));
     	$pro_id->setValue($proValue);
     	$this->addElement($pro_id);
     	
-    	$sql='SELECT DISTINCT Name,LocationId FROM tb_sublocation WHERE Name!="" AND status=1 ';
+    	$sql='SELECT DISTINCT name,id FROM tb_sublocation WHERE name!="" AND status=1 ';
     	$user = $this->GetuserInfo();
     	if($user["level"]!=1 AND $user["level"]!=2){
-    		$sql .= " AND LocationId= ".$user["location_id"];
+    		$sql .= " AND location_id = ".$user["location_id"];
     			
     	}
     	$rs=$db->getGlobalDb($sql);
     	$options=array(''=>$tr->translate('Please_Select_Location'));
-    	$locationValue = $request->getParam('LocationId');
-    	foreach($rs as $read) $options[$read['LocationId']]=$read['Name'];
-    	$location_id=new Zend_Form_Element_Select('LocationId');
+    	$locationValue = $request->getParam('branch_id');
+    	foreach($rs as $read) $options[$read['id']]=$read['name'];
+    	$location_id=new Zend_Form_Element_Select('branch_id');
     	$location_id->setMultiOptions($options);
     	$location_id->setAttribs(array(
-    			'id'=>'LocationId',
-    			'onchange'=>'getProductFilter()',
+    			'id'=>'branch_id',
+    			'class'=>'form-control select2me'
     	));
     	$location_id->setValue($locationValue);
     	
+		$nameValue = $request->getParam('text_search');
+    	$nameElement = new Zend_Form_Element_Text('text_search');
+    	$nameElement->setAttribs(array(
+    			'class'=>'form-control'
+    	));
+    	$nameElement->setValue($nameValue);
+    	$this->addElement($nameElement);
+		
     	$rs=$db->getGlobalDb('SELECT id, name FROM tb_category WHERE name!="" ');
     	$options=array(''=>$tr->translate('Please_Select'));
     	$cateValue = $request->getParam('category_id');
@@ -66,7 +68,7 @@ class Application_Form_FrmReport extends Zend_Form
     	$cate_element->setValue($cateValue);
     	$this->addElement($cate_element);
     	 
-    	$rs=$db->getGlobalDb('SELECT branch_id, name FROM tb_branch WHERE name!="" ORDER BY name');
+    	$rs=$db->getGlobalDb('SELECT id, name FROM tb_sublocation WHERE name!="" ORDER BY name');
     	$options=array(''=>$tr->translate('Please_Select'));
     	$branchValue = $request->getParam('branch_id');
     	foreach($rs as $read) $options[$read['branch_id']]=$read['Name'];
@@ -79,16 +81,21 @@ class Application_Form_FrmReport extends Zend_Form
     	$branch_element->setValue($branchValue);
     	$this->addElement($branch_element);
     	
-    	$date = new Zend_Date();
-    	$startDate = new Zend_Form_Element_Text("start_date");
+    	$startDate = new Zend_Form_Element_Text("start_date");//echo date("Y-m-d");
     	$startDatevalue = $request->getParam("start_date");
-    	//$startDate->setAttribs(array("class"=>"validate[required]"));
+    	$startDate->setAttribs(array(
+    			'class'=>'form-control date-picker',
+    			'placeHolder'=>'Start Date'
+    			));
     	$startDate->setValue($startDatevalue);
-    	
+    	 
     	$endDate = new Zend_Form_Element_Text("end_date");
-    	//$endDate->setValue($date->get("DD-MM-YY"));
+    	$endDate->setAttribs(array(
+    			'class'=>'form-control date-picker'
+    	));
+    	
     	$endDatevalue = $request->getParam("end_date");
-    	//$endDate->setAttribs(array("class"=>"validate[required]"));
+    	if(empty($endDatevalue)){$endDatevalue = date("m/d/Y");}
     	$endDate->setValue($endDatevalue);
 
     	$this->addElements(array($startDate,$endDate,$location_id));

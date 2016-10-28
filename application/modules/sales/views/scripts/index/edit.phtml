@@ -515,7 +515,7 @@ function netTotal() {//use
 }
 function calculateDiscount(){//use
 	var discountValue = ($('#dis_value').val());
-	if(discountValue==''){$('#dis_value').val(0);discountValue=0;}
+	//if(discountValue==''){$('#dis_value').val(0);discountValue=0;}
 	if(discountValue.length!=0){
 		if(discountValue.indexOf("%")!==-1){
 			var pds=discountValue.split("%");
@@ -529,6 +529,10 @@ function calculateDiscount(){//use
 				$('#all_total').val(totalpayment);
 		}
 		//doRemain();
+	}else{
+		alltotal = $("#totalAmoun").val();
+		totalpayment = alltotal - 0;
+		$('#all_total').val(totalpayment);
 	}
 }
 function CalcualteTax() {
@@ -578,10 +582,11 @@ function calculatePrice(index) {
 			}
 			$('#total'+index).val(parseFloat(after_discount).toFixed(2));
 		}
-		netTotal();
-	}else{
 		
+	}else{
+		$('#total'+index).val(parseFloat(total).toFixed(2));
 		}
+		netTotal();
 }
  var record_id = 1;
 function ShowPopupProduct(product_id){

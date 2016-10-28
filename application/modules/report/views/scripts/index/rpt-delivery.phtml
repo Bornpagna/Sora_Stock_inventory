@@ -2,13 +2,13 @@
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 $brach_name =  $this->branch;
 ?>
-<title>Purchase Report</title>
+<title>Invoice/Delivery Report</title>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("SALES_REPORT");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("InvoiceReport");?>
 				</div>
 					<div class="btn-group pull-right">
 							 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">
@@ -125,8 +125,8 @@ $brach_name =  $this->branch;
 						   <td style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["paid_amount"],2);?></td>
 						   <td>&nbsp;<?php echo number_format($rs["balance"],2);?></td>
 						   <td>&nbsp;<?php echo $rs["user_name"];?></td>
+						   <td><a style="color:#000;text-decoration: none;" target="_blank" href="<?php echo $this->baseUrl()."/report/index/invoice/id/".$rs["id"];?>">&nbsp;<i class="fa fa-print" aria-hidden="true"></i>&nbsp;<?php echo $tr->translate("PRINT"); ?></a></td>
 						   <td><a style="color:#000;text-decoration: none;" target="_blank" href="<?php echo $this->baseUrl()."/report/index/deliverynote/id/".$rs["id"];?>">&nbsp;<i class="fa fa-print" aria-hidden="true"></i>&nbsp;<?php echo $tr->translate("PRINT"); ?></a></td>
-						   <td><a style="color:#000;text-decoration: none;" target="_blank" href="<?php echo $this->baseUrl()."/report/index/salesdetail/id/".$rs["id"];?>">&nbsp;<i class="fa fa-print" aria-hidden="true"></i>&nbsp;<?php echo $tr->translate("PRINT"); ?></a></td>
 						</tr>
 						   <?php 
 							if($rs['currency_id']==1){

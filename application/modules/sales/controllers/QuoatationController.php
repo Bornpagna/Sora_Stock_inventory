@@ -100,7 +100,7 @@ class Sales_quoatationController extends Zend_Controller_Action
 		$row = $dbq->getQuotationItemById($id);
 		
 		if($row['is_approved']==1){
-			//Application_Form_FrmMessage::Sucessfull("QUOTATIO_WARNING","/sales/quoatation");
+			Application_Form_FrmMessage::Sucessfull("QUOTATIO_WARNING","/sales/quoatation");
 		}
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/quoatation");

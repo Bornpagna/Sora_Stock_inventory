@@ -1,13 +1,13 @@
 <?php 
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-<title><?php echo $tr->translate("SALEDETAIL_REPORT");?></title>
+<title><?php echo $tr->translate("QUOTATION_DETAIL");?></title>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("SALEDETAIL_REPORT");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("QUOTATION_DETAIL");?>
 				</div>
 						<div class="btn-group pull-right">
 							 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">
@@ -71,7 +71,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		                				<td width="65%"></td>
 		                			</tr>
 		                			<tr>
-		                				<td style="font-size: 11px;" valign="top" width="25%;">
+		                				<td style="font-size: 11px;" valign="top" width="35%;">
 		                				<div style="width:100%; background: #244456;display: block;color:#fff;margin-top: 10px;">&nbsp;&nbsp;Customer Info</div>
 		                				   <ul class='pur_info'>
 			                					<li style="text-align: left;"><strong>Company Name : </strong><?php echo $this->product[0]['customer_name'];?></li>
@@ -81,15 +81,15 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 			                					<li style="text-align: left;"><strong>Address : </strong><?php echo $this->product[0]['add_name'];?></li>
 		                					</ul>
 		                				</td>
-		                				<td width="50%"></td>
-		                				<td width="25%" style="text-align: left;font-size: 11px;">
+		                				<td width="30%"></td>
+		                				<td width="35%" style="text-align: left;font-size: 11px;">
 		                					<div style="padding-left: 10px;width:100%; background: #244456;display: block;color:#fff;margin-top: 10px;">&nbsp;&nbsp;Sale Quotation</div>
 		                					<ul class='pur_info'>
 			                					<li style="text-align: left;"><strong>Location Name : </strong><?php echo $this->product[0]['branch_name'];?></li>
 			                					<li style="text-align: left;"><strong>No.: </strong><?php echo $this->product[0]['quoat_number'];?></li>
-			                					<li style="text-align: left;"><strong>Bill Date : </strong><?php echo date("d/m/Y",strtotime($this->product[0]['date_order']));?></li>
+			                					<li style="text-align: left;"><strong>Issuer Date : </strong><?php echo date("d/m/Y",strtotime($this->product[0]['date_order']));?></li>
 		                						<li style="text-align: left;"><strong>Sale Person : </strong><?php echo $this->product[0]['staff_name'];?></li>
-		                						<li style="text-align: left;"><strong>Bill Issuer : </strong><?php echo ($this->product[0]['user_name']);?></li>
+		                						<li style="text-align: left;"><strong>Issuer By : </strong><?php echo ($this->product[0]['user_name']);?></li>
 		                					</ul>
 		                				</td>
 		                			</tr>
@@ -105,8 +105,8 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		                 <tbody>
 		                 <tr bgcolor="#ccc" class="style" align="center" style="font-weight:bold; line-height: 20px; font-size:12px; padding:1px 0px; white-space: nowrap; ">
 		                    <td>&nbsp;<?php echo $tr->translate("NUM");?></td>
-							<td><?php echo $tr->translate("ITEM_DISCRIPTION");?></td>
-							<td>&nbsp;<?php echo strtoupper($tr->translate("QTY"));?></td>
+							<td>&nbsp;<?php echo $tr->translate("PRODUCT_DISCRIPTION");?></td>
+							<td>&nbsp;<?php echo ($tr->translate("QTY_UNIT"));?></td>
 							<td width="10%">&nbsp;<?php echo $tr->translate("UNIT_PRICE_CAP");?></td>
 							<td><?php echo $tr->translate("AMOUNT");?></td>
 		                </tr>
@@ -126,24 +126,32 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
                     }?>
                     <tr>
 						<td colspan="2" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;តម្លៃសរុប</td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL");?></td>
 						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['net_total'],2);?></td>
 					</tr>
 					<tr>
 						<td colspan="2" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;DISCOUNT</td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("DISCOUNT");?></td>
 						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['discount_value'],2);?></td>
 					</tr>
-					
 					<tr>
 						<td colspan="2" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;ប្រាក់បានបង់</td>
-						<td >&nbsp;&nbsp;<?php //echo number_format($this->product[0]['paid'],2);?></td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL_AMOUNT");?></td>
+						<td >&nbsp;&nbsp;<?php echo number_format($this->product[0]['net_total'],2);?></td>
 					</tr>
 					<tr>
-						<td colspan="2" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="background:#ccc;border-left:1px solid #000;">&nbsp;&nbsp;ប្រាក់ជំពាក់ </td>
-						<td style="background:#ccc;">&nbsp;&nbsp;<?php //echo number_format($this->product[0]['balance'],2);?></td>
+						<td colspan=7" style="border:1px solid #fff;border-top:1px solid #000;">
+						<strong  style="font-size: 13px;"><u>ខសន្យា និងលក្ខណ៏ទូទៅ / General Term & Conditions</u></strong>
+							<style>
+								ul.termcodition li{ line-height: 20px;list-style-type: none; font-size: 12px;}
+							</style>
+							<ul class="termcodition">
+							<?php if(!empty($this->rscondition))foreach ($this->rscondition as $key =>$rst){ ?>
+								<li style="text-align: left;"><?php echo $key+1;echo "-".$rst['con_khmer'];?></li>
+								<li style="text-align: left;"><?php echo $rst['con_english'];?></li>
+							<?php }?>
+							</ul>
+						</td>
 					</tr>
 		                </tbody>
 		           </table>
@@ -158,13 +166,13 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 						        <td style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">រៀបចំដោយ  /​ Prepared By</td>
 						   </tr>
 						   <tr style="font-size: 11px; height: 75px;">
-						        <td valign="bottom" style="width:20%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;">ឈ្មោះ  /Name--------------------------</td>
+						        <td valign="bottom" style="width:20%;text-align:center;  font-family:'Khmer MEF2'; white-space: nowrap;">ឈ្មោះ  /Name : <?php echo $this->product[0]['approval_by'];?></td>
 						        <td></td>
 						        <td valign="bottom" style="width:20%;text-align:center; font-family:'Khmer MEF2';white-space: nowrap;"></td>
 						        <td></td>
-						        <td valign="bottom" style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">ឈ្មោះ  /Name <?php echo $this->product[0]['user_name'];?></td>
+						        <td valign="bottom" style="width:20%;text-align:center;font-family:'Khmer MEF2';white-space: nowrap;">ឈ្មោះ  /Name : <?php echo $this->product[0]['user_name'];?></td>
 						   </tr>
-						   <tr style="font-size: 11px;">
+						   <tr style="font-size: 11px; display:none;">
 						        <td style="width:20%;text-align:center;white-space: nowrap;">ថ្ងៃ  /Date:----------------------------------</td>
 						        <td></td>
 						        <td style="width:20%;text-align:center;white-space: nowrap;"></td>

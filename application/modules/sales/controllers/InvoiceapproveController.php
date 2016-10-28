@@ -80,13 +80,18 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
 			$data = $this->getRequest()->getPost();
 			try {
 				$dbq = new Sales_Model_DbTable_Dbinvoiceapprove();				
-				$dbq->addInvoiceApproved($data);
+				$returnid = $dbq->addInvoiceApproved($data);
 				//Application_Form_FrmMessage::message("APPROVED_SUCESS");
-				Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/invoiceapprove");
+				if(!empty($data["saveprint"])){
+					//Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/report/index/deliverynote/id/".$returnid);
+					Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/report/index/rpt-delivery");
+					
+				}else{
+					Application_Form_FrmMessage::Sucessfull("APPROVED_SUCESS", "/sales/invoiceapprove");
+				}
 				
 			}catch (Exception $e){
 				$err =$e->getMessage();
-				echo $err;exit();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 				Application_Form_FrmMessage::Sucessfull("APPROVED_FAIL", "/sales/invoiceapprove");
 			}

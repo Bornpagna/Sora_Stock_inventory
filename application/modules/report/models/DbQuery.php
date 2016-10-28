@@ -668,7 +668,8 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		(SELECT name_en FROM `tb_view` WHERE type=8 AND key_code=pending_status LIMIT 1) pending_status,
 		s.currency_id,
 		s.net_total,
-		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name
+		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
+		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.approved_userid LIMIT 1 ) AS approval_by
 		FROM `tb_quoatation` AS s ";
 		$from_date =(empty($search['start_date']))? '1': " s.date_order >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " s.date_order <= '".$search['end_date']." 23:59:59'";
@@ -678,7 +679,6 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 			$s_search = trim(addslashes($search['text_search']));
 			$s_where[] = " s.quoat_number LIKE '%{$s_search}%'";
 			$s_where[] = " s.net_total LIKE '%{$s_search}%'";
-// 			$s_where[] = " s.balance LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if($search['customer_id']>0){
@@ -708,7 +708,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
 		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
 		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
-		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS approval_by,
+		(SELECT u.fullname FROM tb_acl_user AS u WHERE u.user_id = s.approved_userid LIMIT 1 ) AS approval_by,
 		so.qty_order,so.price,so.old_price,so.sub_total,s.net_total
 		FROM `tb_quoatation` AS s,
 		`tb_quoatation_item` AS so WHERE s.id=so.quoat_id
@@ -770,12 +770,34 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		(SELECT u.username FROM tb_acl_user AS u WHERE u.user_id = s.user_mod LIMIT 1 ) AS user_name,
 		so.qty_order,so.qty_unit,so.qty_detail,so.price,so.old_price,so.sub_total,s.net_total,
 		s.paid,s.discount_real,s.tax,
-		s.balance,
-		(SELECT tb_invoice.invoice_no FROM `tb_invoice` WHERE tb_invoice.id= d.invoice_id  LIMIT 1) As invoice_no,
-		d.deli_date
+		s.balance,v.invoice_no,(SELECT tb_deliverynote.deli_date FROM `tb_deliverynote` WHERE tb_deliverynote.invoice_id=v.id) AS deli_date
 		FROM `tb_sales_order` AS s,
-		`tb_salesorder_item` AS so ,tb_deliverynote as d WHERE d.so_id =s.id AND s.id=so.saleorder_id
+		`tb_salesorder_item` AS so ,tb_invoice as v WHERE v.sale_id =s.id AND s.id=so.saleorder_id
 		AND s.status=1 AND s.id = $id ";
+		return $db->fetchAll($sql);
+	}
+	function getInvoiceById($id){//5
+		$db = $this->getAdapter();
+		$sql="SELECT
+		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
+		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
+		(SELECT qty_perunit FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS qty_perunit,
+		(SELECT unit_label FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS unit_label,
+		(SELECT name_en FROM `tb_view` WHERE TYPE=2 AND key_code=(SELECT model_id FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) LIMIT 1) AS model_name,
+		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
+		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
+		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
+		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
+		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
+		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
+		(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
+		so.qty_order,so.sub_total AS dsub_total,so.qty_unit,so.qty_detail,so.price,so.old_price,
+		(SELECT tb_acl_user.username FROM tb_acl_user  WHERE tb_acl_user.user_id = v.user_id LIMIT 1 ) AS biller,
+		v.invoice_no,v.invoice_date,v.user_id,v.balance_after,v.sub_total,v.discount AS vdiscount,v.paid_amount,v.balance
+		FROM `tb_sales_order` AS s,
+		`tb_salesorder_item` AS so ,tb_invoice AS v WHERE v.sale_id =s.id AND s.id=so.saleorder_id
+		AND s.status=1 AND s.id =$id ";
 		return $db->fetchAll($sql);
 	}
 	

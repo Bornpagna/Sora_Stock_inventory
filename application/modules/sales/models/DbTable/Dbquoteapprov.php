@@ -62,7 +62,7 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 					$this->update($arr,$where);*/
 				$dbq = new Sales_Model_DbTable_Dbquoatation();
 				$row = $dbq->getQuotationItemById($data["id"]);
-					$so = $db_global->getSalesNumber($row["branch_id"]);
+				$so = $db_global->getSalesNumber($row["branch_id"]);
 					$qdata=array(
 					       'is_toinvocie'=>1,
 							'quote_id'=>$data["id"],
@@ -105,9 +105,10 @@ class Sales_Model_DbTable_Dbquoteapprov extends Zend_Db_Table_Abstract
 					}
 			$dbc=new Application_Model_DbTable_DbGlobal();
 			$pending=3;
-			if($data['approved_name']==2){$pending=1;}
+			$tosale = 1;
+			if($data['approved_name']==2){$pending=1;$tosale=0;}
 			$arr=array(		
- 					'is_tosale'=>1,		
+ 					'is_tosale'=>$tosale,		
 					'is_approved'	=> $data['approved_name'],
 					'approved_userid'=> $GetUserId,
 					'approval_note'	=> $data['app_remark'],

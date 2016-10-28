@@ -33,9 +33,9 @@ $brach_name =  $this->branch;
 						<?php $formFilter = $this->form_purchase; ?>
 						<label class="control-label col-md-2"><?php echo $formFilter->getElement('text_search');?></label>
 						<label class="control-label col-md-2"><?php echo $formFilter->getElement('branch_id');?></label>
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('suppliyer_id');?></label>
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('start_date');?></label>
-						<label class="control-label col-md-2"><?php echo $formFilter->getElement('end_date');?></label>
+						<label class="control-label col-md-2"><?php echo $formFilter->getElement('customer_id');?></label>
+						<label class="control-label col-md-2"><div class="input-icon right"><i class="fa fa-calendar"></i><?php echo $formFilter->getElement('start_date');?></div></label>
+						<label class="control-label col-md-2"><div class="input-icon right"><i class="fa fa-calendar"></i><?php echo $formFilter->getElement('end_date');?></div></label>
 						<label class="control-label col-md-2">
 							<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
 						</label>
@@ -99,10 +99,9 @@ $brach_name =  $this->branch;
 							<td>&nbsp;<?php echo $tr->translate("TOTAL");?></td>
 							<td>&nbsp;<?php echo $tr->translate("DISCOUNT");?></td>
 							<td>&nbsp;<?php echo $tr->translate("TOTAL_AMOUNT");?></td>
-							
 							<td>&nbsp;<?php echo $tr->translate("APPROVED_STATUS");?></td>
+							<td>&nbsp;<?php echo $tr->translate("APPROVED_BY");?></td>
 							<td>&nbsp;<?php echo $tr->translate("PENDING_STATUS");?></td>
-							
 							<td>&nbsp;<?php echo $tr->translate("BY_USER");?></td>
 		                </tr>
 		                <?php $num=1; 
@@ -110,7 +109,7 @@ $brach_name =  $this->branch;
 			                $d_netotal = 0;$d_paid = 0; $d_balance = 0;
 			                $b_netotal = 0;$b_paid = 0; $b_balance = 0;
 		                if(!empty($this->repurchase))foreach ($this->repurchase AS $index => $rs){?>
-						<tr class='row-format<?php echo $num; $num=1-$num;?> hover' style="border:1px solid #000;">
+						<tr class='row-format<?php echo $num; $num=1-$num;?> hover' style="border:1px solid #000; white-space:nowrap;">
 						   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $index+1?></td>
 						   <td style="white-space: nowrap;"><a style="color:#000;text-decoration: none;" target="_blank" href="<?php echo $this->baseUrl()."/report/index/quotadetail/id/".$rs["id"];?>">&nbsp;<?php echo $rs["branch_name"];?></a></td>
 						   <td style="white-space: nowrap;"><a style="color:#000;text-decoration: none;" target="_blank" href="<?php echo $this->baseUrl()."/report/index/quotadetail/id/".$rs["id"];?>">&nbsp;<?php echo $rs["customer_name"];?></a></td>
@@ -122,8 +121,9 @@ $brach_name =  $this->branch;
 						   <td style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["discount_value"],2);?></td>
 						   <td style="white-space: nowrap;">&nbsp;<?php echo number_format($rs["net_total"],2);?></td>
 						   <td>&nbsp;<?php echo $rs["is_approved"];?></td>
+						   <td>&nbsp;<?php echo $rs["approval_by"];?></td>
 						   <td>&nbsp;<?php echo $rs["pending_status"];?></td>
-						    <td>&nbsp;<?php echo $rs["user_name"];?></td>
+						   <td>&nbsp;<?php echo $rs["user_name"];?></td>
 						</tr>
 						   <?php 
 // 							if($rs['currency_id']==1){

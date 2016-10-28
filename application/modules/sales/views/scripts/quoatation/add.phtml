@@ -15,8 +15,9 @@
 				</div>
 			</div>
 			<div class="portlet-body form">
+			
 				<!-- BEGIN FORM-->
-				<form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<form id="login_form" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
 					<div class="form-body">
 						<div class="form-group">
 							<label class="control-label col-md-2"><?php echo $tr->translate("CUSTOMER_NAME");?> <span class="required">
@@ -371,11 +372,27 @@
         </div>
     </div>
  </div>
- 
+ <script>
+$('#login_form').submit(function() {
+		customer_id=$("#customer_id").val();
+		if(customer_id=='' || customer_id==-1){
+			alert("Please select customer name");
+			$('#customer_id').select2('open');
+			return false;	
+		}
+		identity =$("#identity").val();
+		if(identity=='' || identity==-1){
+			alert("Please add product row");
+			$('#add_item').select2('open');
+			return false;
+		}
+});
+			</script>
 <script>
 $( document ).ready(function() {
 	initListTermcondition();
 });
+
 
 function initListTermcondition() {
 	index1=0;
@@ -506,8 +523,8 @@ function getProductPrice(product_id,recordid){
 			data:{'customer_id':customer_id,'product_id':product_id},
 			success: function(data){
 				data = $.parseJSON(data);			
-				$("#price"+recordid).val(data.price);
-				$("#oldprice_"+recordid).val(data.price);
+				//$("#price"+recordid).val(data.price);
+				//$("#oldprice_"+recordid).val(data.price);
 				
 				calculatePrice(recordid);
 			},

@@ -139,7 +139,7 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
                     }?>
                     <tr>
 						<td colspan="7" style="border:1px solid #fff;border-top:1px solid #000;border-right:1px solid #000;"></td>
-						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL");?><input type="hidden" name="soid" id="soid" value="<?php echo ($this->product[0]['id']);?>"/></td>
+						<td colspan="2" style="border-left:1px solid #000;">&nbsp;&nbsp;<?php echo $tr->translate("TOTAL");?><input type="hidden" name="soid" id="soid" value="<?php echo ($this->product[0]['id']);?>"/><input type="hidden" name="quote_id" id="quote_id" value="<?php echo ($this->product[0]['quote_id']);?>"/></td>
 						<td >&nbsp;&nbsp;<input type="hidden" name="all_total" id="all_total" value="<?php echo number_format($this->product[0]['all_total'],2);?>"   ><?php echo number_format($this->product[0]['all_total'],2);?></td>
 					</tr>
 					<tr>
@@ -232,6 +232,13 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 </div>
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 <script>
+
+$(document).ready(function() { 
+   
+  calculateBalance();
+ }); 
+
+ 
 function calculateBalance(){
 	deposit= $("#deposit").val();
 	net_total = $('#net_total').val();

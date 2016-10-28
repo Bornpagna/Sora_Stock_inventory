@@ -51,26 +51,27 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$userName=$session_user->user_name;
 			$GetUserId= $session_user->user_id;
 			$dbc=new Application_Model_DbTable_DbGlobal();
-// 			$pending=3;
-// 			if($data['approved_name']==2){$pending=1;}
-// 			$arr=array(				
-// 					'is_approved'	=> $data['approved_name'],
-// 					'approved_userid'=> $GetUserId,
-// 					'approved_note'	=> $data['app_remark'],
-// 					'approved_date'	=> date("Y-m-d",strtotime($data['app_date'])),
-// 					'pending_status'=>$pending,					
-// 			);
-// 			$this->_name="tb_sales_order";
-// 			$where = " id = ".$data["id"];
-// 			$sale_id = $this->update($arr, $where);
-			if($data['approved_name']==1){
-				$this->_name="tb_sales_order";
+
+		if($data['approved_name']==1){		//approval and create invoice		
+			$this->_name="tb_quoatation";
 				$data_to = array(
-						'is_toinvocie'=>1
+						'pending_status'=>4,			
 				);
-				$where=" id = ".$data['id'];
-				$this->update($data_to, $where);
-			}
+			$where=" id = ".$data['quote_id'];
+			$this->update($data_to, $where);
+				
+			$this->_name="tb_sales_order";
+			$data_to = array(
+						'is_toinvocie'=>1,
+						'pending_status'=>4,
+						'is_approved'=>$data['approved_name'],
+						'approved_note'=>$data['app_remark'],
+						'approved_date'=>$data['app_date'],
+						'approved_userid'=>$GetUserId,
+				);
+			$where=" id = ".$data['id'];
+			$this->update($data_to, $where);
+				
 			$dbg = new Application_Model_DbTable_DbGlobal();
 			$invoice_number = $dbg->getInvoiceNumber($data['branch_id']);
 			$this->_name="tb_invoice";
@@ -82,16 +83,15 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 						'invoice_date'=>date("Y-m-d",strtotime($data['app_date'])),
 						'approved_date'=>date("Y-m-d",strtotime($data['app_date'])),
 						'user_id'=>$GetUserId,
-						'sub_total'=>$data['net_total'],
+						'sub_total'=>$data['all_total'],//$data['net_total'],
 						'discount'=>$data['discount'],
 						'paid_amount'=>$data['deposit'],
 						'balance'=>$data['balance'],
 						'balance_after'=>$data['balance'],
 						'is_approved'=>$data['approved_name'],
 						);		
-				$invoice_id = $this->insert($arr);	
-				
-				
+			$invoice_id = $this->insert($arr);	
+			
 			$this->_name="tb_deliverynote";
 			$arr = array(
 			    'branch_id'=>$data['branch_id'],
@@ -100,31 +100,39 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 				'delivery_userid'=>$data['app_remark'],
 				'deli_date'=>date("Y-m-d",strtotime($data['dilivery_date'])),
 				'user_id'=>$GetUserId,
-				'notefrom_accounting'=>$data['notefrom_accountingk'],
-			);
+				'notefrom_accounting'=>$data['notefrom_accountingk']);
 			$this->insert($arr);
-// 			 $ids=explode(',',$data['identity_term']);
-// 			 if(!empty($data['identity_term'])){
-// 				 foreach ($ids as $i)
-// 				 {
-// 				 	$data_item= array(
-// 				 			'quoation_id'=> $sale_id,
-// 				 			'condition_id'=> $data['termid_'.$i],
-// 				 			"user_id"   => 	$GetUserId,
-// 				 			"date"      => 	date("Y-m-d"),
-// 							'term_type'=>2
-				 			
-// 				 	);
-// 				 	$this->_name='tb_quoatation_termcondition';
-// 				 	$this->insert($data_item);
-// 				 }
-// 			 }
-			 
+			}else{//update to sale order
+			$this->_name="tb_quoatation";
+				$data_to = array(
+						'pending_status'=>1,
+						'is_approved'=>0,		
+                        'is_tosale'=>0,
+						'is_approved'=>0,	
+						
+				);
+			$where=" id = ".$data['quote_id'];
+			$this->update($data_to, $where);
+			
+			   $this->_name="tb_sales_order";
+				$data_to = array(
+						'is_toinvocie'=>0,
+						'pending_status'=>2,
+						'is_approved'=>0,
+						'approved_note'=>$data['app_remark'],
+						'approved_date'=>$data['app_date'],
+						'approved_userid'=>$GetUserId,
+				);
+				$where=" id = ".$data['id'];
+				$this->update($data_to, $where);
+			}			 
 			$db->commit();
+			return $invoice_id;
 		}catch(Exception $e){
 			$db->rollBack();
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
+			echo $err;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
@@ -134,7 +142,7 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 		s.id,
 		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
 		s.branch_id,
-		s.sale_no,s.date_sold,s.remark,s.approved_note,s.approved_date,s.all_total,
+		s.sale_no,s.date_sold,s.remark,s.approved_note,s.approved_date,s.all_total,s.quote_id,
 		(SELECT name FROM `tb_sale_agent` WHERE tb_sale_agent.id =s.saleagent_id  LIMIT 1 ) AS staff_name,
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,

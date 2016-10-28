@@ -24,7 +24,8 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$customerid=new Zend_Form_Element_Select('customer_id');
     	$customerid ->setAttribs(array(
     			'class' => 'validate[required] form-control select2me',
-    			'Onchange'=>'getCustomerInfo()'
+    			'Onchange'=>'getCustomerInfo()',
+				'id'=>'customer_id'
     			));
     	$customerid->setMultiOptions($options);
     	$this->addElement($customerid);
