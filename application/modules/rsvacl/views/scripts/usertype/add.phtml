@@ -3,14 +3,14 @@
 	Application_Model_Decorator::removeAllDecorator($form);
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$cancel_url=$this->url(array(
-		'module'=>'rsvAcl',
-		'controller'=>'user-type',
+		'module'=>'rsvacl',
+		'controller'=>'usertype',
 		'action'=>'index',
 	)); 	
 ?>
 <title><?php echo $tr->translate("MENU_RSVACL_USER_TYPE_ADD_USER_TYPE");?></title>
 <script type="text/javascript">
-	jQuery(Document).ready(function(){
+$(document).ready(function() { 
 		//binds form submission and fields to the validation engine
 		jQuery('#frm').validationEngine('attach', {promptPosition : "centerRight"});
 		
