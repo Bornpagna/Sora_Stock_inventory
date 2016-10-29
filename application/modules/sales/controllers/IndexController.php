@@ -97,6 +97,8 @@ class Sales_IndexController extends Zend_Controller_Action
 		$row = $dbq->getSaleorderItemById($id);
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/index");
+		}if($row['is_approved']==1){
+			Application_Form_FrmMessage::Sucessfull("SALE_ORDER_WARNING","/sales/index");
 		}
 		$this->view->rs = $dbq->getSaleorderItemDetailid($id);
 		$this->view->rsterm = $dbq->getTermconditionByid($id);

@@ -163,9 +163,12 @@ class Sales_Model_DbTable_DbSaleOrder extends Zend_Db_Table_Abstract
 // 					"discount_real"  => 	$data['global_disc'],
 					"net_total"      => 	$data['all_total'],
 					"user_mod"       => 	$GetUserId,
-// 					'pending_status' =>2,
+ 					'pending_status' =>1,
+					'is_approved'=>0,
+					'is_toinvocie'=>0,
 					"date"      => 	date("Y-m-d"),
 			);
+
 			$this->_name="tb_sales_order";
 			$where="id = ".$id;
 			$this->update($arr, $where);

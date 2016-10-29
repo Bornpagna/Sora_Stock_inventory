@@ -52,13 +52,17 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$GetUserId= $session_user->user_id;
 			$dbc=new Application_Model_DbTable_DbGlobal();
 
-		if($data['approved_name']==1){		//approval and create invoice		
+		if($data['approved_name']==1){	
+	//approval and create invoice		
 			$this->_name="tb_quoatation";
 				$data_to = array(
 						'pending_status'=>4,			
 				);
-			$where=" id = ".$data['quote_id'];
-			$this->update($data_to, $where);
+				//print_r($data['quote_id']);exit();
+			if(!empty($data['quote_id'])){
+				$where=" id = ".$data['quote_id'];
+				$this->update($data_to, $where);
+			}
 				
 			$this->_name="tb_sales_order";
 			$data_to = array(
@@ -74,6 +78,7 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 				
 			$dbg = new Application_Model_DbTable_DbGlobal();
 			$invoice_number = $dbg->getInvoiceNumber($data['branch_id']);
+			//print_r($invoice_number);exit();
 			$this->_name="tb_invoice";
 				$arr = array(
 						'approved_note'=>$data['app_remark'],
@@ -103,6 +108,7 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 				'notefrom_accounting'=>$data['notefrom_accountingk']);
 			$this->insert($arr);
 			}else{//update to sale order
+			//echo 11;exit();
 			$this->_name="tb_quoatation";
 				$data_to = array(
 						'pending_status'=>1,
@@ -111,9 +117,10 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 						'is_approved'=>0,	
 						
 				);
-			$where=" id = ".$data['quote_id'];
-			$this->update($data_to, $where);
-			
+			if(!empty($data['quote_id'])){
+				$where=" id = ".$data['quote_id'];
+				$this->update($data_to, $where);
+			}
 			   $this->_name="tb_sales_order";
 				$data_to = array(
 						'is_toinvocie'=>0,
@@ -132,7 +139,8 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 			$db->rollBack();
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();
-			echo $err;exit();
+			//echo 333;
+			//echo $err;exit();
 			Application_Model_DbTable_DbUserLog::writeMessageError($err);
 		}
 	}
