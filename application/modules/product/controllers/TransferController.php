@@ -77,8 +77,6 @@ public function init()
 			$formStockAdd = $formProduct->add($rs);
 			Application_Model_Decorator::removeAllDecorator($formStockAdd);
 			$this->view->formFilter = $formStockAdd;
-			
-			
 	}
 	//view category 27-8-2013
 	function requesttransferAction(){
@@ -86,6 +84,13 @@ public function init()
 	}
 	
 	function editrequestAction(){
+		
+	}
+	
+	function recieverequest(){
+		
+	}
+	function editrecieve(){
 		
 	}
 	
