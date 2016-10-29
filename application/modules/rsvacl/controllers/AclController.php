@@ -43,21 +43,21 @@ class Rsvacl_AclController extends Zend_Controller_Action
     {   
     	/* Initialize action controller here */
     	if($this->getRequest()->getParam('id')){
-    		$db = new RsvAcl_Model_DbTable_DbAcl();
+    		$db = new Rsvacl_Model_DbTable_DbAcl();
     		$acl_id = $this->getRequest()->getParam('id');
     		$rs=$db->getAcl($acl_id);
     		$this->view->rs=$rs;
     	}  	 
     	
     }
-	public function addAclAction()
+	public function addAction()
 		{
-			$form = new RsvAcl_Form_FrmAcl();
+			$form = new Rsvacl_Form_FrmAcl();
 			$this->view->form=$form;
 			
 			if($this->getRequest()->isPost())
 			{
-				$db=new RsvAcl_Model_DbTable_DbAcl();
+				$db=new Rsvacl_Model_DbTable_DbAcl();
 				$post=$this->getRequest()->getPost();
 				$id=$db->insertAcl($post);
 				$tr = Application_Form_FrmLanguages::getCurrentlanguage();

@@ -779,7 +779,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 	function getInvoiceById($id){//5
 		$db = $this->getAdapter();
 		$sql="SELECT
-		(SELECT NAME FROM `tb_sublocation` WHERE id=s.branch_id) AS branch_name,
+		(SELECT name FROM `tb_sublocation` WHERE id=s.branch_id LIMIT 1) AS branch_name,
 		(SELECT item_name FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS item_name,
 		(SELECT item_code FROM `tb_product` WHERE id=so.pro_id LIMIT 1 ) AS item_code,
 		(SELECT qty_perunit FROM `tb_product` WHERE id= so.pro_id LIMIT 1) AS qty_perunit,
@@ -788,6 +788,7 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		(SELECT symbal FROM `tb_currency` WHERE id=s.currency_id LIMIT 1) AS curr_name,
 		(SELECT cust_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS customer_name,
 		(SELECT phone FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS phone,
+		s.customer_id,
 		(SELECT contact_name FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS contact_name,
 		(SELECT email FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS email,
 		(SELECT address FROM `tb_customer` WHERE tb_customer.id=s.customer_id LIMIT 1 ) AS add_name,
@@ -798,6 +799,14 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		FROM `tb_sales_order` AS s,
 		`tb_salesorder_item` AS so ,tb_invoice AS v WHERE v.sale_id =s.id AND s.id=so.saleorder_id
 		AND s.status=1 AND s.id =$id ";
+		return $db->fetchAll($sql);
+	}
+	function getCustomerPayment($customer_id,$sale_id){
+		$db = $this->getAdapter();
+		$sql=" SELECT v.id,v.sale_id,v.invoice_no,v.invoice_date,v.sub_total,v.discount,v.paid_amount,
+		v.balance,v.balance_after,v.is_approved FROM 
+		`tb_invoice` AS v,tb_sales_order As s WHERE v.sale_id = s.id AND customer_id = $customer_id 
+		AND s.id!= $sale_id AND v.is_fullpaid !=1 ";
 		return $db->fetchAll($sql);
 	}
 	

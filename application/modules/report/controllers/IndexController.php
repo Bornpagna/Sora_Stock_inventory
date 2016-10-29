@@ -717,7 +717,7 @@ class report_indexController extends Zend_Controller_Action
     				'text_search'=>'',
     				'start_date'=>date("Y-m-d"),
     				'end_date'=>date("Y-m-d"),
-    				'suppliyer_id'=>0,
+    				'customer_id'=>0,
     				'branch_id'=>0,
     		);
     	}
@@ -726,9 +726,13 @@ class report_indexController extends Zend_Controller_Action
     	$this->view->repurchase =  $query->getAllDeliveryReport($data);
     	$frm = new Application_Form_FrmReport();
     
-    	$form_search=$frm->FrmReportPurchase($data);
-    	Application_Model_Decorator::removeAllDecorator($form_search);
-    	$this->view->form_purchase = $form_search;
+        $formFilter = new Sales_Form_FrmSearch();
+		$this->view->form_purchase = $formFilter;
+	    Application_Model_Decorator::removeAllDecorator($formFilter);
+		
+    	//$form_search=$frm->FrmReportPurchase($data);
+    	//Application_Model_Decorator::removeAllDecorator($form_search);
+    	//$this->view->form_purchase = $form_search;
     }
 	public function deliverynoteAction(){
     	$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
@@ -747,10 +751,11 @@ class report_indexController extends Zend_Controller_Action
     		$this->_redirect("/report/index/rpt-delivery");
     	}
     	$query = new report_Model_DbQuery();
-    	$this->view->product =  $query->getInvoiceById($id);
+		$rs = $query->getInvoiceById($id);
+    	$this->view->product = $rs ;
     	if(empty($query->getInvoiceById($id))){
     		$this->_redirect("/report/index/rpt-delivery");
     	}
+		$this->view-> rsinvoice = $query->getCustomerPayment($rs[0]['customer_id'],$id);
     }
-	
 }

@@ -92,8 +92,6 @@ public function viewAction()
 	    		//echo $where; exit;
 	    	}
 	    	
-	    	
-	    	
 	         //Sophen add here
 			//to assign project list in view
 			$db_acl=new Application_Model_DbTable_DbGlobal();
@@ -102,7 +100,6 @@ public function viewAction()
 			$notParentId = $db_acl->getGlobalDb($sqlNotParentId);
 			$usernotparentid = $notParentId[0]['user_type_id'];
 			    	
-			
 			if($id == 1){
 				//Display all for admin id = 1
 				//Do not change admin id = 1 in database 
@@ -111,7 +108,6 @@ public function viewAction()
 						from tb_acl_acl as acl 
 						WHERE 1 " . $where;
 			}
-    		    			
 			else {
 				//Display all of his/her parent access	
 				$sql="SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status 
@@ -124,8 +120,6 @@ public function viewAction()
 			$acl = (is_null($acl))? array(): $acl;
 			//print_r($acl);
 			$this->view->acl=$acl;			
-			
-			
 			
 			
 			if(!$usernotparentid){
@@ -299,9 +293,10 @@ public function editAction()
 
     public function updateStatusAction(){
     	if($this->getRequest()->isPost()){
+    		try{
     		$post=$this->getRequest()->getPost();
     		
-    		$db = new RsvAcl_Model_DbTable_DbUserAccess();
+    		$db = new Rsvacl_Model_DbTable_DbUserAccess();
     		$user_type_id =  $post['user_type_id'];
     		$acl_id = $post['acl_id'];
     		$status = $post['status'];
@@ -314,13 +309,16 @@ public function editAction()
     			echo "no";	
     		}
     		elseif($status == "no"){
-    			$db->insert($data);    		
+    			$id = $db->insert($data); 
     			echo "yes";
     		}
-    		
     		//write log file
-    		$userLog= new Application_Model_Log();
-    		$userLog->writeUserLog($acl_id);
+    		}catch(Exception $e){
+    		$err =$e->getMessage();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($err);
+    		//$userLog= new Application_Model_Log();
+    		//$userLog->writeUserLog($acl_id);
+    		}
     	}
     	exit();
     }

@@ -2,13 +2,13 @@
 
 class RsvAcl_Model_DbTable_DbUserAccess extends Zend_Db_Table_Abstract
 {
-	protected  $_name = "rsv_acl_user_access";
+	protected  $_name = "tb_acl_user_access";
 	
 	public function getUserAccess($id)
 	{
 		$db=RsvAcl_Model_DbTable_DbUserAccess::getAdapter();  
 		$sql = "SELECT ua.id,ut.user_type, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, ua.status FROM rsv_acl_user_access AS ua 
-					        INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
+					        INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.user_type_id)
 					        INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ua.id =".$id;		
   		$stm=$db->query($sql);
   		$row=$stm->fetchAll();

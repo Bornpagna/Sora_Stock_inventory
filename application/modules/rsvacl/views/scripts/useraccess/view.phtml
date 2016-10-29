@@ -13,6 +13,7 @@ table.user td{vertical-align: top;}
 	  $acl=($this->acl=='')? array():$this->acl;
 	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;
 	  $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	 
 ?>
 <?php $df = $this->datafiter;?>
 <style>
@@ -29,6 +30,7 @@ table.user td{vertical-align: top;}
 	});
 
 	function changeStatus(id, user_type){
+		
 		url = "<?php echo BASE_URL;?>/rsvacl/useraccess/update-status";
 		status = "no";
 		none_src = "<?php echo BASE_URL?>/images/icon/none.png";
@@ -37,9 +39,11 @@ table.user td{vertical-align: top;}
 		if( $("#img_" + id).attr("src") == tick_src){
 			status = "yes";
 		}
-		alert(status);
+		alert("id"+id+"user type"+user_type+"status"+status);
+		
 		$.post( url, { 'acl_id': id, 'status': status, 'user_type_id':user_type},
 	      function( data ) {
+		      alert(data);
 			 img_src = none_src;
 	         if(data == "yes"){
 				img_src = tick_src;
@@ -57,17 +61,18 @@ table.user td{vertical-align: top;}
 				<div class="caption">
 					<i class="fa fa-globe"></i><?php echo $tr->translate("USER_ACCESS");?>
 				</div>
-				<a href="<?php echo $cancel_url;?>" class="btn btn-sm green  pull-right">
-					<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("ADD_NEW");?>
+				<a href="<?php echo $cancel_url;?>" class="btn btn-sm black  pull-right">
+					<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("GO_BACK");?>
 				</a>
 			</div>
 			<div class="portlet-body form">
 				<form method="post" action="<?php //echo $formFilter->getAction(); ?>">
 					<div class="form-group" style="padding-top: 6px;">
+					    <label class="control-label col-md-2"><?php echo $rs[0]['user_type'];?></label>
 						<label class="control-label col-md-2"><select  name="fmod" id="fmod" class="form-control select2me"><?php echo $this->optoin_mod;?></select></label>
 						<label class="control-label col-md-2"><select  class='demo-code-language form-control select2me' name="fcon" id="fcon"><?php echo $this->optoin_con;?></select></label>
-						<label class="control-label col-md-3"><select name="fact" class='demo-code-language form-control select2me' id="fact"><?php echo $this->optoin_act;?></select></label>
-						<label class="control-label col-md-3"><select name="fstatus" id="fstatus" class="form-control select2me"><?php echo $this->optoin_status;?></select></label>
+						<label class="control-label col-md-2"><select name="fact" class='demo-code-language form-control select2me' id="fact"><?php echo $this->optoin_act;?></select></label>
+						<label class="control-label col-md-2"><select name="fstatus" id="fstatus" class="form-control select2me"><?php echo $this->optoin_status;?></select></label>
 						<label class="control-label col-md-2"><input class="btn btn-primary col-md-12" type="submit" value="<?php echo $tr->translate('SEARCH');?>" title="<?php echo $tr->translate('SEARCH');?>"/></label>
 					</div>		
 				</form> 

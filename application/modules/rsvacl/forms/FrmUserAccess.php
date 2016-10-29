@@ -20,7 +20,7 @@ class RsvAcl_Form_FrmUserAccess extends Zend_Form
     	//Main parent of user type
 		$db=new Application_Model_DbTable_DbGlobal();
 		
-		$rs=$db->getGlobalDb("SELECT ut.user_type_id,ut.user_type FROM rsv_acl_user_type AS ut");
+		$rs=$db->getGlobalDb("SELECT ut.user_type_id,ut.user_type FROM tb_acl_user_type AS ut");
 		$options=array();
 		
 		foreach($rs as $read) $options[$read['user_type_id']]=$read['user_type'];
@@ -31,7 +31,7 @@ class RsvAcl_Form_FrmUserAccess extends Zend_Form
 		
 		
 		
-		$rs=$db->getGlobalDb("SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access FROM rsv_acl_acl AS acl");
+		$rs=$db->getGlobalDb("SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access FROM tb_acl_acl AS acl");
 		$options=array();
 		
 		foreach($rs as $read) $options[$read['acl_id']]=$read['user_access'];
@@ -45,11 +45,11 @@ class RsvAcl_Form_FrmUserAccess extends Zend_Form
 		//echo $user_id;exit;
 		$db_user=new Application_Model_DbTable_DbGlobal();
 		if($id==1){
-			$sql = "select acl.acl_id,CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access from rsv_acl_acl as acl";
+			$sql = "select acl.acl_id,CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access from tb_acl_acl as acl";
 		}else {
 			$sql="SELECT acl.acl_id, CONCAT(acl.module,'/', acl.controller,'/', acl.action) AS user_access, acl.status FROM rsv_acl_user_access AS ua 
-		      INNER JOIN rsv_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
-			  INNER JOIN rsv_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ut.user_type_id =".$id;
+		      INNER JOIN tb_acl_user_type AS ut ON (ua.user_type_id = ut.parent_id)
+			  INNER JOIN tb_acl_acl AS acl ON (acl.acl_id = ua.acl_id) WHERE ut.user_type_id =".$id;
 		}
 		
 		//print_r($sql); exit;

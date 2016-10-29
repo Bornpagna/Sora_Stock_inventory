@@ -8,6 +8,7 @@ class Rsvacl_Form_FrmUserType extends Zend_Form
     	$user_type=new Zend_Form_Element_Text('user_type');
     	$user_type->setAttribs(array(
     		'id'=>'user_type',
+    		'required'=>true,
     		'class'=>'validate[required] form-control',
     	));
     	$this->addElement($user_type);

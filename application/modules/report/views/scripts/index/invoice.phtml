@@ -1,13 +1,13 @@
 <?php 
 $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-<title><?php echo $tr->translate("DELIVERY REPORT");?></title>
+<title><?php echo $tr->translate("Invoice Report");?></title>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="fa fa-globe"></i><?php echo $tr->translate("DELIVERY REPORT");?>
+					<i class="fa fa-globe"></i><?php echo $tr->translate("Invoice Report");?>
 				</div>
 						<div class="btn-group pull-right">
 							 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" aria-expanded="false">
@@ -157,9 +157,22 @@ $tr=Application_Form_FrmLanguages::getCurrentlanguage();
 										<td>ទឹកប្រាក់បានបង់</td>
 										<td>ទឹកប្រាក់នៅខ្វះ</td>
 									</tr>
+									<?php $balance = 0;if(!empty($this->rsinvoice)) foreach($this->rsinvoice as $key =>$rs){?>
+									<tr style="text-align:center;">
+										<td><?php echo $key+1;?></td>
+										<td><?php echo date("d/m/Y",strtotime($rs["invoice_date"]));?></td>
+										<td><?php echo $rs["invoice_no"];?></td>
+										<td><?php echo $rs["sub_total"];?></td>
+										<td><?php echo $rs["discount"];?></td>
+										<td><?php echo $rs["paid_amount"];//ត្រូវយកប្រាក់ដែលបានបង់សរុប?></td>
+										<td><?php echo $rs["balance"];
+										$balance =$balance + $rs["balance"];
+										?></td>
+									</tr>
+									<?php } ?>
 									<tr ">
-									    <td colspan="6" style="border-bottom:1px solid #fff;border-left:1px solid #fff;text-align:right; ">ប្រាក់នៅខ្វះរួមសរុប&nbsp;</td>
-										<td style="border-left:1px solid #000;"></td>
+									    <td colspan="6" style="font-size:14px;border-bottom:1px solid #fff;border-left:1px solid #fff;text-align:right; ">ប្រាក់នៅខ្វះរួមសរុប&nbsp;</td>
+										<td style="border-left:1px solid #000;font-size:14px;">$&nbsp;<?php echo number_format($balance,2);?></td>
 									</tr>									
 								</table><br />
 						   </td> 

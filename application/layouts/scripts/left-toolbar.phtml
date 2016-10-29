@@ -43,9 +43,9 @@
 	//module user 
 	$url_user_list = array($this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'index'),null, true), "MENU_RSVACL_USER_INDEX");
 	$url_user_add = array($this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'add'),null, true), "MENU_RSVACL_USER_ADD_USER");
-	$url_add_user_access = array($this->url(array('module'=>'rsvacl','controller'=>'user-access','action'=>'index'),null, true), "MENU_RSVACL_USER_ACCESS_ADD");
+	$url_add_user_access = array($this->url(array('module'=>'rsvacl','controller'=>'useraccess','action'=>'index'),null, true), "MENU_RSVACL_USER_ACCESS_ADD");
 	$url_user_acl_list = array($this->url(array('module'=>'rsvacl','controller'=>'acl','action'=>'index'),null, true), "MENU_RSVACL_USER_ACL_LIST");
-	$url_user_type = array($this->url(array('module'=>'rsvacl','controller'=>'user-type','action'=>'index'),null, true), "MENU_RSVACL_USER_TYPE_LIST");
+	$url_user_type = array($this->url(array('module'=>'rsvacl','controller'=>'usertype','action'=>'index'),null, true), "MENU_RSVACL_USER_TYPE_LIST");
 	
 	//module report$url_report_summary
 	$url_report_list = array($this->url(array('module'=>'report','controller'=>'index','action'=>'index'),null, true), "MENU_REPORT_INDEX_INDEX");
@@ -59,7 +59,7 @@
 	$url_report_product = array($this->url(array('module'=>'report','controller'=>'product','action'=>'index'),null, true), "MENU_REPORT_PRODUCT");
 	$url_chart_po =  array($this->url(array('module'=>'report','controller'=>'index','action'=>'pochart'),null, true), "MENU_REPORT_INDEX_POCHART");
 	$url_chart_so =  array($this->url(array('module'=>'report','controller'=>'index','action'=>'sochart'),null, true), "MENU_REPORT_INDEX_SOCHART");
-	$url_measure  = array($this->url(array('module'=>'measure','controller'=>'index','action'=>'index'),null, true), "Measure");
+	$url_measure  = array($this->url(array('module'=>'product','controller'=>'measure','action'=>'index'),null, true), "Measure");
 	$url_other  = array($this->url(array('module'=>'product','controller'=>'other','action'=>'index'),null, true), "Other");
 	$url_pricelevel = array($this->url(array('module'=>'product','controller'=>'pricelevel','action'=>'index'),null, true), "Price Level");
 	?>
@@ -155,6 +155,10 @@
 	            		<li>
             		<?php //}?>   
             		<?php //}?>-->
+            		<li>
+	            			<a href="<?php echo $url_measure[0]; ?>">
+							 <i class="icon-bulb"></i><?php echo $tr->translate($url_measure[1])?></a>
+	            		<li>
 					</ul>
 				</li>
 				<li>
