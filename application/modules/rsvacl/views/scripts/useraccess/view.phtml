@@ -1,87 +1,24 @@
-<title>Detail User Right - RSMK</title>
+<title>Detail User Right</title>
 <style>
-fieldset.fifthy {	
-	border-right: 0px;
-	width: 30%;
-}
-fieldset.fifthy table{
-	padding-right: 1px;
-}
-table.user td{
-	vertical-align: top;   
-}
+fieldset.fifthy {	border-right: 0px;width: 30%;}
+fieldset.fifthy table{padding-right: 1px;}
+table.user td{vertical-align: top;}
 </style>       
-
 <?php $rs=$this->rs;
-$cancel_url=$this->url(array(
-		'module'=>'rsvAcl',
-		'controller'=>'user-access',
+	$cancel_url=$this->url(array(
+		'module'=>'rsvacl',
+		'controller'=>'useraccess',
 		'action'=>'index',
 	));
-	
-	
 	  $acl=($this->acl=='')? array():$this->acl;
 	  $acl_name=($this->acl_name=='')? array(): $this->acl_name;
 	  $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 ?>
-
-<div class="right" style="width: 97%; padding: 10px;">
-	<div class="btn" align="right">
-			    <a class="negative" href="<?php echo $cancel_url;?>">
-			        <img alt="" src="<?php echo BASE_URL?>/images/previous.gif">
-			        <?php echo $tr->translate('BACK');?>
-			    </a>
-	</div>
-		<div class="head_form">
-			<?php echo $tr->translate('USER_ACCESS');?>
-		</div>
-		<div class="contain_form">
-			<table>
-				<tr>
-					<td class="field"><?php echo $tr->translate('USER_TYPE');?></td>
-					<td class="value"><?php echo $rs[0]['user_type'];?></td>				
-				</tr>
-			</table>
-		</div>
-	<br/>
-	<div class="head_form">
-		<?php echo $tr->translate('MODULE')."/".$tr->translate('CONTROLLER')."/".$tr->translate('ACTION')." ". $tr->translate('ASSIGNMENT');?>
-	</div>
-	<div class="contain_form">
-		<form action="" method="post">
-		
-			<table class="view-table shadow">
-				<tr class="height">
-					<td><?php echo $tr->translate('MODULE');?></td>
-					<td width="30%"><select  name="fmod" id="fmod"><?php echo $this->optoin_mod;?></select></td>	
-					<td><?php echo $tr->translate('CONTROLLER');?></td>
-					<td width="30%"><select  class='demo-code-language' name="fcon" id="fcon"><?php echo $this->optoin_con;?></select></td>				
-				</tr>	
-				<tr class="height">
-					<td><?php echo $tr->translate('ACTION');?></td>
-					<td><select name="fact" class='demo-code-language' id="fact"><?php echo $this->optoin_act;?></select></td>	
-					<td><?php echo $tr->translate('STATUS');?></td>
-					<td><select name="fstatus" id="fstatus"><?php echo $this->optoin_status;?></select></td>				
-				</tr>	
-				<tr>
-					<td class="add-edit btn" colspan="4" align="right">
-						<input type="submit" value="<?php echo $tr->translate('SEARCH');?>" title="<?php echo $tr->translate('SEARCH');?>"/>
-					</td>
-				</tr>		
-			</table>
-		</form>	
-		<br/>
-		<?php echo $this->acl_name;?>		
-	
-	</div>
 <?php $df = $this->datafiter;?>
-</div>
 <style>
-<!--
 	.pointer{
 		cursor: pointer;	
 	}
--->
 </style>
 <script>
 	$(function(){		
@@ -92,7 +29,7 @@ $cancel_url=$this->url(array(
 	});
 
 	function changeStatus(id, user_type){
-		url = "<?php echo BASE_URL;?>/rsvAcl/user-access/update-status";
+		url = "<?php echo BASE_URL;?>/rsvacl/useraccess/update-status";
 		status = "no";
 		none_src = "<?php echo BASE_URL?>/images/icon/none.png";
 		tick_src = "<?php echo BASE_URL?>/images/icon/tick.png";
@@ -100,7 +37,7 @@ $cancel_url=$this->url(array(
 		if( $("#img_" + id).attr("src") == tick_src){
 			status = "yes";
 		}
-		
+		alert(status);
 		$.post( url, { 'acl_id': id, 'status': status, 'user_type_id':user_type},
 	      function( data ) {
 			 img_src = none_src;
@@ -112,3 +49,32 @@ $cancel_url=$this->url(array(
 	    );
 	}
 </script>
+<meta charset="utf-8" />
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-globe"></i><?php echo $tr->translate("USER_ACCESS");?>
+				</div>
+				<a href="<?php echo $cancel_url;?>" class="btn btn-sm green  pull-right">
+					<i class="fa fa-plus"></i>&nbsp;<?php echo $tr->translate("ADD_NEW");?>
+				</a>
+			</div>
+			<div class="portlet-body form">
+				<form method="post" action="<?php //echo $formFilter->getAction(); ?>">
+					<div class="form-group" style="padding-top: 6px;">
+						<label class="control-label col-md-2"><select  name="fmod" id="fmod" class="form-control select2me"><?php echo $this->optoin_mod;?></select></label>
+						<label class="control-label col-md-2"><select  class='demo-code-language form-control select2me' name="fcon" id="fcon"><?php echo $this->optoin_con;?></select></label>
+						<label class="control-label col-md-3"><select name="fact" class='demo-code-language form-control select2me' id="fact"><?php echo $this->optoin_act;?></select></label>
+						<label class="control-label col-md-3"><select name="fstatus" id="fstatus" class="form-control select2me"><?php echo $this->optoin_status;?></select></label>
+						<label class="control-label col-md-2"><input class="btn btn-primary col-md-12" type="submit" value="<?php echo $tr->translate('SEARCH');?>" title="<?php echo $tr->translate('SEARCH');?>"/></label>
+					</div>		
+				</form> 
+					<div class="contain_form" style="clear: both;">
+						<?php echo $this->acl_name;?>	
+					</div>
+		   </div>
+		</div>
+	</div>
+</div>

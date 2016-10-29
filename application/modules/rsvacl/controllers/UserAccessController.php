@@ -16,7 +16,7 @@ class Rsvacl_UserAccessController extends Zend_Controller_Action
         // action body    	
     	//$this->_helper->layout()->disableLayout();
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-        $db = new RsvAcl_Model_DbTable_DbUserType();        
+        $db = new Rsvacl_Model_DbTable_DbUserType();        
         $userAccessQuery = "SELECT user_type_id, user_type, status from tb_acl_user_type";
         $rows = $db->getUserTypeInfo($userAccessQuery);
         //print_r($rows); exit;
@@ -33,7 +33,7 @@ class Rsvacl_UserAccessController extends Zend_Controller_Action
         		}
         	}
         	
-        	$link = array("rsvacl","user-access","view-user-access");
+        	$link = array("rsvacl","useraccess","view");
         	$links = array('user_type'=>$link);
         	
         	$list=new Application_Form_Frmlist();        	
@@ -44,13 +44,13 @@ class Rsvacl_UserAccessController extends Zend_Controller_Action
         
     }
     
-public function viewUserAccessAction()
+public function viewAction()
     {   
     	/* Initialize action controller here */
     	if($this->getRequest()->getParam('id')){
     		
     		$id = $this->getRequest()->getParam('id');
-    		$db = new RsvAcl_Model_DbTable_DbUserType();        
+    		$db = new Rsvacl_Model_DbTable_DbUserType();        
         	$userAccessQuery = "SELECT user_type_id, user_type, status from tb_acl_user_type where user_type_id=".$id;
     		$rows = $db->getUserTypeInfo($userAccessQuery);	
 	    	$this->view->rs=$rows;   		
@@ -61,7 +61,7 @@ public function viewUserAccessAction()
 	    	$sql = "SELECT DISTINCT acl.`module` FROM `tb_acl_acl` AS acl";
 	    	$this->view->optoin_mod =  $gc->getOptonsHtml($sql, "module", "module");
 	    	// For list all controller
-	    	$sql = "SELECT DISTINCT acl.`controller` FROM `th_acl_acl` AS acl WHERE acl.`status` = 1";
+	    	$sql = "SELECT DISTINCT acl.`controller` FROM `tb_acl_acl` AS acl WHERE acl.`status` = 1";
 	    	$this->view->optoin_con =  $gc->getOptonsHtml($sql, "controller", "controller");
 	    	// For List all action
 	    	$sql = "SELECT DISTINCT acl.`action` FROM `tb_acl_acl` AS acl WHERE acl.`status` = 1";
@@ -177,11 +177,11 @@ public function viewUserAccessAction()
     	}  	 
     	
     }
-	public function addUserAccessAction()
+	public function addAction()
 		{
 			if($this->getRequest()->isPost())
 			{
-				$db=new RsvAcl_Model_DbTable_DbUserAccess();	
+				$db=new Rsvacl_Model_DbTable_DbUserAccess();	
 				$post=$this->getRequest()->getPost();			
 				//if(!$db->isUserExist($post['username'])){
 					
@@ -198,12 +198,12 @@ public function viewUserAccessAction()
 // 				 Application_Form_FrmMessage::message('User had existed already');
 // 				}
 			}
-			$form=new RsvAcl_Form_FrmUserAccess();
+			$form=new Rsvacl_Form_FrmUserAccess();
 			$db = new Application_Model_DbTable_DbGlobal();
 			$this->view->form=$form;
 		}
     
-public function editUserAccessAction()
+public function editAction()
     {	
     	$id=$this->getRequest()->getParam('id');
     	if(!$id)$id=0;    	
@@ -308,12 +308,12 @@ public function editUserAccessAction()
     		
     		$data=array('acl_id'=>$acl_id, 'user_type_id'=>$user_type_id);
     		
-    		if($status === "yes"){
+    		if($status == "yes"){
     			$where="user_type_id='".$user_type_id."' AND acl_id='". $acl_id . "'";
     			$db->delete($where);    		
     			echo "no";	
     		}
-    		elseif($status === "no"){
+    		elseif($status == "no"){
     			$db->insert($data);    		
     			echo "yes";
     		}
