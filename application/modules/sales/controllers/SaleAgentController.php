@@ -27,7 +27,7 @@ public function init()
 		$db = new Sales_Model_DbTable_DbSalesAgent();
 		$rows= $db->getAllSaleAgent($search);
         $list = new Application_Form_Frmlist();
-    	$columns=array("BRANCH_NAME","AGENT_CODE","SALE_AGENT","CONTACT_NUM","EMAIL","ADDRESS","POSTION","START_WORKING_DATE","DESC_CAP");
+    	$columns=array("BRANCH_NAME","AGENT_CODE","SALE_AGENT","CONTACT_NUM","EMAIL","ADDRESS","POSTION","START_WORKING_DATE","DESC_CAP","STATUS");
     	$link=array(
     		'module'=>'sales','controller'=>'saleagent','action'=>'edit',
     	);

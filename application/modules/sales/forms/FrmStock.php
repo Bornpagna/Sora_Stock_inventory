@@ -128,6 +128,17 @@ class Sales_Form_FrmStock extends Zend_Form
     	
     	$user_id = new Zend_Form_Element_Hidden("user_id");
     	$this->addElement($user_id);
+		
+		$row_status = $db->getGlobalDb('SELECT v.key_code,v.name_kh FROM tb_view as v WHERE v.type=5 AND v.status=1');
+     	$option_status = array();
+     	if(count($row_status) > 0) {
+     		foreach($row_status as $rs) $option_status[$rs['key_code']]=$rs['name_kh'];
+     	}
+		$status=new Zend_Form_Element_Select("status");
+		$status->setAttribs(array('class'=>'form-control select2me'));
+		$status->setMultiOptions($option_status);
+		$this->addElement($status);
+		
 //     	$sex = $db->getGlobalDb('SELECT u.`user_id`,u.`fullname` FROM `tb_acl_user` AS u,`tb_acl_user_type` AS ut WHERE u.`status`=1 AND u.`user_type_id`=ut.`user_type_id` AND u.`user_type_id`=5');
 //     	$option_user = array('-1'=>'Select User Type');
 //     	if(count($row_manger) > 0) {
@@ -165,6 +176,7 @@ class Sales_Form_FrmStock extends Zend_Form
     		$old_document->setValue($data["document"]);
     		$old_signature->setValue($data["signature"]);
     		$user_id->setValue($data["acl_user"]);
+			$status->setValue($data["status"]);
     	}
     	return $this;
 	}

@@ -15,19 +15,24 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     
 	 public function getProductCoded(){
 		$db =$this->getAdapter();
-		$sql=" SELECT id FROM tb_customer ";
+		$sql=" SELECT id FROM tb_sale_agent ";
 		$acc_no = $db->fetchAll($sql);
-		foreach($acc_no as $rs){
+		$count = count($acc_no);
+		$i=0;
+		foreach($acc_no as $rs){ $i++;
 			$new_acc_no= $rs["id"];
 			$acc_no= strlen($rs["id"]);
-			$pre = "CID";
-			for($i = $acc_no;$i<5;$i++){
+			$pre = "EID";
+			$id = 32+$i;
+			$sqls = "UPDATE tbl_user_copys SET id = "."'".$id."'"." WHERE id=".$rs["id"];
+			$db->query($sqls);
+			/*for($i = $acc_no;$i<5;$i++){
 				$pre.='0';
 				$code = $pre.$new_acc_no;
-				$sqls = "UPDATE tb_customer SET cu_code = "."'".$code."'"." WHERE id=".$rs["id"];
+				$sqls = "UPDATE tb_sale_agent SET id = "."'".$code."'"." WHERE id=".$rs["id"];
 				//echo $sqls;
 				$db->query($sqls);
-			}
+			}*/
 		}
 		
 		
@@ -95,7 +100,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 			  p.`item_code`,
 			  p.`item_name` ,
   			  p.`serial_number`,
-  			  p.`status`,
+			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=5  AND p.`status`=v.`key_code` LIMIT 1) AS status,
 			  (SELECT b.`name` FROM `tb_brand` AS b WHERE b.`id`=p.`brand_id` LIMIT 1) AS brand,
 			  (SELECT c.name FROM `tb_category` AS  c WHERE c.id=p.`cate_id` LIMIT 1) AS cat,
 			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=2  AND p.`model_id`=v.`key_code` LIMIT 1) AS model,
@@ -104,6 +109,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 			  (SELECT m.name FROM `tb_measure` AS m WHERE m.id = p.`measure_id` LIMIT 1) AS measure,
 			  (SELECT b.name FROM `tb_sublocation` AS b WHERE b.id=pl.`location_id` LIMIT 1) AS branch,
 			  SUM(pl.`qty`) AS qty
+			  
 			FROM
 			  `tb_product` AS p ,
 			  `tb_prolocation` AS pl

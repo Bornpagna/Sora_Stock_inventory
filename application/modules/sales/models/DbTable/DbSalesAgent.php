@@ -16,7 +16,8 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 				  sg.address,
 				  sg.job_title,
 				  sg.`start_working_date`,
-				  sg.description 
+				  sg.description ,
+				  (SELECT v.name_kh FROM tb_view as v WHERE v.key_code=sg.status AND v.type=5) AS status
 				FROM
 				  tb_sale_agent AS sg 
 				  INNER JOIN tb_sublocation AS l 
@@ -84,7 +85,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					"fullname"			=>	$data['name'],
 					'created_date'		=>	date("Y-m-d"),
 					"modified_date"		=>	date("Y-m-d"),
-					"status"			=>	1
+					"status"			=>	$data["status"]
 			);
 			$this->_name = "tb_acl_user";
 			$id = $this->insert($arr);
@@ -147,6 +148,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					'user_id'				=>	$GetUserId,
 					"date"					=>	date("Y-m-d"),
 					"acl_user"				=>	$id,
+					"status"			=>	$data["status"]
 			);
 			$this->_name="tb_sale_agent";
 			$this->insert($datainfo);
@@ -184,7 +186,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					"fullname"			=>	$data['name'],
 					//'created_date'		=>	date("Y-m-d"),
 					"modified_date"		=>	date("Y-m-d"),
-					"status"			=>	1
+					"status"			=>	$data["status"]
 			);
 			$this->_name = "tb_acl_user";
 				
@@ -273,6 +275,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					'user_id'				=>	$GetUserId,
 					"date"					=>	date("Y-m-d"),
 					"acl_user"				=>	$id,
+					"status"			=>	$data["status"],
 			);
 			$this->_name="tb_sale_agent";
 			$where=$this->getAdapter()->quoteInto('id=?',$data['id']);

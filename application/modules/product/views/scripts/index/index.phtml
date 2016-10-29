@@ -107,12 +107,8 @@
 									<td class="center"><?php echo $row["model"]?></td>
 									<td class="center"><?php echo $row["measure"]?></td>
 									<td class="center"><?php echo $row["qty"]?></td>
-									<td class="center">
-										<?php if($row["status"] == 1){?>
-										<span class="label label-sm label-success"><?php echo $tr->translate("ACTIVE");?> </span>
-										<?php }else{?>
-										<span class="label label-sm label-danger"><?php echo $tr->translate("DEACTIVE");?> </span>
-										<?php }?>
+									<td class="center"> 
+										<?php echo $row["status"];?>
 									</td>
 									<td>
 										<a href="<?php echo $url_edit;?>/id/<?php echo $row["id"]?>"><?php echo $tr->translate("EDIT");?></a>
