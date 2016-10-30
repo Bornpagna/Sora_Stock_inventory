@@ -17,18 +17,25 @@ public function init()
     }
    	public function indexAction()
    	{
-   		$formFilter = new Application_Form_Frmsearch();
-   		$this->view->formFilter = $formFilter;
    		$data = $this->getRequest()->getPost();
    		$list = new Application_Form_Frmlist();
    		$db = new Product_Model_DbTable_DbAdjustStock();
-   		
+   		if($this->getRequest()->isPost()){   
+    		$data = $this->getRequest()->getPost();
+    	}else{
+			$data = array(
+    			'ad_search'	=>	'',
+    			'date'	=>	1
+    		);
+		}
    
    		$rows=$db->getAllAdjustStock($data);
-   		$columns=array("PRO_NAME","BAR_CODE","ITEM_CODE","QTY_BEFORE","QTY_AFTER","DFFER_QTY","MEASURE","LOCATION","BY_USER","DATE");
+   		$columns=array("ITEM_CODE","PRO_NAME","QTY_BEFORE","QTY_ADJUST","DFFER_QTY","MEASURE","LOCATION","BY_USER","DATE");
    		
    		$this->view->list=$list->getCheckList(0, $columns, $rows);
-   		Application_Model_Decorator::removeAllDecorator($formFilter);
+   		$frm = new Product_Form_FrmAdjust();
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->formFilter = $frm->filter();
    		
    	}
    	//26-8-13 add adjust stock //done 27-8-813

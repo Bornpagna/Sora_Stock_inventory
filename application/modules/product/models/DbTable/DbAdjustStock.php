@@ -12,9 +12,8 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 		$db_globle = new Application_Model_DbTable_DbGlobal();
 		$sql ="SELECT 
 				  m.`pro_id` ,
-				  p.`item_name`,
-				  p.`barcode`,
 				  p.`item_code`,
+				  p.`item_name`,
 				  m.`before_qty`,
 				  m.`qty_after`,
 				  m.`differ_qty`,
@@ -52,13 +51,14 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 		try{
 			$user_info = new Application_Model_DbTable_DbGetUserInfo();
 			$result = $user_info->getUserInfo();
+			print_r($result);exit();
 			if(!empty($data['identity'])){
 				$identitys = explode(',',$data['identity']);
 				foreach($identitys as $i)
 				{
 					$arr = array(
 							'pro_id'		=>	$data["pro_id_".$i],
-							'location_id'	=>	$result["location_id"],
+							'location_id'	=>	$result["branch_id"],
 							'before_qty'	=>	$data["current_qty_".$i],
 							'qty_after'		=>	$data["new_qty_".$i],
 							'differ_qty'	=>	$data["difer_qty_".$i],
@@ -70,19 +70,19 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 					$this->_name="tb_move_history";
 					$this->insert($arr);
 	
-					$rs = $this->getProductById($data["pro_id_".$i],$result["location_id"]);
+					$rs = $this->getProductById($data["pro_id_".$i],$result["branch_id"]);
 	
 					if(!empty($rs)){
 						$arr_p = array(
 								'qty'	=>	$data["new_qty_".$i],
 						);
 						$this->_name="tb_prolocation";
-						$where = array('pro_id=?'=>$data["pro_id_".$i],"location_id=?"=>$result["location_id"]);
+						$where = array('pro_id=?'=>$data["pro_id_".$i],"location_id=?"=>$result["branch_id"]);
 						$this->update($arr_p, $where);
 					}else{
 						$arr_p = array(
 								'pro_id'			=>	$data["pro_id_".$i],
-								'location_id'		=>	$result["location_id"],
+								'location_id'		=>	$result["branch_id"],
 								'qty'				=>	$data["new_qty_".$i],
 								'qty_warning'		=>	0,
 								'last_mod_userid'	=>	$result["user_id"],
@@ -102,7 +102,8 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 	}
 	function getProductName(){
 		$db_globle = new Application_Model_DbTable_DbGlobal();
-		
+		$user_info = new Application_Model_DbTable_DbGetUserInfo();
+		$result = $user_info->getUserInfo();
 		$db = $this->getAdapter();
 		$sql = "SELECT 
 				  p.`id`,
@@ -116,9 +117,9 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 				FROM
 				  `tb_product` AS p,
 				  `tb_prolocation` AS pl 
-				WHERE p.`id` = pl.`pro_id` ";
-		$location = $db_globle->getAccessPermission('pl.`location_id`');
-		return $db->fetchAll($sql.$location);
+				WHERE p.`id` = pl.`pro_id` AND pl.`location_id`=".$result["branch_id"];
+		//$location = $db_globle->getAccessPermission('pl.`location_id`');
+		return $db->fetchAll($sql);
 	}
 	function getProductById($id){
 		$db_globle = new Application_Model_DbTable_DbGlobal();

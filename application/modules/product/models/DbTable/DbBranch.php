@@ -12,7 +12,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$arr = array(
 			'name'			=>	$data["branch_name"],
-			'code'			=>	$data["code"],
+			'branch_code'	=>	$data["code"],
 			'prefix'		=>	$data["prefix"],
 			'contact'		=>	$data["contact"],
 			'phone'			=>	$data["contact_num"],
@@ -35,7 +35,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$arr = array(
 				'name'			=>	$data["branch_name"],
-				'code'			=>	$data["code"],
+				'branch_code'	=>	$data["code"],
 				'prefix'		=>	$data["prefix"],
 				'contact'		=>	$data["contact"],
 				'phone'			=>	$data["contact_num"],
@@ -59,7 +59,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$sql = "SELECT 
 				  s.`id`,
 				  s.`name`,
-				  s.`code`,
+				  s.`branch_code`,
 				  s.prefix,
 				  s.`contact`,
 				  s.`phone`,
@@ -76,7 +76,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 			$s_where[]= " s.`name` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`contact` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`phone` LIKE '%{$s_search}%'";
-			$s_where[]=" s.`code` LIKE '%{$s_search}%'";
+			$s_where[]=" s.`branch_code` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`prefix` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`email` LIKE '%{$s_search}%'";
 			$s_where[]=" s.`office_tel` LIKE '%{$s_search}%'";
@@ -95,7 +95,7 @@ class Product_Model_DbTable_DbBranch extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$sql = "SELECT 
 				  s.`id`,
-				  s.`code`,
+				  s.`branch_code` AS code,
 				  s.prefix,
 				  s.`name`,
 				  s.`contact`,

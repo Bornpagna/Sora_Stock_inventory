@@ -10,7 +10,9 @@ public function init()
     	$id=$this->getRequest()->getParam("id");
     	$session_user=new Zend_Session_Namespace('auth');
     	$session_user->location_id=$id;
-    	$this->_redirect("/product/index/index");
+		//print_r($session_user->location_id);
+		//echo "<script>alert(".$session_user->location_id.")</script>";
+    	$this->_redirect("/product/index");
 	}
 	
 }

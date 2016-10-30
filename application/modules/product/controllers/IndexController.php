@@ -179,5 +179,49 @@ public function init()
 		}
 	}
 	
+	function outstockAction(){
+		$db = new Product_Model_DbTable_DbProduct();
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    	}else{
+    		$data = array(
+    			'ad_search'	=>	'',
+    			'branch'	=>	'',
+    			'brand'		=>	'',
+    			'category'	=>	'',
+    			'model'		=>	'',
+    			'color'		=>	'',
+    			'size'		=>	'',
+    			'status'	=>	1
+    		);
+    	}
+    	$this->view->product = $db->getAllProductOutStock($data);
+    	$formFilter = new Product_Form_FrmProduct();
+    	$this->view->formFilter = $formFilter->productFilter();
+    	Application_Model_Decorator::removeAllDecorator($formFilter);
+	}
+	
+	function lowstockAction(){
+		$db = new Product_Model_DbTable_DbProduct();
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    	}else{
+    		$data = array(
+    			'ad_search'	=>	'',
+    			'branch'	=>	'',
+    			'brand'		=>	'',
+    			'category'	=>	'',
+    			'model'		=>	'',
+    			'color'		=>	'',
+    			'size'		=>	'',
+    			'status'	=>	1
+    		);
+    	}
+    	$this->view->product = $db->getAllProductLowStock($data);
+    	$formFilter = new Product_Form_FrmProduct();
+    	$this->view->formFilter = $formFilter->productFilter();
+    	Application_Model_Decorator::removeAllDecorator($formFilter);
+	}
+	
 }
 
