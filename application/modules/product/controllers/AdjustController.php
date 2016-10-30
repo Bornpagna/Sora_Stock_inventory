@@ -20,12 +20,14 @@ public function init()
    		$data = $this->getRequest()->getPost();
    		$list = new Application_Form_Frmlist();
    		$db = new Product_Model_DbTable_DbAdjustStock();
+		$date =new Zend_Date();
    		if($this->getRequest()->isPost()){   
     		$data = $this->getRequest()->getPost();
     	}else{
 			$data = array(
     			'ad_search'	=>	'',
-    			'date'	=>	1
+    			'start_date'	=>	$date->get('MM/d/Y'),
+				'end_date'	=>	$date->get('MM/d/Y')
     		);
 		}
    

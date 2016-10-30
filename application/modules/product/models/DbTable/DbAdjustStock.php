@@ -10,6 +10,8 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 	function getAllAdjustStock($data){
 		$db = $this->getAdapter();
 		$db_globle = new Application_Model_DbTable_DbGlobal();
+		$start_date = $data["start_date"];
+		$end_date = $data["end_date"];
 		$sql ="SELECT 
 				  m.`pro_id` ,
 				  p.`item_code`,
@@ -24,21 +26,18 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 				FROM
 				  `tb_move_history` AS m ,
 				  `tb_product` AS p
-				WHERE m.`pro_id`=p.`id`";
+				WHERE m.`pro_id`=p.`id` AND m.`date` BETWEEN '".$start_date."' AND '".$end_date."'";
 		$where = '';
-		// 		if($data["ad_search"]!=""){
-		// 			$s_where=array();
-		// 			$s_search = addslashes(trim($data['ad_search']));
-		// 			$s_where[]= " p.item_name LIKE '%{$s_search}%'";
-		// 			$s_where[]=" p.barcode LIKE '%{$s_search}%'";
-		// 			$s_where[]= " p.item_code LIKE '%{$s_search}%'";
-		// 			$s_where[]= " p.serial_number LIKE '%{$s_search}%'";
-		// 			//$s_where[]= " cate LIKE '%{$s_search}%'";
-		// 			$where.=' AND ('.implode(' OR ', $s_where).')';
-		// 		}
-// 		if($data["pro_id"]!=""){
-// 			$where.=' AND m.pro_id='.$data["pro_id"];
-// 		}
+		 		if($data["ad_search"]!=""){
+		 			$s_where=array();
+		 			$s_search = addslashes(trim($data['ad_search']));
+		 			$s_where[]= " p.item_name LIKE '%{$s_search}%'";
+		 			$s_where[]=" p.barcode LIKE '%{$s_search}%'";
+		 			$s_where[]= " p.item_code LIKE '%{$s_search}%'";
+		 			$s_where[]= " p.serial_number LIKE '%{$s_search}%'";
+		 			//$s_where[]= " cate LIKE '%{$s_search}%'";
+		 			$where.=' AND ('.implode(' OR ', $s_where).')';
+		 		}
 		$location = $db_globle->getAccessPermission('m.`location_id`');
 		//echo $location;
 		return $db->fetchAll($sql.$where.$location);
@@ -51,7 +50,8 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 		try{
 			$user_info = new Application_Model_DbTable_DbGetUserInfo();
 			$result = $user_info->getUserInfo();
-			print_r($result);exit();
+			$date =new Zend_Date();
+			//print_r($result);exit();
 			if(!empty($data['identity'])){
 				$identitys = explode(',',$data['identity']);
 				foreach($identitys as $i)
@@ -63,7 +63,7 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 							'qty_after'		=>	$data["new_qty_".$i],
 							'differ_qty'	=>	$data["difer_qty_".$i],
 							'type'			=>	1,
-							'date'			=>	new Zend_Date(),
+							'date'			=>	$date->get('MM/d/Y'),
 							'Remark'		=>	$data["remark_".$i],
 							'user_mod'		=>	$result["user_id"],
 					);
@@ -86,7 +86,7 @@ class Product_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
 								'qty'				=>	$data["new_qty_".$i],
 								'qty_warning'		=>	0,
 								'last_mod_userid'	=>	$result["user_id"],
-								'last_mod_date'		=>	new Zend_Date(),
+								'last_mod_date'		=>	$date->get('MM/d/Y'),
 						);
 						$this->_name="tb_prolocation";
 						$this->insert($arr_p);

@@ -16,6 +16,28 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 					<?php $formList = new Application_Form_Frmlist(); echo $formList->showAddBuntton($url_new);?>
 			</div>
 		</div>
+		
+		<div class="portlet-body form">
+			<form class="form-horizontal" method="post" action="" >
+				<div class="form-body">
+							<div class="form-group">
+								<div class="col-md-3">
+									<?php echo $formFilter->getElement('ad_search');?>
+								</div>
+								<div class="col-md-3">
+									<?php echo $formFilter->getElement('start_date');?>
+								</div>
+								<div class="col-md-3">
+									<?php echo $formFilter->getElement('end_date');?>
+								</div>
+								<div class="col-md-3">
+									<button class="btn btn-primary col-md-12" value="" ><i class="fa fa-save"></i>&nbsp;<?php echo $tr->translate("REFRESH");?></button>
+								</div>
+							</div>		
+				</div>
+			</form>
+			
+		</div>
 	<div style="position: relative; clear: both;">
 		<div class="contain_form">
 			<?php echo $this->list; ?>

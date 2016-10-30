@@ -80,7 +80,24 @@ public function init()
 	}
 	//view category 27-8-2013
 	function requesttransferAction(){
-		
+		$db = new Product_Model_DbTable_DbTransfer();
+			if($this->getRequest()->isPost()){ 
+				try{
+					$post = $this->getRequest()->getPost();
+					$db->addRequest($post);
+					if(isset($post["save_close"]))
+					{
+						Application_Form_FrmMessage::message("INSERT_SUCCESS");
+						Application_Form_FrmMessage::redirectUrl('/product/transfer');
+					}
+				  }catch (Exception $e){
+				  	Application_Form_FrmMessage::messageError("INSERT_ERROR",$err = $e->getMessage());
+				  }
+			}
+			$formProduct = new Product_Form_FrmTransfer();
+			$formStockAdd = $formProduct->addRequest(null);
+			Application_Model_Decorator::removeAllDecorator($formStockAdd);
+			$this->view->formFilter = $formStockAdd;
 	}
 	
 	function editrequestAction(){
