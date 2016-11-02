@@ -499,5 +499,60 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		
    	return $db->fetchAll($sql); 
    }
+   function getAllInvoice($completed=null,$opt=null){
+   	$db= $this->getAdapter();
+   	$sql=" SELECT id,invoice_no FROM `tb_invoice` WHERE status=1  ";
+   	if($completed!=null){ $sql.="  AND is_fullpaid=0 ";} 
+   	$sql.=" ORDER BY id DESC ";
+   	$row =  $db->fetchAll($sql);
+   	if($opt==null){
+   		return $row;
+   	}else{
+   		  $options=array(-1=>"Select Invoice");
+   		 if(!empty($row)) foreach($row as $read) $options[$read['id']]=$read['invoice_no'];
+   		 return $options;
+   	}
+   }
+   function getAllInvoicePayment($post_id,$type){
+   	$db= $this->getAdapter();
+	if($type==1){
+		$sql=" SELECT * FROM `tb_invoice` AS v,tb_sales_order as s WHERE v.sale_id = s.id AND s.customer_id = $post_id AND v.status=1  ";
+		$sql.="  AND v.is_fullpaid=0 ";
+		$sql.=" ORDER BY v.id DESC ";
+   }else{
+		$sql=" SELECT * FROM `tb_invoice` AS v  WHERE v.id=$post_id AND v.status=1  ";
+		$sql.="  AND v.is_fullpaid=0 LIMIT 1";
+	}
+	//return $sql;
+   	return  $db->fetchAll($sql);
+   }
+   	function getAllCustomer($opt=null){
+   		$db=$this->getAdapter();
+   		$sql=" SELECT id, CONCAT(cust_name,',',contact_name) AS cust_name FROM tb_customer WHERE cust_name!=''
+   		 AND status=1 ORDER BY id DESC";
+   		
+   		$row =  $db->fetchAll($sql);
+   		if($opt==null){
+   			return $row;
+   		}else{
+   			$options=array(-1=>"Select Customer");
+   			if(!empty($row)) foreach($row as $read) $options[$read['id']]=str_replace("-","",$read['cust_name']);
+   			return $options;
+   		}
+   }
+   	function getAllProvince($opt=null){
+   		$db=$this->getAdapter();
+   		$sql=" SELECT province_id,province_en_name FROM ln_province WHERE province_en_name!='' ";
+   		
+   		$row =  $db->fetchAll($sql);
+   		if($opt==null){
+   			return $row;
+   		}else{
+   			$options=array();
+   			if(!empty($row)) foreach($row as $read) $options[$read['province_id']]=str_replace("-","",$read['province_en_name']);
+   			return $options;
+   		}
+   }
+   	
 }
 ?>

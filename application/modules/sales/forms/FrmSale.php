@@ -16,14 +16,12 @@ class Sales_Form_FrmSale extends Zend_Form
     	$request=Zend_Controller_Front::getInstance()->getRequest();
     	$db=new Application_Model_DbTable_DbGlobal();
 
-    	$rs=$db->getGlobalDb('SELECT id, cust_name FROM tb_customer WHERE cust_name!="" AND status=1 ORDER BY id DESC');
-    	$options=array(''=>$tr->translate('Please_Select'),'-1'=>$tr->translate('Add_New_Vendor'));
-    	if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['cust_name'];
     	$customerid=new Zend_Form_Element_Select('customer_id');
     	$customerid ->setAttribs(array(
     			'class' => 'validate[required] form-control select2me',
     			'Onchange'=>'getCustomerInfo()'
     			));
+    	$options = $db->getAllCustomer(1);
     	$customerid->setMultiOptions($options);
     	$this->addElement($customerid);
     	

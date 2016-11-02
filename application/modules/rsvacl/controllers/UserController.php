@@ -21,7 +21,8 @@ class Rsvacl_UserController extends Zend_Controller_Action
 			$user_type_id = $this->getRequest()->getParam('user_type_filter');
 			$where=" where user_type_id=".$user_type_id;
 		}
-        $userQuery = "select `user_id`,`username`,
+        $userQuery = "select `user_id`,fullname,`username`,
+        (SELECT user_type FROM `tb_acl_user_type`  WHERE user_type_id=tb_acl_user.user_type_id) AS user_type,
         (SELECT name FROM `tb_sublocation` WHERE id=LocationId) AS branch_name,
         `created_date`,`modified_date`,`status` from tb_acl_user";
         $userQuery = $userQuery.$where;
@@ -40,11 +41,11 @@ class Rsvacl_UserController extends Zend_Controller_Action
         		}
         	}
         	
-        	$link = array("rsvacl","user","view");
-        	$links = array('username'=>$link);
+        	$link = array("rsvacl","user","edit");
+        	$links = array('username'=>$link,'fullname'=>$link);
         	
         	$list=new Application_Form_Frmlist();
-        	$columns=array($tr->translate('USER_NAME_CAP'),"BRANCH_NAME",$tr->translate('CREATED_DATE'),$tr->translate('MODIFIED_DATE'),$tr->translate('STATUS_CAP'));
+        	$columns=array("FULL_NAME",$tr->translate('USER_NAME_CAP'),"USER_TYPE","BRANCH_NAME",$tr->translate('CREATED_DATE'),$tr->translate('MODIFIED_DATE'),$tr->translate('STATUS_CAP'));
         	$this->view->form=$list->getCheckList('radio', $columns, $rows, $links);
         	
         }else $this->view->form = $tr->translate('NO_RECORD_FOUND');
@@ -120,7 +121,7 @@ class Rsvacl_UserController extends Zend_Controller_Action
 // 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 // 			Application_Form_FrmMessage::message($tr->translate('ROW_AFFECTED'));
 // 			Application_Form_FrmMessage::redirector('/Rsvacl/user/index');
-			$this->_redirect('/Rsvacl/user/index');
+			$this->_redirect('/rsvacl/user/index');
 		}
 		Application_Model_Decorator::removeAllDecorator($form);
 		

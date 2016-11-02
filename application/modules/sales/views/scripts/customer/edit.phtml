@@ -32,6 +32,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 								<div class="input-icon right">
 									<i class="fa"></i>
 									<?php echo $form->getElement("branch_id");?>
+									<?php echo $form->getElement("id");?>
 								</div>
 							</div>
 							<label class="control-label col-md-2">
@@ -107,7 +108,7 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 							</div>
 					</div>
 					<div class="form-group">
-							<label class="control-label col-md-2"><?php echo $tr->translate("VENDOR_ADD");?><span class="required">
+							<label class="control-label col-md-2"><?php echo $tr->translate("Customer Address");?><span class="required">
 								</span>
 							</label>
 							<div class="col-md-4">
@@ -117,13 +118,15 @@ $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 								</div>
 							</div>
 							<label class="control-label col-md-2">
-							<?php echo $tr->translate("EMAIL");?><span class="required">
+							<?php echo $tr->translate("EMAIL");?>
+							<span class="required">
 								</span>
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
 									<i class="fa"></i>
 									<?php echo $form->getElement('txt_mail'); ?>
+									<?php echo $form->getElement('province'); ?>
 								</div>
 							</div>
 					</div>

@@ -134,7 +134,7 @@ class RsvAcl_Model_DbTable_DbUser extends Zend_Db_Table_Abstract
      			"user_id"=>$id,
      			"location_id"=>$arr["LocationId"]
      	);
-     	$db->insert("rsv_acl_ubranch", $_arrdata);
+     	$db->insert("tb_acl_ubranch", $_arrdata);
      	
 	}
 	public function getUserBranchExist($user_id, $location_id){

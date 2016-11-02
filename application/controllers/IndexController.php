@@ -21,8 +21,8 @@ class IndexController extends Zend_Controller_Action
 					$user_info = $db_user->getUserInfo($user_id);
 					$arr_acl=$db_user->getArrAcl($user_info['user_type_id']);
 					//in case user have no right to access any module of the system
-					if(!$arr_acl) $this->view->msg = $tr->translate('LOGIN_FAIL_NO_MODULE');
-					else{
+					//if(!$arr_acl) $this->view->msg = $tr->translate('LOGIN_FAIL_NO_MODULE');
+					//else{
 						
 						$session_lang=new Zend_Session_Namespace('lang');
 						$session_lang->lang_id=0;//$formdata["lang"];//for creat session
@@ -56,7 +56,7 @@ class IndexController extends Zend_Controller_Action
 						//$this->_redirect("/sales/sales-order");
 						$_url=($arr_acl[0]!=='')? '/default/index/dashboad':'/sales/sales-order' ;//after
 						$this->_redirect($_url);
-					}
+					//}
 				}
 				elseif (!$db_user->checkStatusByEmail($email)){
 					$this->view->msg = $tr->translate('LOGIN_FAIL_COMFIRM');

@@ -15,18 +15,14 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$request=Zend_Controller_Front::getInstance()->getRequest();
     	$db=new Application_Model_DbTable_DbGlobal();
-    	$sql='SELECT id,cust_name FROM tb_customer WHERE cust_name!="" AND status=1 ';
-    	$sql.=$db->getAccessPermission()." ORDER BY id DESC ";
-    	$rs=$db->getGlobalDb($sql);
     	
-    	$options=array(''=>$tr->translate('Please_Select'),'-1'=>$tr->translate('ADD_NEWCUSTOMER'));
-    	if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['cust_name'];
     	$customerid=new Zend_Form_Element_Select('customer_id');
     	$customerid ->setAttribs(array(
     			'class' => 'validate[required] form-control select2me',
     			'Onchange'=>'getCustomerInfo()',
 				'id'=>'customer_id'
     			));
+    	$options = $db->getAllCustomer(1);
     	$customerid->setMultiOptions($options);
     	$this->addElement($customerid);
     	

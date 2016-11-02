@@ -92,7 +92,12 @@ class Sales_Model_DbTable_Dbinvoiceapprove extends Zend_Db_Table_Abstract
 						'discount'=>$data['discount'],
 						'paid_amount'=>$data['deposit'],
 						'balance'=>$data['balance'],
+						
+						'sub_total_after'=>$data['all_total'],//$data['net_total'],
+						'discount_after'=>$data['discount'],
+						'paid_after'=>$data['deposit'],
 						'balance_after'=>$data['balance'],
+						
 						'is_approved'=>$data['approved_name'],
 						);		
 			$invoice_id = $this->insert($arr);	

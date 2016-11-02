@@ -4,6 +4,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage(); 
 	$session_user=new Zend_Session_Namespace('auth');
 	$request=Zend_Controller_Front::getInstance()->getRequest();
+	 $level = $result["level"];
 	//must add edit it
 	$url_pro_add =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'add'),null, true), "MENU_PRODUCT_INDEX_ADD");
 	$url_pro_list =  array($this->url(array('module'=>'product','controller'=>'index','action'=>'index'),null, true), "MENU_PRODUCT_INDEX_INDEX");
@@ -78,6 +79,7 @@
 					<!-- END SIDEBAR TOGGLER BUTTON -->
 				</li>
 				<!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
+				<?php if($level==1 OR $level==2 OR $level==4){?>
 				<li class="start ">
 					<a href="javascript:;">
 					<i class="icon-home"></i>
@@ -161,6 +163,8 @@
 	            		<li>
 					</ul>
 				</li>
+				<?php }?>
+				<?php if($level==1 OR $level==2 OR $level==8){?>
 				<li>
 					<a href="javascript:;">
 					<i class="icon-screen-desktop"></i>
@@ -211,6 +215,8 @@
 	            		<?php }?>
 					</ul>
 				</li>
+				<?php }?>
+				<?php if($level==1 OR $level==2 OR $level==8){?>
 				<li>
 					<a href="javascript:;">
 					<i class="icon-screen-desktop"></i>
@@ -301,6 +307,7 @@
             		<?php //}?> 
 					</ul>
 				</li>
+				<?php }?>
 				<li>
 					<a href="javascript:;">
 					<i class="icon-screen-desktop"></i>
@@ -362,6 +369,7 @@
 	            		</li> --> 
 					</ul>
 				</li>
+				<?php if($level==1 OR $level==2){?>
 				<li>
 					<a href="javascript:;">
 					<i class="icon-screen-desktop"></i>
@@ -396,6 +404,7 @@
 	            		</li> 
 					</ul>
 				</li>
+				<?php }?>
 			</ul>
 		</div>
 	</div>

@@ -13,7 +13,7 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
     
     function getAllView($data){
     	$db = $this->getAdapter();
-    	$sql = "SELECT v.`id`,v.`name_en`,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` IN(2,3,4)";
+    	$sql = "SELECT v.`id`,v.`name_en`,v.`status`,v.`key_code`,`type` FROM `tb_view` AS v WHERE v.`type` IN(2,3,4,6)";
     	$where = '';
     	if($data["adv_search"]!=""){
     		$s_where=array();
@@ -30,6 +30,7 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
     		$where.=' AND v.type='.$data["type"];
     	}
     	//echo $sql.$where;
+		$where.=" ORDER BY v.type DESC";
     	return $db->fetchAll($sql.$where);
     }
     function getViewById($id){

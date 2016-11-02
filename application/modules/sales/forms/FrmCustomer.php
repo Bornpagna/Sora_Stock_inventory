@@ -35,6 +35,13 @@ public function Formcustomer($data=null) {
     	$customerlevel->setAttribs(array('OnChange'=>'AddLocation()','class'=>'form-control select2me'));
     	$customerlevel->setMultiOptions($opt);
     	$this->addElement($customerlevel);
+		
+		$province = new Zend_Form_Element_Select('province');
+    	$province->setAttribs(array('class'=>'form-control select2me'));
+    	$opt = $db->getAllProvince(1);
+		$province->setMultiOptions($opt);
+		
+    	$this->addElement($province);
     	 
     	
     	$contactElement = new Zend_Form_Element_Text('txt_contact_name');
@@ -102,6 +109,13 @@ public function Formcustomer($data=null) {
     	
     	
     	if($data != null) {
+			
+			$id = new Zend_Form_Element_Hidden("id");
+			
+			$id->setAttribs(array("class"=>"form-control","readOnly"=>"readOnly"));
+			$this->addElement($id);
+		
+		    $id->setValue($data['id']);
     	   $nameElement->setValue($data['cust_name']);
     		$contactElement->setValue($data['contact_name']);
     		$addressElement->setValue($data["address"]);
@@ -117,6 +131,7 @@ public function Formcustomer($data=null) {
     		$credit_tearm->setValue($data["credit_team"]);
     		$phoneElement->setValue($data["phone"]);
     		$mainStockElement->setValue($data["branch_id"]);
+			$province->setValue($data["province_id"]);
     		//$balancelement->setValue($data['balance']);
     	}
     	return $this;

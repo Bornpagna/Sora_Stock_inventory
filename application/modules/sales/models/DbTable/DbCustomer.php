@@ -79,6 +79,7 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 				'contact_name'	=> $post['txt_contact_name'],//test
 				'contact_phone'	=> $post['contact_phone'],//test
 				'address'		=> $post['txt_address'],
+				'province_id'=> $post['province'],
 				'fax'			=> $post['txt_fax'],
 				'email'			=> $post['txt_mail'],
 				'website'		=> $post['txt_website'],//test
@@ -106,6 +107,7 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 				'contact_name'	=> $post['txt_contact_name'],//test
 				'contact_phone'	=> $post['contact_phone'],//test
 				'address'		=> $post['txt_address'],
+				'province_id'=> $post['province'],
 				'fax'			=> $post['txt_fax'],
 				'email'			=> $post['txt_mail'],
 				'website'		=> $post['txt_website'],//test

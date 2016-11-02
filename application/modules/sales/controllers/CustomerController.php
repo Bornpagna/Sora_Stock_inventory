@@ -70,9 +70,10 @@ class Sales_CustomerController extends Zend_Controller_Action
 		{
 			try{
 				$post = $this->getRequest()->getPost();
-				$post["id"]=$id;
+				//$post["id"]=$id;
 				$customer= new Sales_Model_DbTable_DbCustomer();
 				$customer->updateCustomer($post);
+				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ',"/sales/customer");
 				//$this->_redirect('/sales/customer/index');
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Update customer failed !");

@@ -72,14 +72,14 @@ public function init()
     		$data["id"] = $id;
     		try {
     			$db->edit($data);
-    			if(isset($data['save_new'])){
+    			//if(isset($data['save_new'])){
     
     				Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
-    			}
-    			if(isset($data['save_close'])){
-    				Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
-    				Application_Form_FrmMessage::redirectUrl('/other/loantype');
-    			}
+    			//}
+    			//if(isset($data['save_close'])){
+    				Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ',"/product/other");
+    				//Application_Form_FrmMessage::redirectUrl('/other/loantype');
+    			//}
     		} catch (Exception $e) {
     			Application_Form_FrmMessage::message("INSERT_FAIL");
     			$err = $e->getMessage();
