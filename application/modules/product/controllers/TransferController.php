@@ -79,6 +79,25 @@ public function init()
 			$this->view->formFilter = $formStockAdd;
 	}
 	//view category 27-8-2013
+	
+	function requestlitAction(){
+		$db = new Product_Model_DbTable_DbTransfer();
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    	}else{
+    		$data = array(
+    			'tran_num'	=>	'',
+    			'tran_date'	=>	1,
+    			'type'		=>	'',
+    			'status'	=>	1,
+    			'to_loc'	=>	'',
+    		);
+    	}
+    	$this->view->product = $db->getTransfer($data);
+    	$formFilter = new Product_Form_FrmTransfer();
+    	$this->view->formFilter = $formFilter->frmFilter();
+    	Application_Model_Decorator::removeAllDecorator($formFilter);
+	}
 	function requesttransferAction(){
 		$db = new Product_Model_DbTable_DbTransfer();
 			if($this->getRequest()->isPost()){ 

@@ -20,7 +20,7 @@ class Sales_Form_FrmStock extends Zend_Form
     	$this->addElement($phoneElement);
     	
     	$emailElement = new Zend_Form_Element_Text('email');
-    	$emailElement->setAttribs(array('class'=>'validate[custom[email]] form-control','placeholder'=>'Enter Email Address'));
+    	$emailElement->setAttribs(array('class'=>'form-control','placeholder'=>'Enter Email Address'));
     	$this->addElement($emailElement);
     	
     	$addressElement = new Zend_Form_Element_Text('address');

@@ -206,16 +206,12 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					'location_id'	=>	$data["branch_id"],
 			);
 			$this->_name="tb_acl_ubranch";
-			$db->getProfiler()->setEnabled(true);
 			if(!empty($row)){
 				$where=$this->getAdapter()->quoteInto('user_id=?',$data['user_id']);
 				$this->update($arr_u, $where);
 			}else {
 				$this->insert($arr_u);
 			}
-			Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQuery());
-			Zend_Debug::dump($db->getProfiler()->getLastQueryProfile()->getQueryParams());
-			$db->getProfiler()->setEnabled(false);
 			
 			$photo = $_FILES['photo'];
 			if($photo["name"]!=""){
