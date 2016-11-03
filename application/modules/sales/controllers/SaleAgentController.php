@@ -84,6 +84,7 @@ public function init()
     			$this->_redirect("sales/saleagent/index");    		}
     	}
     	// show form with value
+		$this->view->id = $id;
     	$sql="SELECT * FROM tb_sale_agent where id=".$id;
     	$rows= $db->getGlobalDbRow($sql);
     	$formAgent = new Sales_Form_FrmStock(null);

@@ -1,6 +1,7 @@
 <?php 
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $url_save=$this->url(array("module"=>"sales","controller"=>"saleagent","action"=>"add"));
+$changepassword = $this->url(array("module"=>"rsvacl","controller"=>"user","action"=>"changepassword"));
 $frm_agent = $this->form_agent;
 ?>
 <title><?php echo $tr->translate("MENU_SALES_SALE_AGENT_ADD_SALE_AGENT");?></title>
@@ -155,13 +156,13 @@ $frm_agent = $this->form_agent;
 									<?php echo $frm_agent->getElement("user_id");?>
 								</div>
 							</div>
-							<label class="control-label col-md-2"><?php echo $tr->translate("PASSWORD");?><span class="required">
-								</span>
+							<label class="control-label col-md-2"><?php echo $tr->translate("PASSWORD");?><span class="required"></span>
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
 									<i class="fa"></i>
 									<?php echo $frm_agent->getElement('password'); ?>
+									<a target="_blank" href="<?php echo $changepassword?>/id/<?php echo $this->id?>">Change Password</a>
 								</div>
 							</div>
 					</div>
