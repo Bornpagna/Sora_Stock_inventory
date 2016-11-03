@@ -199,7 +199,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 				$id = $this->insert($arr);
 			}
 			
-			$sqls = "DELETE FROM `tb_acl_ubranch` AS u WHERE u.`user_id`="."'".$data['user_id']."'"." AND u.`location_id`="."'".$data['branch_id']."'";
+			$sqls = "DELETE FROM `tb_acl_ubranch` WHERE `user_id`=".$data["user_id"]." AND `location_id`=".$data["branch_id"];
 			$db->query($sqls);
 			
 			$arr_u= array(
