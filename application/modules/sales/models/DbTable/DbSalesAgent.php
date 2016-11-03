@@ -58,7 +58,8 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 		$new_acc_no= (int)$acc_no+1;
 		$acc_no= strlen((int)$acc_no+1);
 
-		$pre = $prefix."EID";
+		//$pre = $prefix."EID";
+		$pre = "EID";
 		for($i = $acc_no;$i<4;$i++){
 			$pre.='0';
 		}
@@ -175,11 +176,11 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 			$part= PUBLIC_PATH.'/images/stuffdocument/';
 				
 			$sql = "SELECT u.* FROM `tb_acl_user` AS u WHERE u.`user_id`="."'".$data['user_id']."'";
-			echo $sql;
+			//echo $sql;
 			$row = $db->fetchRow($sql);
 			$arr=array(
 					"username"  		=>	$data['user_name'],
-					"password"   		=> 	md5($data['password']),
+					//"password"   		=> 	md5($data['password']),
 					"email"      		=>	$data['email'],
 					"LocationId"   		=>	$data['branch_id'],
 					"user_type_id"		=>	$data["user_type"],
