@@ -200,7 +200,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 			}
 			
 			$sqls = "DELETE FROM `tb_acl_ubranch` AS u WHERE u.`user_id`="."'".$data['user_id']."'"." AND u.`location_id`="."'".$data['branch_id']."'";
-			$rows = $db->fetchAll($sqls);
+			$db->query($sqls);
 			
 			$arr_u= array(
 					'user_id'		=>	$id,
