@@ -199,7 +199,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 				$id = $this->insert($arr);
 			}
 			
-			$sqls = "SELECT u.* FROM `tb_acl_ubranch` AS u WHERE u.`user_id`="."'".$data['user_id']."'";
+			$sqls = "DELETE FROM `tb_acl_ubranch` AS u WHERE u.`user_id`="."'".$data['user_id']."'"." AND u.`location_id`="."'".$data['branch_id']."'";
 			$rows = $db->fetchAll($sqls);
 			
 			$arr_u= array(
@@ -207,12 +207,7 @@ class Sales_Model_DbTable_DbSalesAgent extends Zend_Db_Table_Abstract
 					'location_id'	=>	$data["branch_id"],
 			);
 			$this->_name="tb_acl_ubranch";
-			if(!empty($row)){
-				$where=$this->getAdapter()->quoteInto('user_id=?',$data['user_id']);
-				$this->update($arr_u, $where);
-			}else {
 				$this->insert($arr_u);
-			}
 			
 			$photo = $_FILES['photo'];
 			if($photo["name"]!=""){
