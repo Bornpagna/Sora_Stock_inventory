@@ -19,7 +19,7 @@ class Sales_Form_FrmSale extends Zend_Form
     	$customerid=new Zend_Form_Element_Select('customer_id');
     	$customerid ->setAttribs(array(
     			'class' => 'validate[required] form-control select2me',
-    			'Onchange'=>'getCustomerInfo()'
+    			'Onchange'=>'getCustomerInfo()',
     			));
     	$options = $db->getAllCustomer(1);
     	$customerid->setMultiOptions($options);
@@ -35,18 +35,10 @@ class Sales_Form_FrmSale extends Zend_Form
     	
     	$user= $this->GetuserInfo();
     	$options="";
-    	$sql = "SELECT id, name FROM tb_sublocation WHERE name!='' ";
-    	if($user["level"]==1 OR $user["level"]== 2){
-    		$options=array("1"=>$tr->translate("Please_Select"),"-1"=>$tr->translate("ADD_NEW_LOCATION"));
-    	}
-    	else{
-    		$sql.=" AND id = ".$user["location_id"];
-    	}
-    	$sql.=" ORDER BY id DESC";
-    	$rs=$db->getGlobalDb($sql);
-    	if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['name'];
+		
     	$locationID = new Zend_Form_Element_Select('branch_id');
     	$locationID ->setAttribs(array('class'=>'validate[required] form-control select2me'));
+		$options = $db->getAllLocation(1);
     	$locationID->setMultiOptions($options);
     	$locationID->setattribs(array(
     			'Onchange'=>'getsaleOrderNumber()',));

@@ -16,7 +16,7 @@
 			</div>
 			<div class="portlet-body form">
 				<!-- BEGIN FORM-->
-				<form id="form_sample_2" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<form id="orderFrm" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
 					<div class="form-body">
 						<div class="form-group">
 							<label class="control-label col-md-2"><?php echo $tr->translate("CUSTOMER_NAME");?> <span class="required">
@@ -52,7 +52,7 @@
 							</label>
 							<div class="col-md-4">
 								<div class="input-icon right">
-								<?php echo $form->getElement("order_date");?>
+								<i class="fa fa-calendar"></i><?php echo $form->getElement("order_date");?>
 								</div>
 							</div>
 						</div>
@@ -183,25 +183,6 @@
 								</div>
 							</div>
 						</div>
-						<!--
-						<div class="form-group">
-							<label class="control-label col-md-2"><?php //echo $tr->translate("PAID");?><span class="required">
-								 </span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-									<?php //echo $form->getElement("paid");?>
-								</div>
-							</div>
-								<label class="control-label col-md-2"><?php //echo $tr->translate("BALANCE");?><span class="required">
-							* </span>
-							</label>
-							<div class="col-md-4">
-								<div class="input-icon right">
-								<?php //echo $form->getElement("remain");?>
-								</div>
-							</div>
-						</div>-->
 						
 						<div class="form-group">
 						<div class="col-md-2">
@@ -244,6 +225,169 @@
 		</div>
 	</div>
 </div>
+<?php $form = $this->form_customer; ?>
+<div id="customerpopup" class="modal fade" tabindex="-1" data-width="1200">
+       <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">   
+		<div class="row">
+		<div class="col-md-12">
+			<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_NEW_CUSTOMER");?>
+				</div>
+				<div class="caption pull-right">
+					<a href="<?php echo $url_new;?>" >
+						 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form id="frmcustomer" name="frmcustomer" class="form-horizontal" enctype="multipart/form-data" method="post">
+				<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("Branch Name");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("branch_id");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('cu_code'); ?>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("COMPANY_NAME");?> <span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_name'); ?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("COMPANY_NUMBER");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_phone'); ?>
+								</div>
+							</div>
+						</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CON_NAME");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_contact_name'); ?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("CON_NUMBER");?><span class="required"></span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i><?php echo $form->getElement('contact_phone'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CUSTOMER_TYPE");?> <span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+									<div class="input-icon right">
+										<i class="fa"></i>
+										<?php echo $form->getElement('customer_type'); ?>
+									</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("Customer Level");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('customer_level'); ?>
+								</div>
+							</div>
+					</div>
+					<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("VENDOR_ADD");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("txt_address");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2">
+							<?php echo $tr->translate("EMAIL");?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('txt_mail'); ?>
+								</div>
+							</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label col-md-2"><?php echo $tr->translate("CREDIT_LIMIT");?> <span class="required">
+								</span>
+						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement('credit_limit'); ?>
+								</div>
+						</div>
+						<label class="control-label col-md-2">
+							<?php echo $tr->translate("CREDIT_TEARM");?><span class="required">
+								</span>
+						</label>
+						<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $form->getElement("credit_tearm");?>
+								</div>
+						</div>
+						
+					</div>
+					
+					<div class="form-group">
+						<label  class="col-md-12 col-md-offset-4 col-md-8">
+							<button type="button" name="btnsavenew" onclick="addNewCustomer();" class="btn btn-primary"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_CUSTOMER")?> </button>
+						</label>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+          </div>
+        </div>
+    </div>
+ </div>
 <!-- end new product -->
 <script>
 var index5 = 0;num=0;
@@ -274,7 +418,7 @@ function addRow(item_id) {
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" required="1" value="1" id="qty_unit_'+index5+'" name="qty_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="totalQty('+index5+')" class="validate[required,custom[number]] input form-control" value="0" id="qty_per_unit_'+index5+'" name="qty_per_unit_'+index5+'" /></td>';
 	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="form-control" required="1" id="qty'+index5+'" name="qty'+index5+'"/></td>';
-	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" required="1" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
+	template+='<td ><input type="text" onkeyup="calculatePrice('+index5+')" class="validate[required,custom[number]] input form-control" id="price'+index5+'" name="price'+index5+'" /><input type="hidden" id="oldprice_'+index5+'" name="oldprice_'+index5+'"/></td>';
 	template+='<td  width="5%"><input type="text" onkeyup="calculatePrice('+index5+')" value="0" id="dis_value'+index5+'" name="dis_value'+index5+'" class="form-control" /><input type="hidden" id="olddis_value_'+index5+'" name="olddis_value_'+index5+'"/><input type="hidden" readonly="readonly" class="input70px" id="real-value'+index5+'" name="real-value'+index5+'" /></td>';
 	template+='<td ><input type="text" class="form-control" readonly="readonly" id="total'+index5+'" name="total'+index5+'" /></span></td>';
 	template+="</tr>";
@@ -301,6 +445,7 @@ function addRow(item_id) {
 		$("#paid").val(0);
 	}
 	$("#row_order_0").remove();
+	$("#orderFrm").validationEngine();
 }
 term_option = '<?php echo $this->term_opt; ?>';
 index1 = 0;
@@ -520,39 +665,6 @@ function ShowPopupProduct(product_id){
 		getProductPrice(product_id);
 	}
 }
-function getCustomerInfo(){
-	v_id = $("#v_name").val();
-	if(v_id==-1){
-		$('#dialogvendor').modal('show');
-	}
-}
-<?php $url_add_vendor =  $this->url(array('module'=>'purchase','controller'=>'vendor','action'=>'add-vendor')); ?>
-function addNewVendor(){
-	var v_name  = $("#vendor_name").val();
-	var contact = $("#txt_contact_name").val();
-	var phone   = $("#v_phone").val();
-	var address = $("#txt_address").val();
-	var txt_mail= $("#txt_mail").val();
-	validate_text('#vendor_name');
-	$.ajax({
-        url: "<?php echo $url_add_vendor;?>",
-        type: "post",
-        data: {'v_name':v_name,'contact':contact,'phone':phone,'address':address,'txt_mail':txt_mail},
-        success: function(data){
-            val = $.parseJSON(data);
-	        $('#v_name').append($("<option></option>").attr("value",val['vid']).attr("selected",true).text(v_name));  
-            $("#contact").val(contact);
-            $("#txt_phone").val(phone);   
-            $("#vendor_address").val(address);     
-            document.getElementById("frmvendor").reset();
-            HideDialogVendor();
-        },
-        error:function(){
-            alert("faile insert");
-            $("#result").html('There is error while submit');
-        }
-    });
-}
 function AddLocation(){
 	var location_id= $("#LocationId").val();
 	if(location_id==-1){
@@ -578,5 +690,30 @@ function getsaleOrderNumber(){
 						}
 					});
 				}	
+}
+function getCustomerInfo(){
+	customer_id = $("#customer_id").val();
+	if(customer_id==-1){
+		$('#customerpopup').modal('show');
+	}
+}
+<?php $url_add_customer =  $this->url(array('module'=>'sales','controller'=>'customer','action'=>'add-customer')); ?>
+function addNewCustomer(){
+	var customer_name  = $("#txt_name").val();
+	$.ajax({
+        url: "<?php echo $url_add_customer;?>",
+        type: "post",
+        data: $('#frmcustomer').serialize(),
+        success: function(data){
+            rs = $.parseJSON(data);
+             $('#customer_id').append($("<option></option>").attr("value",rs['cus_id']).attr("selected",true).text(customer_name));                       
+             $("#customer_id").select2();
+			$('#customerpopup').modal('hide');
+        },
+        error:function(err){
+            alert("faile insert");
+           
+        }
+    });
 }
 </script>	

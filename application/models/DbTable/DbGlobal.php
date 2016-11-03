@@ -535,7 +535,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		if($opt==null){
    			return $row;
    		}else{
-   			$options=array(-1=>"Select Customer");
+   			$options=array(0=>"Select Customer",-1=>"Add New Customer");
    			if(!empty($row)) foreach($row as $read) $options[$read['id']]=str_replace("-","",$read['cust_name']);
    			return $options;
    		}
@@ -550,6 +550,19 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		}else{
    			$options=array();
    			if(!empty($row)) foreach($row as $read) $options[$read['province_id']]=str_replace("-","",$read['province_en_name']);
+   			return $options;
+   		}
+   }
+   function getAllLocation($opt=null){
+   		$db=$this->getAdapter();
+   		$sql=" SELECT id,`name` FROM `tb_sublocation` WHERE `name`!='' AND STATUS=1  ";
+   		
+   		$row =  $db->fetchAll($sql);
+   		if($opt==null){
+   			return $row;
+   		}else{
+   			$options=array();
+   			if(!empty($row)) foreach($row as $read) $options[$read['id']]=$read['name'];
    			return $options;
    		}
    }

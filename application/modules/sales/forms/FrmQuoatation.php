@@ -43,21 +43,13 @@ class Sales_Form_FrmQuoatation extends Zend_Form
     	
     	$user= $this->GetuserInfo();
     	$options="";
-    	$sql = "SELECT id, name FROM tb_sublocation WHERE name!='' AND status=1";
-    	if($user["level"]==1 OR $user["level"]== 2){
-    		$options=array();//array("1"=>$tr->translate("Please_Select"));
-    	}
-    	else{
-    		$sql.=" AND id = ".$user["location_id"];
-    	}
-    	$sql.=" ORDER BY id DESC";
-    	$rs=$db->getGlobalDb($sql);
-    	if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['name'];
-    	$locationID = new Zend_Form_Element_Select('branch_id');
+		
+		$locationID = new Zend_Form_Element_Select('branch_id');
     	$locationID ->setAttribs(array('class'=>'validate[required] form-control select2me'));
+		$options = $db->getAllLocation(1);
     	$locationID->setMultiOptions($options);
     	$locationID->setattribs(array(
-    			'Onchange'=>'filterBranch();',));
+    			'Onchange'=>'getsaleOrderNumber()',));
     	$this->addElement($locationID);
     	    	
     	

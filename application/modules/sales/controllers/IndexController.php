@@ -76,6 +76,11 @@ class Sales_IndexController extends Zend_Controller_Action
 		$items = new Application_Model_GlobalClass();
 		$this->view->items = $items->getProductOption();
 		$this->view->term_opt = $db->getAllTermCondition(1);
+		
+		$formpopup = new Sales_Form_FrmCustomer(null);
+		$formpopup = $formpopup->Formcustomer(null);
+		Application_Model_Decorator::removeAllDecorator($formpopup);
+		$this->view->form_customer = $formpopup;
 	}
 	function editAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
