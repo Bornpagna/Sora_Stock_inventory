@@ -50,7 +50,7 @@ class Sales_Form_FrmStock extends Zend_Form
     	$this->addElement($user_name);
     	
     	$password = new Zend_Form_Element_Password('password');
-    	$password->setAttribs(array('placeholder'=>'Enter Password',"class"=>"form-control","readOnly"=>'readOnly'));
+    	$password->setAttribs(array('placeholder'=>'Enter Password',"class"=>"form-control"));
     	$this->addElement($password);
     	
     	$pob= new Zend_Form_Element_Text('pob');

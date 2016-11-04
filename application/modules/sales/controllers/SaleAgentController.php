@@ -85,8 +85,10 @@ public function init()
     	}
     	// show form with value
 		$this->view->id = $id;
+		
     	$sql="SELECT * FROM tb_sale_agent where id=".$id;
     	$rows= $db->getGlobalDbRow($sql);
+		$this->view->user_id = $rows["acl_user"];
     	$formAgent = new Sales_Form_FrmStock(null);
 		$formShowAgent = $formAgent->showSaleAgentForm($rows);
 		Application_Model_Decorator::removeAllDecorator($formShowAgent);
