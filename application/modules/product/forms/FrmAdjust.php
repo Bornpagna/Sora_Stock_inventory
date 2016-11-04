@@ -14,8 +14,9 @@ class Product_Form_FrmAdjust extends Zend_Form
 				'onChange'=>'addNew();'
 		));
 		$opt= array(''=>$tr->translate("SELECT PRODUCT"));
-		if(!empty($db->getProductName())){
-			foreach ($db->getProductName() as $rs){
+		$row_product = $db->getProductName();
+		if(!empty($row_product)){
+			foreach ($row_product as $rs){
 				$opt[$rs["id"]] = $rs["item_name"]." ".$rs["model"]." ".$rs["size"]." ".$rs["color"];
 			}
 		}

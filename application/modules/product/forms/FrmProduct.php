@@ -44,8 +44,9 @@ class Product_Form_FrmProduct extends Zend_Form
 				'onChange'=>'getPopupBrand();',
 				//'required'=>'required'
 		));
-		if(!empty($db->getBrand())){
-			foreach ($db->getBrand() as $rs){
+		$row_brand= $db->getBrand();
+		if(!empty($row_brand)){
+			foreach ($row_brand as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -58,8 +59,9 @@ class Product_Form_FrmProduct extends Zend_Form
 				'onChange'=>'getPopupModel()',
 				//'required'=>'required'
 		));
-		if(!empty($db->getModel())){
-			foreach ($db->getModel() as $rs){
+		$row_model = $db->getModel();
+		if(!empty($row_model)){
+			foreach ($row_model as $rs){
 				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
@@ -72,8 +74,9 @@ class Product_Form_FrmProduct extends Zend_Form
 				'onChange'=>'getPopupCategory()',
 				//'required'=>'required'
 		));
-		if(!empty($db->getCategory())){
-			foreach ($db->getCategory() as $rs){
+		$row_cat = $db->getCategory();
+		if(!empty($row_cat)){
+			foreach ($row_cat as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -86,8 +89,9 @@ class Product_Form_FrmProduct extends Zend_Form
 				'onChange'=>'getPopupColor()',
 				//'required'=>'required'
 		));
-		if(!empty($db->getColor())){
-			foreach ($db->getColor() as $rs){
+		$row_color = $db->getColor();
+		if(!empty($row_color)){
+			foreach ($row_color as $rs){
 				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
@@ -100,8 +104,9 @@ class Product_Form_FrmProduct extends Zend_Form
 				'onChange'=>'getPopupSize()',
 				//'required'=>'required'
 		));
-		if(!empty($db->getSize())){
-			foreach ($db->getSize() as $rs){
+		$row_size = $db->getSize();
+		if(!empty($row_size)){
+			foreach ($row_size as $rs){
 				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
@@ -127,8 +132,9 @@ class Product_Form_FrmProduct extends Zend_Form
 				//'required'=>'required',
 				'Onchange'	=>	'getMeasureLabel();getPopupMeasure();'
 		));
-		if(!empty($db->getMeasure())){
-			foreach ($db->getMeasure() as $rs){
+		$row_measure= $db->getMeasure();
+		if(!empty($row_measure)){
+			foreach ($row_measure as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -157,8 +163,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		
 		$branch = new Zend_Form_Element_Select("branch");
 		$opt = array(''=>$tr->translate("SELECT_BRANCH"));
-		if(!empty($db->getBranch())){
-			foreach ($db->getBranch() as $rs){
+		$row_branch = $db->getBranch();
+		if(!empty($row_branch)){
+			foreach ($row_branch as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -171,8 +178,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		
 		$price_type = new Zend_Form_Element_Select("price_type");
 		$opt = array();
-		if(!empty($db->getPriceType())){
-			foreach ($db->getPriceType() as $rs){
+		$row_price = $db->getPriceType();
+		if(!empty($row_price)){
+			foreach ($row_price as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -215,8 +223,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		
 		$branch = new Zend_Form_Element_Select("branch");
 		$opt = array(''=>$tr->translate("SELECT_BRANCH"));
-		if(!empty($db->getBranch())){
-			foreach ($db->getBranch() as $rs){
+		$row_branch = $db->getBranch();
+		if(!empty($row_branch)){
+			foreach ($row_branch as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -239,8 +248,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		$brand->setAttribs(array(
 				'class'=>'form-control select2me',
 		));
-		if(!empty($db->getBrand())){
-			foreach ($db->getBrand() as $rs){
+		$row_brand = $db->getBrand();
+		if(!empty($row_brand)){
+			foreach ($row_brand as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -252,8 +262,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		$model->setAttribs(array(
 				'class'=>'form-control select2me',
 		));
-		if(!empty($db->getModel())){
-			foreach ($db->getModel() as $rss){
+		$row_model = $db->getModel();
+		if(!empty($row_model)){
+			foreach ($row_model as $rss){
 				$opt[$rss["key_code"]] = $rss["name"];
 			}
 		}
@@ -265,8 +276,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		$category->setAttribs(array(
 				'class'=>'form-control select2me',
 		));
-		if(!empty($db->getCategory())){
-			foreach ($db->getCategory() as $rs){
+		$row_cat = $db->getCategory();
+		if(!empty($row_cat)){
+			foreach ($row_cat as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -278,8 +290,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		$color->setAttribs(array(
 				'class'=>'form-control select2me',
 		));
-		if(!empty($db->getColor())){
-			foreach ($db->getColor() as $rs){
+		$row_color = $db->getColor();
+		if(!empty($row_color)){
+			foreach ($row_color as $rs){
 				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}
@@ -291,8 +304,9 @@ class Product_Form_FrmProduct extends Zend_Form
 		$size->setAttribs(array(
 				'class'=>'form-control select2me',
 		));
-		if(!empty($db->getSize())){
-			foreach ($db->getSize() as $rs){
+		$row_size = $db->getSize();
+		if(!empty($row_size)){
+			foreach ($row_size as $rs){
 				$opt[$rs["key_code"]] = $rs["name"];
 			}
 		}

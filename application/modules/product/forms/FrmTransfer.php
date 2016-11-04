@@ -52,8 +52,9 @@ class Product_Form_FrmTransfer extends Zend_Form
     			'onChange'=>'addNew();'
     	));
     	$opt= array(''=>$tr->translate("SELECT PRODUCT"));
-    	if(!empty($db_stock->getProductName())){
-    		foreach ($db_stock->getProductName() as $rs){
+		$row_product = $db_stock->getProductName();
+    	if(!empty($row_product)){
+    		foreach ($row_product as $rs){
     			$opt[$rs["id"]] = $rs["item_name"]." ".$rs["model"]." ".$rs["size"]." ".$rs["color"];
     		}
     	}
@@ -128,8 +129,9 @@ class Product_Form_FrmTransfer extends Zend_Form
     			'onChange'=>'addNew();'
     	));
     	$opt= array(''=>$tr->translate("SELECT PRODUCT"));
-    	if(!empty($db_stock->getProductName())){
-    		foreach ($db_stock->getProductName() as $rs){
+		$row_product=$db_stock->getProductName();
+    	if(!empty($row_product)){
+    		foreach ($row_product as $rs){
     			$opt[$rs["id"]] = $rs["item_name"]." ".$rs["model"]." ".$rs["size"]." ".$rs["color"];
     		}
     	}

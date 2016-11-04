@@ -21,8 +21,9 @@ class Product_Form_FrmBrand extends Zend_Form
 				'class'=>'form-control',
 		));
 		$opt = array(''=>$tr->translate("SEELECT_Brand"));
-		if(!empty($db->getAllBrand())){
-			foreach ($db->getAllBrand() as $rs){
+		$row_brand = $db->getAllBrand();
+		if(!empty($row_brand)){
+			foreach ($row_brand as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}

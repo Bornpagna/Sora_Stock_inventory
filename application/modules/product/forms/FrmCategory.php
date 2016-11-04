@@ -21,8 +21,9 @@ class Product_Form_FrmCategory extends Zend_Form
 				'class'=>'form-control',
 		));
 		$opt = array(''=>$tr->translate("SEELECT_CATEGORY"));
-		if(!empty($db->getAllCategory())){
-			foreach ($db->getAllCategory() as $rs){
+		$row_cate = $db->getAllCategory();
+		if(!empty($row_cate)){
+			foreach ($row_cate as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
@@ -65,8 +66,9 @@ class Product_Form_FrmCategory extends Zend_Form
 				'class'=>'form-control',
 		));
 		$opt = array(''=>$tr->translate("SEELECT_CATEGORY"));
-		if(!empty($db->getAllCategory())){
-			foreach ($db->getAllCategory() as $rs){
+		$row_cate = $db->getAllCategory();
+		if(!empty($row_cate)){
+			foreach ($row_cate as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}

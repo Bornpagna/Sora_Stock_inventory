@@ -66,8 +66,9 @@ class Product_Form_FrmMeasure extends Zend_Form
 				'class'=>'form-control',
 		));
 		$opt = array(''=>$tr->translate("SEELECT_Measure"));
-		if(!empty($db->getAllMeasure())){
-			foreach ($db->getAllMeasure() as $rs){
+		$row_measure = $db->getAllMeasure();
+		if(!empty($row_measure)){
+			foreach ($row_measure as $rs){
 				$opt[$rs["id"]] = $rs["name"];
 			}
 		}
