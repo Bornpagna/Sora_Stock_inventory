@@ -22,7 +22,7 @@ public function Formterm($data=null) {
     	$status->setMultiOptions($opt);
     	$this->addElement($status);
     	
-    	//$opt_type= array('1'=>'Quotation',2=>'Sale',3=>"Invoice",4=>"Delivery Note");
+    	$opt_type= array();
 		if(!empty($rs_type)){
 			foreach($rs_type AS $rs){
 				$opt_type[$rs["key_code"]] = $rs["name_en"];

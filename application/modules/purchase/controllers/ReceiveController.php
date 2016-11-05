@@ -36,7 +36,7 @@ class Purchase_ReceiveController extends Zend_Controller_Action
 			$this->view->formFilter = $formFilter;
 			Application_Model_Decorator::removeAllDecorator($formFilter);
 	}
-	public function addRecievePurchaseAction(){
+	public function addAction(){
 		if($this->getRequest()->getPost()){
 			$db = new Application_Model_DbTable_DbGlobal();
 			

@@ -25,10 +25,7 @@ public function init()
 		);
 		$this->view->list=$list->getCheckList(0, $columns, $rows, array('con_khmer'=>$link,'con_english'=>$link));
 		
-		$formFilter = new Category_Form_FrmCategory();
-		$frmsearch = $formFilter->categoryFilter();
-		$this->view->formFilter = $frmsearch;
-		Application_Model_Decorator::removeAllDecorator($formFilter);
+		
 	}
 	public function addAction()
 	{
