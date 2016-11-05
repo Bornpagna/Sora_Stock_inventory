@@ -8,7 +8,7 @@ $request=Zend_Controller_Front::getInstance()->getRequest();
 	<div class="page-header-inner">
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
-			<a href="index.html">
+			<a href="<?php echo $this->baseUrl(); ?>/default/index/dashboad">
 			<img src="<?php echo $this->baseUrl()?>/images/soralogotop.png" alt="logo" class="logo-default" />
 			</a>
 			<div class="menu-toggler sidebar-toggler hide">
