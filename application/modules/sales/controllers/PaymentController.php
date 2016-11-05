@@ -28,20 +28,20 @@ class Sales_PaymentController extends Zend_Controller_Action
 					'customer_id'=>-1,
 					);
 		}
-		$db = new Sales_Model_DbTable_DbSaleOrder();
-		$rows = $db->getAllSaleOrder($search);
-		$columns=array("BRANCH_NAME","CUSTOMER_NAME","SALE_AGENT","SALE_NO", "ORDER_DATE",
-				"CURRNECY_TYPE","TOTAL","DISCOUNT","TOTAL_AMOUNT","APPROVED_STATUS","PENDING_STATUS","BY_USER");
+		$db = new Sales_Model_DbTable_Dbpayment();
+		$rows = $db->getAllReciept($search);
+		$columns=array("RECIEPT_NO","BRANCH_NAME","CUSTOMER_NAME","DATE",
+				"TOTAL","PAID","BALANCE","PAYMENT_TYPE","PAYMENT_METHOD","BY_USER");
 		$link=array(
-				'module'=>'sales','controller'=>'index','action'=>'edit',
+				'module'=>'sales','controller'=>'payment','action'=>'edit',
 		);
-		$link1=array(
-				'module'=>'sales','controller'=>'index','action'=>'viewapp',
-		);
+// 		$link1=array(
+// 				'module'=>'sales','controller'=>'index','action'=>'viewapp',
+// 		);
 		
 		$list = new Application_Form_Frmlist();
-		$this->view->list=$list->getCheckList(0, $columns, $rows, array('branch_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,
-				'sale_no'=>$link,'approval'=>$link1));
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('receipt_no'=>$link,'customer_name'=>$link,'branch_name'=>$link,
+				'date_input'=>$link));
 		
 		$formFilter = new Sales_Form_FrmSearch();
 		$this->view->formFilter = $formFilter;
@@ -58,8 +58,9 @@ class Sales_PaymentController extends Zend_Controller_Action
 				}
 				Application_Form_FrmMessage::message("INSERT_SUCESS");
 				if(!empty($data['btnsavenew'])){
-					Application_Form_FrmMessage::redirectUrl("/sales/quoatation");
+					Application_Form_FrmMessage::redirectUrl("/sales/payment/add");
 				}
+				Application_Form_FrmMessage::redirectUrl("/sales/payment/index");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message('INSERT_FAIL');
 				$err =$e->getMessage();
@@ -79,35 +80,37 @@ class Sales_PaymentController extends Zend_Controller_Action
 	}
 	function editAction(){
 		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
-		$dbq = new Sales_Model_DbTable_DbSaleOrder();
+		$dbq = new Sales_Model_DbTable_Dbpayment();
 		$db = new Application_Model_DbTable_DbGlobal();
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
+			$data['id']=$id;
 			try {
 				if(!empty($data['identity'])){
-					$dbq->updateSaleOrder($data);
+					$dbq->updatePayment($data);
 				}
-				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/index");
+				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/sales/payment");
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message('UPDATE_FAIL');
 				$err =$e->getMessage();
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		$row = $dbq->getSaleorderItemById($id);
-		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/index");
-		}if($row['is_approved']==1){
-			Application_Form_FrmMessage::Sucessfull("SALE_ORDER_WARNING","/sales/index");
-		}
-		$this->view->rs = $dbq->getSaleorderItemDetailid($id);
-		$this->view->rsterm = $dbq->getTermconditionByid($id);
+		$row = $dbq->getRecieptById($id);
+		$this->view->reciept_detail = $dbq->getRecieptDetail($id);
+// 		if(empty($row)){
+// 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/sales/payment");
+// 		}if($row['is_approved']==1){
+// 			Application_Form_FrmMessage::Sucessfull("SALE_ORDER_WARNING","/sales/payment");
+// 		}
+// 		$this->view->rs = $dbq->getSaleorderItemDetailid($id);
+// 		$this->view->rsterm = $dbq->getTermconditionByid($id);
 		
 		///link left not yet get from DbpurchaseOrder
-		$frm_purchase = new Sales_Form_FrmSale(null);
-		$form_sale = $frm_purchase->SaleOrder($row);
-		Application_Model_Decorator::removeAllDecorator($form_sale);
-		$this->view->form_sale = $form_sale;
+		$frm = new Sales_Form_FrmPayment(null);
+		$form_pay = $frm->Payment($row);
+		Application_Model_Decorator::removeAllDecorator($form_pay);
+		$this->view->form_sale = $form_pay;
 		 
 		// item option in select
 		$items = new Application_Model_GlobalClass();

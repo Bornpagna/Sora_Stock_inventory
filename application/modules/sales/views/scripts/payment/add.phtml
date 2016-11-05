@@ -236,7 +236,7 @@ function getInvoice(type){
 			            template+='<td ><img onClick="deleteRecord('+index+')" src="<?php echo BASE_URL; ?>/images/icon/delete.gif" /></td>';
 						template+='<td >'+index+'</td>';
 						template+='<td >'+data[i].invoice_date+'</td>';
-						template+='<td >'+data[i].invoice_no+'<input type="hidden" value='+data[i].id+' id="invoice_no'+index+'" name="invoice_no'+index+'"/></td>';
+						template+='<td >'+data[i].invoice_no+'<input type="hidden" value='+data[i].inovice_id+' id="invoice_no'+index+'" name="invoice_no'+index+'"/></td>';
 						template+='<td >'+data[i].sub_total_after+'<input type="hidden" value='+data[i].sub_total_after+' id="subtotal'+index+'" name="subtotal'+index+'"/></td>';
 						template+='<td >'+data[i].discount_after+'<input type="hidden" value='+data[i].discount_after+' id="discount'+index+'" name="discount'+index+'"/></td>';
 						template+='<td >'+data[i].paid_after+'<input type="hidden" value='+data[i].paid_after+' id="paid_amount'+index+'" name="paid_amount'+index+'"/></td>';
@@ -279,16 +279,17 @@ function netTotal() {//use
 		
 		subtotal += Number($('#subtotal'+rowIDArray[n]).val());
 		paid +=Number($('#paid_amount'+rowIDArray[n]).val());
-		discount =Number($('#discount'+rowIDArray[n]).val());
+		discount +=Number($('#discount'+rowIDArray[n]).val());
 	}
-	$('#all_total').val(subtotal.toFixed(2)-discount.toFixed(2));
+	var alltotal = Number(subtotal - discount).toFixed(2);
+	$('#all_total').val(alltotal);
 	$('#paid').val(paid.toFixed(2));
 	doRemain();
 }
 function doRemain() {
-	var all_total = $('#all_total').val();
-	var paid = $('#paid').val();
-	if(paid>all_total){
+	var all_total = Number($('#all_total').val());
+	var paid = Number($('#paid').val());
+	if(paid > all_total){
 		var paid = $('#paid').val(all_total);
 		 $('#remain').val(0);
    }else{

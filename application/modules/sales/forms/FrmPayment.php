@@ -85,15 +85,19 @@ class Sales_Form_FrmPayment extends Zend_Form
     			$idElement ->setValue($data["id"]);
     			
     			$customerid->setValue($data["customer_id"]);
+    			$customerid->setAttribs(array("readonly"=>true));
     			$locationID->setValue($data['branch_id']);
+    			$roder_element->setValue($data['receipt_no']);
+    			$paymentmethodElement->setValue($data['payment_id']);
+    			$date_inElement->setValue($data['date_input']);
     			
-    			$currencyElement->setValue($data['currency_id']);
-    			$saleagent_id->setValue($data['saleagent_id']);
     			$descriptionElement->setValue($data['remark']);
-    			$roder_element->setValue($data['sale_no']);
-    			$totalAmountElement->setValue($data['all_total']);
-    			$dis_valueElement->setValue($data['discount_value']);
-    			$allTotalElement->setValue($data['net_total']);
+    			$allTotalElement->setValue($data['total']);
+    			$remainlElement->setValue($data['balance']);
+    			$paidElement->setValue($data['paid']);
+    			$locationID->setAttribs(array("readonly"=>true));
+    			//$dis_valueElement->setValue($data['discount_value']);
+    			//$allTotalElement->setValue($data['net_total']);
     		
     		} else {
     	}

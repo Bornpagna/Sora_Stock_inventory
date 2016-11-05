@@ -1,5 +1,5 @@
 <?php 					
-	$url_new = $this->url(array('module'=>'sales','controller'=>'index','action'=>'add',));
+	$url_new = $this->url(array('module'=>'sales','controller'=>'payment','action'=>'index',));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$formFilter = $this->formFilter;
 ?>
@@ -16,7 +16,7 @@
 				</a>
 			</div>
 			<div class="portlet-body form">
-				<form method="post" action="<?php echo $formFilter->getAction(); ?>">
+				<form method="post" action="<?php echo $url_new; ?>">
 					<div class="form-group" style="padding-top: 6px;">
 						<label class="control-label col-md-2"><?php echo $formFilter->getElement('text_search');?></label>
 						<label class="control-label col-md-2"><?php echo $formFilter->getElement('branch_id');?></label>

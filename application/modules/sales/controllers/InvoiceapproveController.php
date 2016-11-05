@@ -105,7 +105,8 @@ class Sales_InvoiceapproveController extends Zend_Controller_Action
     	}
     	$query = new Sales_Model_DbTable_Dbinvoiceapprove();
     	$this->view->product =  $query->getProductSaleById($id);
-    	if(empty($query->getProductSaleById($id))){
+		$rs = $query->getProductSaleById($id);
+    	if(empty($rs)){
     		$this->_redirect("/sales/salesapprove");
     	}
     	$db= new Application_Model_DbTable_DbGlobal();
