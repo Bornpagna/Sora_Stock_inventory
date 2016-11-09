@@ -178,6 +178,22 @@ public function init()
 			}
 		}
 	}
+	public function addNewproudctAction(){
+		if($this->getRequest()->isPost()){
+			try {
+				$post=$this->getRequest()->getPost();
+				$db = new Product_Model_DbTable_DbProduct();
+				$pro_id =$db->addAjaxProduct($post);
+				$result = array('pro_id'=>$pro_id);
+				echo Zend_Json::encode($result);
+				exit();
+			}catch (Exception $e){
+				$result = array('err'=>$e->getMessage());
+				echo Zend_Json::encode($result);
+				exit();
+			}
+		}
+	}
 	
 	function outstockAction(){
 		$db = new Product_Model_DbTable_DbProduct();
