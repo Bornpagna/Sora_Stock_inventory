@@ -154,9 +154,13 @@ class Application_Form_FrmPopup extends Zend_Form
     	$address_Element ->setAttribs(array('placeholder' => 'Customer Address','rows'=>"3",'class'=>'form-control'));
     	$this->addElement($address_Element);
 
-    	 $email_Element = new Zend_Form_Element_Text('txt_mail');
+    	$email_Element = new Zend_Form_Element_Text('txt_mail');
     	$email_Element ->setAttribs(array('placeholder' => 'Email Address','class' => 'form-control validate[custom[email]]'));
     	$this->addElement($email_Element);
+    	
+    	$vendornote = new Zend_Form_Element_Text('vendor_note');
+    	$vendornote ->setAttribs(array('placeholder' => 'Note','class' => 'form-control'));
+    	$this->addElement($vendornote);
     	    	
      	return $this;
     }

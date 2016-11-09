@@ -32,7 +32,7 @@ class Application_Form_FrmReport extends Zend_Form
     	$sql='SELECT DISTINCT name,id FROM tb_sublocation WHERE name!="" AND status=1 ';
     	$user = $this->GetuserInfo();
     	if($user["level"]!=1 AND $user["level"]!=2){
-    		$sql .= " AND location_id = ".$user["location_id"];
+    		$sql .= " AND location_id = ".$user["branch_id"];
     			
     	}
     	$rs=$db->getGlobalDb($sql);
@@ -134,7 +134,7 @@ class Application_Form_FrmReport extends Zend_Form
     	$sql='SELECT DISTINCT name,id FROM tb_sublocation WHERE name!="" AND status=1 ';
     	$user = $this->GetuserInfo();
     	if($user["level"]!=1 AND $user["level"]!=2){
-    		$sql .= " AND id= ".$user["location_id"];
+    		$sql .= " AND id= ".$user["branch_id"];
     		 
     	}
     	$rs=$db->getGlobalDb($sql);
@@ -270,7 +270,7 @@ class Application_Form_FrmReport extends Zend_Form
     	$sql='SELECT DISTINCT name,id FROM tb_sublocation WHERE name!="" AND status=1 ';
     	$user = $this->GetuserInfo();
     	if($user["level"]!=1 AND $user["level"]!=2){
-    		$sql .= " AND id= ".$user["location_id"];
+    		$sql .= " AND id= ".$user["branch_id"];
     		 
     	}
     	$rs=$db->getGlobalDb($sql);

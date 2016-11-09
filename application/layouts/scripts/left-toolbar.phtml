@@ -79,7 +79,7 @@
 					<!-- END SIDEBAR TOGGLER BUTTON -->
 				</li>
 				<!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
-				<?php if($level==1 OR $level==2 OR $level==4){?>
+				<?php if($level==1 OR $level==2 OR $level==4  OR $level==9 ){?>
 				<li class="start ">
 					<a href="javascript:;">
 					<i class="icon-home"></i>
@@ -182,7 +182,7 @@
 							         <i class="icon-arrow-right"></i><?php echo $tr->translate($url_add_purchase[1]);?>
 		            		</a>
 	            		</li> 
-	            		<?php if($result["level"]==1 OR $result["level"]==2){?>
+	            		<?php //if($result["level"]==1 OR $result["level"]==2){?>
 	            		<!-- 
 	            		
 	            		<li>
@@ -210,13 +210,20 @@
 	            			<a href="<?php echo $url_vendor_add[0]; ?>">
 		            			<i class="icon-arrow-right"></i><?php echo $tr->translate($url_vendor_add[1]);?>
 		            		</a>
+	            		</li>
+	            		<li>
+	            			<a href="<?php echo $this->url(array('module'=>'purchase','controller'=>'expense','action'=>'index'),null, true); ?>">
+		            			<i class="icon-arrow-right"></i>Expense List
+		            		</a>
 	            		</li> 
 	            		
-	            		<?php }?>
+	
+	            		
+	            		<?php //}?>
 					</ul>
 				</li>
 				<?php }?>
-				<?php if($level==1 OR $level==2 OR $level!=8){?>
+				<?php if($level==1 OR $level==2 OR $level==3 OR $level==5 OR $level==10){?>
 				<li>
 					<a href="javascript:;">
 					<i class="icon-screen-desktop"></i>

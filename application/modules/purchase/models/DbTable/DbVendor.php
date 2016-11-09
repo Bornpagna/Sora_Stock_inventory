@@ -99,17 +99,22 @@ class Purchase_Model_DbTable_DbVendor extends Zend_Db_Table_Abstract
 		$userName=$session_user->user_name;
 		$GetUserId= $session_user->user_id;
 		try{
-		$data=array(
-				"v_name"	   => $post["v_name"],
-				"v_phone"=> $post["com_phone"],
-				"contact_name" => $post["contact"],
-				"phone_person"=> $post["phone"],
-				"add_name"	   => $post["address"],
-				"email"		   => $post["txt_mail"],
-				"last_usermod" => $GetUserId,
-				"last_mod_date"=>new Zend_Date()
-		);
-		return $this->insert($data);
+			$data=array(
+					'v_name'		=> $post['vendor_name'],
+					'v_phone'		=> $post['com_phone'],
+					'contact_name'	=> $post['txt_contact_name'],
+					'phone_person'	=> $post['v_phone'],
+					'add_name'		=> $post['txt_address'],
+					'email'			=> $post['txt_mail'],
+	// 				'website'		=> $post['txt_website'],
+	// 				'fax'			=> $post['txt_fax'],
+					'note'			=> $post['vendor_note'],
+					'is_over_sea'	=>	0,
+					'last_usermod'	=> $GetUserId,
+					'last_mod_date' => new Zend_Date(),
+					'date'			=>	date("Y-m-d"),
+			);
+		   return $this->insert($data);
 		}catch(Exception $e){
 			Application_Form_FrmMessage::message('INSERT_FAIL');
 			$err =$e->getMessage();

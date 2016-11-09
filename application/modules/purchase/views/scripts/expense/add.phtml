@@ -1,0 +1,124 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_expense;
+?>
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$form=$this->form_purchase;
+	$url_submit = $this->url(array('module'=>'purchase','controller'=>'expense','action'=>'add'));
+	$url_cancel = $this->url(array('module'=>'purchase','controller'=>'expense','action'=>'index'));
+	$frm = $this->frm_expense;
+?>
+<title><?php echo $tr->translate("ADD_EXPENSE");?></title>
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-home"></i><?php echo $tr->translate("ADD_EXPENSE")?>
+				</div>
+				<div class="tools" >
+					<a href="<?php echo $url_cancel;?>" class="btn btn-sm pull-right" style="color:white;">
+					<i class="fa fa-undo"></i>	&nbsp;<?php echo $tr->translate("GO_BACK");?>
+					</a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<!-- BEGIN FORM-->
+				<form id="frm" action="<?php echo $url_submit; ?>" class="form-horizontal" enctype="multipart/form-data" method="post">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("INVOICE_NO")?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm->getElement('invoice');?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("EXPENSE_TITLE")?><span class="required">
+								</span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa"></i>
+									<?php echo $frm->getElement('title');?>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("CURRENCY_TYPE")?><span class="required">
+							* </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+								<?php echo $frm->getElement('currency_type'); ?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("TOTAL_EXPENSE")?>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $frm->getElement('total_amount');?>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-md-2"><?php echo $tr->translate("BRANCH_NAME");?><span class="required">
+								 </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $frm->getElement("branch_id");?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("DATE")?><span class="required">
+							* </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<i class="fa fa-calendar"></i><?php echo $frm->getElement('Date');?></div>
+							</div>
+						</div>
+						<div class="form-group" >
+						    <label class="control-label col-md-2"><?php echo $tr->translate("NOTE")?><span class="required">
+								 </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $frm->getElement('Description');?>
+								</div>
+							</div>
+							<label class="control-label col-md-2"><?php echo $tr->translate("STATUS")?><span class="required">
+								 </span>
+							</label>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<?php echo $frm->getElement('Stutas');?>
+								</div>
+							</div>
+							
+						</div>
+						
+						
+						<div class="form-group">
+						    <div class="col-md-4">
+								<a href="<?php echo $this->baseUrl();?>/purchase/expense/"><button type="button" class="btn red btn-block btn-lg"><i class="fa fa-times"></i> <?php echo $tr->translate("GO_BACK")?></button></a>
+							</div>
+							<div class="col-md-4">
+								<div class="input-icon right">
+									<button type="submit" class="btn blue btn-block btn-lg" ><i class="fa fa-close"></i> <?php echo $tr->translate("SAVE_CLOSE")?></button>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<button type="submit" name="btnsavenew" class="btn blue btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
+							</div>
+							
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -54,20 +54,15 @@ class Application_Form_Frmsearch extends Zend_Form
 				'class'=>'form-control form-control-inline date-picker'
 		));
 		
-// 		$rs=$db->getGlobalDb('SELECT DISTINCT name,id FROM tb_sublocation WHERE Name!="" AND status=1 ');
-// 		$options=array($tr->translate('Please_Select'));
-// 		$locationValue = $request->getParam('LocationId');
-// 		foreach($rs as $read) $options[$read['id']]=$read['name'];
-// 		$location_id=new Zend_Form_Element_Select('id');
-// 		$location_id->setMultiOptions($options);
-// 		$location_id->setAttribs(array(
-// 				'id'=>'LocationId',
-// 				'onchange'=>'this.form.submit()',
-// 				'class'=>'form-control'
-				
-// 		));
-// 		$location_id->setValue($locationValue);
-// 		$this->addElement($location_id);
+		$options = $db->getAllLocation(1);
+		$locationID = new Zend_Form_Element_Select('branch_id');
+		$locationID ->setAttribs(array('class'=>'validate[required] form-control select2me'));
+		$locationID->setMultiOptions($options);
+		$locationID->setattribs(array());
+		$locationID->setValue($request->getParam('branch_id'));
+		$this->addElement($locationID);
+		
+		
 	  
 		$statusCOValue=4;
 		$statusCOValue = $request->getParam('purchase_status');

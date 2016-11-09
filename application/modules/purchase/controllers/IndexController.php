@@ -42,9 +42,9 @@ class Purchase_indexController extends Zend_Controller_Action
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			try {
-			$payment_purchase_order = new Purchase_Model_DbTable_DbPurchaseVendor();
+			$db = new Purchase_Model_DbTable_DbPurchaseOrder();
 			 if(!empty($data['identity'])){
-				$payment_purchase_order->addPurchaseOrder($data);
+				$db->addPurchaseOrder($data);
 			 }
 			Application_Form_FrmMessage::message("Purchase has been Saved!");
 				if(!empty($data['btnsavenew'])){
@@ -56,10 +56,9 @@ class Purchase_indexController extends Zend_Controller_Action
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-		
 		///link left not yet get from DbpurchaseOrder 	
 		$frm_purchase = new Application_Form_purchase(null);
-		$form_add_purchase = $frm_purchase->productOrder(null);
+		$form_add_purchase = $frm_purchase->productOrder();
 		Application_Model_Decorator::removeAllDecorator($form_add_purchase);
 		$this->view->form_purchase = $form_add_purchase;
 		
@@ -67,21 +66,70 @@ class Purchase_indexController extends Zend_Controller_Action
 		$items = new Application_Model_GlobalClass();
 		$this->view->items = $items->getProductOption();;
 		
-		//for add product;
-		$formpopup = new Application_Form_FrmPopup(null);
-		$formproduct = $formpopup->popuProduct(null);
-		Application_Model_Decorator::removeAllDecorator($formproduct);
-		$this->view->form = $formproduct;
+		$formProduct = new Product_Form_FrmProduct();
+		$formStockAdd = $formProduct->add(null);
+		Application_Model_Decorator::removeAllDecorator($formStockAdd);
+		$this->view->form = $formStockAdd;
 		
+		$formpopup = new Application_Form_FrmPopup(null);
 		//for add vendor
 		$formStockAdd = $formpopup->popupVendor(null);
 		Application_Model_Decorator::removeAllDecorator($formStockAdd);
 		$this->view->form_vendor = $formStockAdd;
 		
 		//for add location
-		$formAdd = $formpopup->popuLocation(null);
-		Application_Model_Decorator::removeAllDecorator($formAdd);
-		$this->view->form_branch = $formAdd;	
+// 		$formAdd = $formpopup->popuLocation(null);
+// 		Application_Model_Decorator::removeAllDecorator($formAdd);
+// 		$this->view->form_branch = $formAdd;	
+	}
+	public function editAction(){
+		$db = new Application_Model_DbTable_DbGlobal();
+		if($this->getRequest()->isPost()) {
+			$data = $this->getRequest()->getPost();
+			try {
+				$db = new Purchase_Model_DbTable_DbPurchaseOrder();
+				if(!empty($data['identity'])){
+					$db->addPurchaseOrder($data);
+				}
+				Application_Form_FrmMessage::message("Purchase has been Saved!");
+				if(!empty($data['btnsavenew'])){
+					Application_Form_FrmMessage::redirectUrl("/purchase/index");
+				}
+			}catch (Exception $e){
+				Application_Form_FrmMessage::message('INSERT_FAIL');
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		$id = ($this->getRequest()->getParam('id'))? $this->getRequest()->getParam('id'): '0';
+		$db = new Purchase_Model_DbTable_DbPurchaseOrder();
+		$row = $db->getPurchaseById($id);
+		$this->view->rsdetail = $db->getPurchaseDetailById($id);
+		
+		$frm_purchase = new Application_Form_purchase();
+		$form_add_purchase = $frm_purchase->productOrder($row);
+		
+		Application_Model_Decorator::removeAllDecorator($form_add_purchase);
+		$this->view->form_purchase = $form_add_purchase;
+	
+		$items = new Application_Model_GlobalClass();
+		$this->view->items = $items->getProductOption();;
+	
+		$formProduct = new Product_Form_FrmProduct();
+		$formStockAdd = $formProduct->add(null);
+		Application_Model_Decorator::removeAllDecorator($formStockAdd);
+		$this->view->form = $formStockAdd;
+	
+		$formpopup = new Application_Form_FrmPopup(null);
+		//for add vendor
+		$formStockAdd = $formpopup->popupVendor(null);
+		Application_Model_Decorator::removeAllDecorator($formStockAdd);
+		$this->view->form_vendor = $formStockAdd;
+	
+		//for add location
+		// 		$formAdd = $formpopup->popuLocation(null);
+		// 		Application_Model_Decorator::removeAllDecorator($formAdd);
+		// 		$this->view->form_branch = $formAdd;
 	}
 	public function addoldAction(){
 		$db = new Application_Model_DbTable_DbGlobal();
@@ -102,7 +150,6 @@ class Purchase_indexController extends Zend_Controller_Action
 				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
-	
 		///link left not yet get from DbpurchaseOrder
 		$frm_purchase = new Application_Form_purchase(null);
 		$form_add_purchase = $frm_purchase->productOrder(null);
@@ -661,6 +708,8 @@ class Purchase_indexController extends Zend_Controller_Action
   		$sql="  SELECT `qty_perunit`,
 						(SELECT qty FROM `tb_prolocation` WHERE location_id=$branch_id AND pro_id=$item_id LIMIT 1 ) AS qty 
 						FROM tb_product WHERE id= $item_id LIMIT 1  ";
+  		//return $sql;
+  		//echo $sql;
   		$db = new Application_Model_DbTable_DbGlobal();
   		$row=$db->getGlobalDbRow($sql);
   		echo Zend_Json::encode($row);

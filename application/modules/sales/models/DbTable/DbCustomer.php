@@ -28,12 +28,14 @@ class Sales_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		
 		$sql=" SELECT id,
 		(SELECT name FROM `tb_sublocation` WHERE id=branch_id LIMIT 1) AS branch_name,
-		 cust_name,phone,
+		 cust_name,
+		(SELECT name_en FROM `tb_view` WHERE type=6 AND key_code=cu_type LIMIT 1) customer_type,
+		 phone,
 		(SELECT NAME FROM `tb_price_type` WHERE id=customer_level LIMIT 1) As level,
 		 contact_name,contact_phone,address,
 		( SELECT name_en FROM `tb_view` WHERE type=5 AND key_code=status LIMIT 1) status,
-		( SELECT fullname FROM `tb_acl_user` WHERE tb_acl_user.user_id=user_id LIMIT 1) AS user_name
-		 FROM `tb_customer` WHERE cust_name!=''  ";
+		( SELECT fullname FROM `tb_acl_user` WHERE tb_acl_user.user_id=tb_customer.user_id LIMIT 1) AS user_name
+		 FROM `tb_customer` WHERE cust_name!='' ";
 		
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";

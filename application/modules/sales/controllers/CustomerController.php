@@ -26,7 +26,7 @@ class Sales_CustomerController extends Zend_Controller_Action
 		$db = new Sales_Model_DbTable_DbCustomer();
 		$rows = $db->getAllCustomer($search);
 		$list = new Application_Form_Frmlist();
-		$columns=array("BRANCH_NAME","CUSTOMER_NAME","COMPANY_NUMBER","CUSTOMER_LEVEL","CONTACT_NAME","CONTACT_NUMBER","ADDRESS","STATUS","BY_USER");
+		$columns=array("BRANCH_NAME","CUSTOMER_NAME","CUSTOMER_TYPE","CUSTOMER_LEVEL","CONTACT_NAME","CONTACT_NUMBER","ADDRESS","STATUS","BY_USER");
 		$link=array(
 				'module'=>'sales','controller'=>'customer','action'=>'edit',
 		);
@@ -77,6 +77,8 @@ class Sales_CustomerController extends Zend_Controller_Action
 				//$this->_redirect('/sales/customer/index');
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Update customer failed !");
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
 			}
 		}
 		

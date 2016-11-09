@@ -44,14 +44,7 @@ public function init()
 		));
 		$this->addElement($startDateElement);
 		
-// 		Application_Form_DateTimePicker::addDateField(array('start_date','end_date'));
-		
-		$options="";
-		$sql = "SELECT id, name FROM tb_sublocation WHERE name!='' ";
-		$sql.=" ORDER BY id DESC ";
-		$rs=$db->getGlobalDb($sql);
-		$options=array(0=>"Choose Branch");
-		if(!empty($rs)) foreach($rs as $read) $options[$read['id']]=$read['name'];
+		$options = $db->getAllLocation(1);
 		$locationID = new Zend_Form_Element_Select('branch_id');
 		$locationID ->setAttribs(array('class'=>'validate[required] form-control select2me'));
 		$locationID->setMultiOptions($options);

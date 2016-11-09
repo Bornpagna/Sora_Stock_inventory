@@ -743,10 +743,10 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 			$where .= " AND s.customer_id = ".$search['customer_id'];
 		}
 		if($search['branch_id']>0){
-			$where .= " AND branch_id =".$search['branch_id'];
+			$where .= " AND s.branch_id =".$search['branch_id'];
 		}
 		$dbg = new Application_Model_DbTable_DbGlobal();
-		$where.=$dbg->getAccessPermission();
+		$where.=$dbg->getAccessPermission(" s.branch_id ");
 		$order=" ORDER BY id DESC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
@@ -808,6 +808,38 @@ Class report_Model_DbQuery extends Zend_Db_Table_Abstract{
 		`tb_invoice` AS v,tb_sales_order As s WHERE v.sale_id = s.id AND customer_id = $customer_id 
 		AND s.id!= $sale_id AND v.is_fullpaid !=1 ";
 		return $db->fetchAll($sql);
+	}
+	function getAllExpense($search){
+		$db=$this->getAdapter();
+		$sql = "SELECT e.*,
+		(SELECT name FROM `tb_sublocation` WHERE id=e.branch_id LIMIT 1) AS branch_name,
+		(SELECT description FROM tb_currency WHERE tb_currency.id=e.curr_type) AS curr_name,
+		(SELECT fullname FROM `tb_acl_user` AS u WHERE u.user_id = e.user_id)  AS user_name
+		FROM tb_income_expense as e  WHERE 1  ";
+		$where= ' ';
+		$order=" ORDER BY e.id DESC ";
+		 
+		$from_date =(empty($search['start_date']))? '1': " e.create_date >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " e.create_date <= '".$search['end_date']." 23:59:59'";
+		$where .= "  AND ".$from_date." AND ".$to_date;
+		 
+		if(empty($search)){
+			return $db->fetchAll($sql.$order);
+		}
+		if(!empty($search['user'])){
+			$where.=" AND e.user_id = ".$search['user'] ;
+		}
+		 
+		if(!empty($search['text_search'])){
+			$s_where = array();
+			$s_search = addslashes(trim($search['text_search']));
+			$s_where[] = " e.title LIKE '%{$s_search}%'";
+			$s_where[] = " e.desc LIKE '%{$s_search}%'";
+			$s_where[] = " e.invoice LIKE '%{$s_search}%'";
+			$where .=' AND ( '.implode(' OR ',$s_where).')';
+		}
+// 		echo $sql.$where.$order;
+		return $db->fetchAll($sql.$where.$order);
 	}
 	
 }

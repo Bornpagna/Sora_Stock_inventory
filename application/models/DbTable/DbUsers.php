@@ -14,7 +14,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		$sql = "SELECT au.`fullname`,au.`email`, au.`username`, au.`user_type_id`, aut.`user_type`, au.`LocationId`
 				FROM `tb_acl_user` AS au
 				INNER JOIN `tb_acl_user_type` AS aut ON(au.`user_type_id` = aut.`user_type_id`)
-				WHERE user_id=" . $user_id;
+				WHERE user_id=" . $user_id." LIMIT 1";
 		$row = $this->getAdapter()->fetchRow($sql);
 		if(!$row) return NULL;
 		return $row;

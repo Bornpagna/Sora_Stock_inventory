@@ -304,9 +304,11 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 		$user_info = new Application_Model_DbTable_DbGetUserInfo();
 		$result = $user_info->getUserInfo();
 		$option="";		
-		if($result["level"]==1 OR $result["level"]==2){
-			$option .= '<option value="-1">Please Select Product</option>';
-		}
+		//if($result["level"]==1 OR $result["level"]==2){
+			//$option .= '<option value="-1">Add Product</option>';
+		//}
+		$option .= '<option value="9">Select Product</option>';
+		$option .= '<option value="-1">Add Product</option>';
 		foreach($row_cate as $cate){
 			$option .= '<optgroup  label="'.htmlspecialchars($cate['name'], ENT_QUOTES).'">';
 			if($result["level"]==1 OR $result["level"]==2){
@@ -320,7 +322,7 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 				 FROM tb_product AS p
 				INNER JOIN tb_prolocation As pl ON p.id = pl.pro_id
 				WHERE p.cate_id = ".$cate['id']."
-				AND p.item_name!='' AND pl.location_id =".$result['location_id']." ORDER BY user_id DESC ";
+				AND p.item_name!='' AND pl.location_id =".$result['branch_id']." ORDER BY user_id DESC ";
 			}
 				$rows = $db->fetchAll($sql);
 				if($rows){

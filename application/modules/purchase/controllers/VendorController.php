@@ -85,8 +85,8 @@ class Purchase_vendorController extends Zend_Controller_Action
 	//for add vendor from purchase
 	final function addvendorAction(){
 		$post=$this->getRequest()->getPost();
-		$add_vendor = new Purchase_Model_DbTable_DbVendor();
-		$vid = $add_vendor->addnewvendor($post);
+		$db = new Purchase_Model_DbTable_DbVendor();
+		$vid = $db->addnewvendor($post);
 		$result = array('vid'=>$vid);
 		echo Zend_Json::encode($result);
 		exit();

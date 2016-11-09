@@ -350,14 +350,14 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
     	return $info;
     }
     
-    public function getAccessPermission(){
+    public function getAccessPermission($branch='branch_id'){
     	$result = $this->getUserInfo();
     	if($result['level']==1 OR $result['level']==2){
     		$result = "";
     		return $result;
     	}
     	else{
-    		$result = " AND branch_id =".$result['branch_id'];
+    		$result = " AND $branch =".$result['branch_id'];
     		return $result;
     	} 
     }
@@ -556,7 +556,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    function getAllLocation($opt=null){
    		$db=$this->getAdapter();
    		$sql=" SELECT id,`name` FROM `tb_sublocation` WHERE `name`!='' AND STATUS=1  ";
-   		
    		$row =  $db->fetchAll($sql);
    		if($opt==null){
    			return $row;
@@ -565,6 +564,31 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    			if(!empty($row)) foreach($row as $read) $options[$read['id']]=$read['name'];
    			return $options;
    		}
+   }
+   function getAllCurrency($opt=null){
+   	$db=$this->getAdapter();
+   	$sql=" SELECT id, description,symbal FROM tb_currency WHERE status = 1 ";
+   	$row =  $db->fetchAll($sql);
+   	if($opt==null){
+   		return $row;
+   	}else{
+   		$options=array();
+   		if(!empty($row)) foreach($row as $read) $options[$read['id']]=$read['description'].$read['symbal'];
+   		return $options;
+   	}
+   }
+   function getAllVendor($opt=null){
+   	$db=$this->getAdapter();
+   	$sql=" SELECT vendor_id, v_name FROM tb_vendor WHERE v_name!='' AND status = 1 ORDER BY vendor_id DESC";
+   	$row =  $db->fetchAll($sql);
+   	if($opt==null){
+   		return $row;
+   	}else{
+   		$options=array(0=>"Select Vendor",-1=>"Add Vendor");
+   		if(!empty($row)) foreach($row as $read) $options[$read['vendor_id']]=$read['v_name'];
+   		return $options;
+   	}
+   	//$options=array(''=>$tr->translate('Please_Select'),'-1'=>$tr->translate('Add_New_Vendor'));
    }
    	
 }

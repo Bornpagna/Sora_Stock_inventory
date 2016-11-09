@@ -1,7 +1,7 @@
-﻿<?php 
+<?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$form=$this->form_purchase;
-	$url_submit = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'add'));
+	$url_submit = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'edit'));
 	$url_cancel = $this->url(array('module'=>'purchase','controller'=>'index','action'=>'index'));
 ?>
 <title><?php echo $tr->translate("ADD_PURCAHSE_ORDER");?></title>
@@ -10,7 +10,7 @@
 		<div class="portlet box blue">
 			<div class="portlet-title">
 				<div class="caption">
-					<i class="icon-home"></i><?php echo $tr->translate("ADD_PURCAHSE_ORDER")?>
+					<i class="icon-home"></i><?php echo $tr->translate("EDIT_PURCAHSE_ORDER")?>
 				</div>
 				<div class="tools" >
 					<a href="<?php echo $url_cancel;?>" class="btn btn-sm pull-right" style="color:white;">
@@ -131,7 +131,6 @@
 							</tr>
 						 </table>
 						 <input type="hidden" id="identity" name="identity" />
-								
 					</div>
 						<div class="form-group">
 						    <label class="control-label col-md-2"><?php echo $tr->translate("CURRENCY_TYPE");?><span class="required">
@@ -226,7 +225,6 @@
 							<div class="col-md-4">
 								<button type="submit" name="btnsavenew" class="btn blue btn-block btn-lg"><i class="fa fa-save"></i> <?php echo $tr->translate("SAVE_NEW")?> </button>
 							</div>
-							
 						</div>
 					</div>
 				</form>
@@ -481,7 +479,6 @@ function addNewVendor(){
         },
         error:function(e){
             alert("faile insert");
-          
         }
     });
 }
@@ -546,9 +543,7 @@ function addRow(item_id) {
 		$('#identity').val(identity+','+index5);
 	} else {$('#identity').val(index5);}
 	$("#item_id_"+index5).val(item_id);
-
 	getQtyById(index5);
-
 	if(free.checked){
 		$("#pricefree_"+index5).attr({checked:'checked'});  
 		$("#price"+index5).val(0);
@@ -666,7 +661,6 @@ function doRemain() {
 	   remain = all_total-paid;
 	   $('#remain').val(remain.toFixed(2));
 	}
-	
 }
 function totalQty(index){
 	calculatePrice(index);
@@ -678,19 +672,16 @@ function calculatePrice(index) {
 	var total = price * qty;	
 	var ds = $('#dis_value'+index).val();
 	if(ds.length!=0){
-		
 		if(ds.indexOf("%")!==-1){//if have %
 			var pds=ds.split("%");
 			if(!isNaN(pds[0])){
 				var discount=(total*parseFloat(pds[0]))/100;
 				after_discount = total - discount;
-				
 			}else{
 				after_discount = total - discount;
 			}
 			$('#total'+index).val(after_discount.toFixed(2));
 		}else{
-		
 			after_discount=0;
 			if(!isNaN(ds)&&ds!=0){
 				discount = parseFloat(ds).toFixed(2);

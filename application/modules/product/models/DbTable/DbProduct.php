@@ -100,12 +100,12 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 			  p.`item_code`,
 			  p.`item_name` ,
   			  p.`serial_number`,
-			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=5  AND p.`status`=v.`key_code` LIMIT 1) AS status,
+  			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=5  AND p.`status`=v.`key_code` LIMIT 1) AS status,
 			  (SELECT b.`name` FROM `tb_brand` AS b WHERE b.`id`=p.`brand_id` LIMIT 1) AS brand,
 			  (SELECT c.name FROM `tb_category` AS  c WHERE c.id=p.`cate_id` LIMIT 1) AS cat,
-			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=2  AND p.`model_id`=v.`key_code` LIMIT 1) AS model,
-			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=3  AND p.`model_id`=v.`key_code` LIMIT 1) AS size,
-			  (SELECT v.`name_kh` FROM tb_view AS v WHERE v.`type`=4  AND p.`model_id`=v.`key_code` LIMIT 1) AS color,
+			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=2  AND p.`model_id`=v.`key_code` LIMIT 1) AS model,
+			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=3  AND p.`size_id`=v.`key_code` LIMIT 1) AS size,
+			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=4  AND p.`color_id`=v.`key_code` LIMIT 1) AS color,
 			  (SELECT m.name FROM `tb_measure` AS m WHERE m.id = p.`measure_id` LIMIT 1) AS measure,
 			  (SELECT b.name FROM `tb_sublocation` AS b WHERE b.id=pl.`location_id` LIMIT 1) AS branch,
 			  SUM(pl.`qty`) AS qty
@@ -666,6 +666,49 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 // 	    	$this->insert($data);
 // 	    }
 //     }
+    public function addAjaxProduct($data){
+    	//print_r($data);exit();
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try {
+    		$arr = array(
+    				'item_name'		=>	$data["name"],
+    				'item_code'		=>	$data["pro_code"],
+    				'barcode'		=>	$data["barcode"],
+    				'cate_id'		=>	$data["category"],
+    				'brand_id'		=>	$data["brand"],
+    				'model_id'		=>	$data["model"],
+    				'color_id'		=>	$data["color"],
+    				'measure_id'	=>	$data["measure"],
+    				'size_id'		=>	$data["size"],
+    				'serial_number'	=>	$data["serial"],
+    				'qty_perunit'	=>	$data["qty_unit"],
+    				'unit_label'	=>	$data["label"],
+    				'user_id'		=>	$this->getUserId(),
+    				'note'			=>	$data["description"],
+    				//'status'		=>	$data["status"],
+    		);
+    		$this->_name="tb_product";
+    		$id = $this->insert($arr);
+    		
+    		$arr1 = array(
+    				'pro_id'			=>	$id,
+    				'location_id'		=>	$data["branch_id"],
+    				'qty'				=>	0,
+    				'qty_warning'		=>	0,
+    				'last_mod_userid'	=>	$this->getUserId(),
+    				'last_mod_date'		=>	new Zend_Date(),
+    		);
+    		$this->_name = "tb_prolocation";
+    		$this->insert($arr1);
+    		$db->commit();
+    		return $id;
+    	}catch (Exception $e){
+    		$db->rollBack();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e);
+    		
+    	}
+    }
 	public function getTransferInfo($id){
 		$db=$this->getAdapter();
 		$sql = "SELECT * FROM tb_stocktransfer WHERE transfer_id = ".$id." LIMIT 1";
