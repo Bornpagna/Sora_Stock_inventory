@@ -32,6 +32,21 @@ public function init()
     			'status'	=>	1
     		);
     	}
+		//$db = new Sales_Model_DbTable_DbSaleOrder();
+		$rows = $db->getAllProduct($data);
+		$columns=array("BRANCH_NAME","ITEM_CODE","ITEM_NAME","BARCODE", "SIZE",
+				"COLOR","SERIAL_NO","BRAND","CATEGORY","MODEL","MEASURE","QTY","USER","STATUS");
+		$link=array(
+				'module'=>'product','controller'=>'index','action'=>'edit',
+		);
+		$link1=array(
+				'module'=>'sales','controller'=>'index','action'=>'viewapp',
+		);
+		
+		$list = new Application_Form_Frmlist();
+		$this->view->list=$list->getCheckList(0, $columns, $rows, array('item_name'=>$link,'customer_name'=>$link,'staff_name'=>$link,
+				'sale_no'=>$link,'approval'=>$link1));
+		
     	$this->view->product = $db->getAllProduct($data);
     	$formFilter = new Product_Form_FrmProduct();
     	$this->view->formFilter = $formFilter->productFilter();
@@ -110,6 +125,26 @@ public function init()
 		$formStockAdd = $formProduct->add($rs);
 		Application_Model_Decorator::removeAllDecorator($formStockAdd);
 		$this->view->form = $formStockAdd;
+		
+		$formBrand = new Product_Form_FrmBrand();
+			$frmBrand = $formBrand->Brand();
+			$this->view->frmBrand = $frmBrand;
+			Application_Model_Decorator::removeAllDecorator($frmBrand);
+			
+			$formCat = new Product_Form_FrmCategory();
+			$frmCat = $formCat->cat();
+			$this->view->frmCat = $frmCat;
+			Application_Model_Decorator::removeAllDecorator($frmCat);
+			
+			$formMeasure = new Product_Form_FrmMeasure();
+			$frmMesure = $formMeasure->measure();
+			$this->view->frmMesure = $frmMesure;
+			Application_Model_Decorator::removeAllDecorator($frmMesure);
+			
+			$fmOther = new Product_Form_FrmOther();
+			$frmOther = $fmOther->add();
+			Application_Model_Decorator::removeAllDecorator($frmOther);
+			$this->view->frmOther = $frmOther;
 	}
 	
 	public function addBrandAction(){

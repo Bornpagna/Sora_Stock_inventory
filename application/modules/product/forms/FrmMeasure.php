@@ -10,7 +10,7 @@ class Product_Form_FrmMeasure extends Zend_Form
 	public function measure($data=null){
 		$db = new Product_Model_DbTable_DbMeasure();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$name = new Zend_Form_Element_Text('measure_name');
+		$name = new Zend_Form_Element_Text('name');
 		$name->setAttribs(array(
 				'class'=>'form-control',
 				'required'=>'required'

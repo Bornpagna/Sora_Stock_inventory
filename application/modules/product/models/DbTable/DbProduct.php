@@ -94,22 +94,23 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   function getAllProduct($data){
   	$db = $this->getAdapter();
   	$db_globle = new Application_Model_DbTable_DbGlobal();
+	$user_id = $this->getUserId();
   	$sql ="SELECT 
 			  p.`id`,
-			  p.`barcode`,
+			  (SELECT b.name FROM `tb_sublocation` AS b WHERE b.id=pl.`location_id` LIMIT 1) AS branch,
 			  p.`item_code`,
 			  p.`item_name` ,
+			  p.`barcode`,
+			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=3  AND p.`size_id`=v.`key_code` LIMIT 1) AS size,
+			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=4  AND p.`color_id`=v.`key_code` LIMIT 1) AS color,
   			  p.`serial_number`,
-  			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=5  AND p.`status`=v.`key_code` LIMIT 1) AS status,
 			  (SELECT b.`name` FROM `tb_brand` AS b WHERE b.`id`=p.`brand_id` LIMIT 1) AS brand,
 			  (SELECT c.name FROM `tb_category` AS  c WHERE c.id=p.`cate_id` LIMIT 1) AS cat,
 			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=2  AND p.`model_id`=v.`key_code` LIMIT 1) AS model,
-			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=3  AND p.`size_id`=v.`key_code` LIMIT 1) AS size,
-			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=4  AND p.`color_id`=v.`key_code` LIMIT 1) AS color,
 			  (SELECT m.name FROM `tb_measure` AS m WHERE m.id = p.`measure_id` LIMIT 1) AS measure,
-			  (SELECT b.name FROM `tb_sublocation` AS b WHERE b.id=pl.`location_id` LIMIT 1) AS branch,
-			  SUM(pl.`qty`) AS qty
-			  
+			  SUM(pl.`qty`) AS qty,
+			  (SELECT `fullname` FROM `tb_acl_user` WHERE `user_id`=p.`user_id` LIMIT 1) AS user_name,
+  			  (SELECT v.`name_en` FROM tb_view AS v WHERE v.`type`=5  AND p.`status`=v.`key_code` LIMIT 1) AS status
 			FROM
 			  `tb_product` AS p ,
 			  `tb_prolocation` AS pl
@@ -225,6 +226,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
   function getAllProductLowStock($data){
   	$db = $this->getAdapter();
   	$db_globle = new Application_Model_DbTable_DbGlobal();
+	
   	$sql ="SELECT 
 			  p.`id`,
 			  p.`barcode`,

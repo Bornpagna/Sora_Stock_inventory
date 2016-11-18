@@ -205,6 +205,7 @@ class Product_Form_FrmProduct extends Zend_Form
 			$label->setValue($data["unit_label"]);
 			$description->setValue($data["note"]);
 			$qty_per_unit->setValue($data["qty_perunit"]);
+			//$qty_unit->setValue($data["qty_perunit"]);
 			$status->setValue($data["status"]);
 		}
 		

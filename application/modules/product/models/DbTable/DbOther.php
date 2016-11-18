@@ -42,6 +42,7 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
     function add($data){
     	$db = $this->getAdapter();
     	$key_code = $this->getLastKeycodeByType($data['type']);
+		//echo $key_code;exit();
     	$arr = array(
     		'name_en'	=>	$data["title_en"],
     		'key_code'	=>	$key_code,
@@ -80,9 +81,10 @@ class Product_Model_DbTable_DbOther extends Zend_Db_Table_Abstract
 		return $key_code;
     }
     function getLastKeycodeByType($type){
-    	$sql = "SELECT key_code FROM `tb_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
+    	$sql = "SELECT COUNT(key_code) FROM `tb_view` WHERE type=$type ORDER BY key_code DESC LIMIT 1 ";
     	$db =$this->getAdapter();
     	$number = $db->fetchOne($sql);
-    	return $number+1;
+		//echo (int)$number+1;exit;
+    	return (int)$number+1;
     }
 }
