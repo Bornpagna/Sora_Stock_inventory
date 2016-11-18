@@ -315,14 +315,13 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 				$sql = "SELECT id,item_name,
 				(SELECT tb_brand.name FROM `tb_brand` WHERE tb_brand.id=brand_id limit 1) As brand_name,
 				item_code FROM tb_product WHERE cate_id = ".$cate['id']." 
-						AND item_name!='' ORDER BY id DESC ";
+						AND item_name!='' AND status=1 ORDER BY id DESC ";
 			}else{
 				$sql = " SELECT p.id,p.item_name,p.item_code,
 				(SELECT tb_brand.name FROM `tb_brand` WHERE tb_brand.id=p.brand_id limit 1) As brand_name
 				 FROM tb_product AS p
 				INNER JOIN tb_prolocation As pl ON p.id = pl.pro_id
-				WHERE p.cate_id = ".$cate['id']."
-				AND p.item_name!='' AND pl.location_id =".$result['branch_id']." ORDER BY user_id DESC ";
+				WHERE p.cate_id = ".$cate['id']." AND p.item_name!='' AND p.status=1 AND pl.location_id =".$result['location_id']." ORDER BY user_id DESC ";
 			}
 				$rows = $db->fetchAll($sql);
 				if($rows){
